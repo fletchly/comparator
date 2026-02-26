@@ -1,0 +1,2 @@
+group = "io.fletchly"
+version = "0.0.0"
