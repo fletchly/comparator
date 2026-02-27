@@ -1,8 +1,9 @@
 package io.fletchly.comparator.core.manager
 
-import io.fletchly.comparator.core.model.user.User
-import io.fletchly.comparator.core.port.out.ContextPort
-import io.fletchly.comparator.core.port.out.NotificationPort
+import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.NotificationPort
+import io.fletchly.comparator.manager.ContextManager
 import io.mockk.called
 import io.mockk.coVerify
 import io.mockk.mockk

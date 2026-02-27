@@ -1,15 +1,16 @@
 package io.fletchly.comparator.core.manager
 
-import io.fletchly.comparator.core.model.message.Message
-import io.fletchly.comparator.core.model.message.MessageResult
-import io.fletchly.comparator.core.model.message.ToolCall
-import io.fletchly.comparator.core.model.user.User
-import io.fletchly.comparator.core.port.out.AIPort
-import io.fletchly.comparator.core.port.out.ChatPort
-import io.fletchly.comparator.core.port.out.ContextPort
-import io.fletchly.comparator.core.port.out.NotificationPort
-import io.fletchly.comparator.core.port.out.SystemInfoPort
-import io.fletchly.comparator.core.port.out.ToolPort
+import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.message.MessageResult
+import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.port.out.AIPort
+import io.fletchly.comparator.port.out.ChatPort
+import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.NotificationPort
+import io.fletchly.comparator.port.out.SystemInfoPort
+import io.fletchly.comparator.port.out.ToolPort
+import io.fletchly.comparator.manager.ConversationManager
 import io.mockk.called
 import io.mockk.coEvery
 import io.mockk.coVerify
