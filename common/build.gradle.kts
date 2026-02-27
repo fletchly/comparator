@@ -7,5 +7,6 @@ plugins {
 dependencies {
     implementation(project(":core"))
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization)
     implementation(libs.bundles.ktor.client)
 }
