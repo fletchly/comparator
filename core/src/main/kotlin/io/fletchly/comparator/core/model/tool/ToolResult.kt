@@ -33,7 +33,7 @@ sealed interface ToolResult {
      * information about a failure that occurred during the execution of a tool.
      *
      * @property toolName The name of the tool that generated this failure result.
-     * @property message A detailed message describing the reason for the failure.
+     * @property error A detailed message describing the reason for the failure.
      */
-    data class Failure(override val toolName: String, val message: String) : ToolResult
+    data class Failure(override val toolName: String, val error: String) : ToolResult
 }

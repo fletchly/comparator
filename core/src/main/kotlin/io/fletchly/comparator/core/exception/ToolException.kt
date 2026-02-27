@@ -10,4 +10,4 @@ package io.fletchly.comparator.core.exception
  * @constructor Creates a [ToolException] with a specific error message.
  * @param message A detailed message describing the reason for the exception.
  */
-class ToolException(message: String) : Exception(message)
+class ToolException(override val message: String) : Exception(message)
