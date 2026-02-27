@@ -5,7 +5,10 @@ plugins {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
     implementation(kotlin("reflect"))
     implementation(libs.kotlinxSerialization)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockK)
+    testImplementation(libs.kotlinxCoroutinesTest)
 }
