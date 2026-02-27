@@ -17,6 +17,5 @@ plugins {
 }
 
 include(":core")
-include(":adapter")
 
 rootProject.name = "comparator"
