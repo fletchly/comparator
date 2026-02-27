@@ -10,4 +10,19 @@ package io.fletchly.comparator.core.model.message
  * @property messages The collection of messages that form the conversation.
  */
 @JvmInline
-value class Conversation(val messages: ArrayDeque<Message>)
+value class Conversation(private val messages: ArrayDeque<Message>) {
+    fun size() = messages.size
+
+    fun add(message: Message) {
+        messages.add(message)
+    }
+
+    fun removeOldest() {
+        messages.removeFirst()
+    }
+
+
+    companion object {
+        fun empty() = Conversation(ArrayDeque())
+    }
+}

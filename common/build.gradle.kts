@@ -3,3 +3,8 @@ plugins {
     id("buildsrc.convention.dokka-convention")
     alias(libs.plugins.kotlinPluginSerialization)
 }
+
+dependencies {
+    implementation(project(":core"))
+    implementation(libs.kotlinxCoroutines)
+}
