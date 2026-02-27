@@ -17,5 +17,6 @@ plugins {
 }
 
 include(":core")
+include(":common")
 
 rootProject.name = "comparator"
