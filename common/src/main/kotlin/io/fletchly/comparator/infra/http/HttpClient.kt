@@ -1,28 +1,25 @@
 package io.fletchly.comparator.infra.http
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.HttpCallValidator
-import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.RedirectResponseException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 
 object HttpClient {
-    private const val REQUEST_TIMEOUT_MS: Long = 2 * 60 * 1000 // 2 minutes
-    private const val CONNECT_TIMEOUT_MS: Long = 10 * 1000 // 10 seconds
-    private const val SOCKET_TIMEOUT_MS: Long = 2 * 60 * 1000 // 2 minutes
-    private const val MAX_RETRIES = 5
-    private const val BASE_DELAY_MS = 1000L
-    private const val MAX_DELAY_MS = 60_000L
-    private const val RANDOMIZATION_MS = 1000L
+    private const val MAX_RETRIES = 4
+    private const val REQUEST_TIMEOUT_MS: Long = 30_000L   // 30 seconds
+    private const val CONNECT_TIMEOUT_MS: Long = 10_000L   // 10 seconds
+    private const val SOCKET_TIMEOUT_MS: Long = 30_000L    // 30 seconds
+    private const val BASE_DELAY_MS = 1_000L // 1 second
+    private const val MAX_DELAY_MS = 10_000L  // 10 seconds
+    private const val RANDOMIZATION_MS = 500L // 0.5 seconds
 
     val ktor = HttpClient(CIO) {
-        expectSuccess = true
+        expectSuccess = false
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
@@ -36,8 +33,14 @@ object HttpClient {
         }
         install(HttpRequestRetry) {
             maxRetries = MAX_RETRIES
-            retryOnServerErrors()
-            retryOnException(retryOnTimeout = true)
+            retryIf { _, response ->
+                response.status == HttpStatusCode.ServiceUnavailable ||
+                        response.status == HttpStatusCode.GatewayTimeout ||
+                        response.status == HttpStatusCode.TooManyRequests
+            }
+            retryOnExceptionIf { _, cause ->
+                cause is IOException
+            }
             exponentialDelay(
                 baseDelayMs = BASE_DELAY_MS,
                 maxDelayMs = MAX_DELAY_MS,
@@ -47,7 +50,6 @@ object HttpClient {
         install(HttpCallValidator) {
             validateResponse { response ->
                 when (response.status.value) {
-                    in 300..399 -> throw RedirectResponseException(response, "Redirect: ${response.status.description}")
                     in 400..499 -> throw ClientRequestException(
                         response,
                         "Client error: ${response.status.description}"
