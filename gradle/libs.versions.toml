@@ -8,6 +8,7 @@ kotlinxSerializationJSON = "1.10.0"
 kotlinxCoroutines = "1.10.2"
 dokka = "2.1.0"
 mockK = "1.14.9"
+ktor = "3.4.0"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -15,9 +16,14 @@ dokkaGradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", versio
 
 kotlinxSerialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJSON" }
 kotlinxCoroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+ktorClientCore = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktorClientCIO = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 
 mockK = { module = "io.mockk:mockk", version.ref = "mockK" }
 kotlinxCoroutinesTest =  { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+
+[bundles]
+ktorClient = [ "ktorClientCore", "ktorClientCIO" ]
 
 [plugins]
 kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

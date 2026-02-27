@@ -7,4 +7,5 @@ plugins {
 dependencies {
     implementation(project(":core"))
     implementation(libs.kotlinxCoroutines)
+    implementation(libs.bundles.ktorClient)
 }
