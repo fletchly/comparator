@@ -26,7 +26,7 @@ class ContextManager(
         target.forEach { context.clear(it) }
     }
 
-    override suspend fun clear(
+    override suspend fun clearWithFeedback(
         sender: User,
         vararg target: User
     ) {

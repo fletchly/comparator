@@ -21,7 +21,7 @@ interface ClearContext {
      * @param sender The user initiating the clear operation, typically for notification or logging purposes.
      * @param target A vararg parameter representing the users whose context should be cleared.
      */
-    suspend fun clear(sender: User, vararg target: User)
+    suspend fun clearWithFeedback(sender: User, vararg target: User)
 
     /**
      * Clears all conversational contexts within the system.
