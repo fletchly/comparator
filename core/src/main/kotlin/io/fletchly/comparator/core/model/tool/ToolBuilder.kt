@@ -8,13 +8,21 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.serializer
-import kotlin.collections.get
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
 import kotlin.reflect.full.callSuspendBy
 import kotlin.reflect.full.findAnnotation
 
+/**
+ * A builder class for creating and configuring instances of [Tool].
+ *
+ * This class provides a fluent interface for defining the structure, metadata,
+ * and behavior of a tool. It facilitates the configuration of a tool's name,
+ * description, parameters, and execution logic.
+ *
+ * @property name The unique name of the tool being built.
+ */
 class ToolBuilder(private val name: String) {
     var description = ""
     private var handler: KFunction<*>? = null
@@ -73,9 +81,28 @@ class ToolBuilder(private val name: String) {
     }
 }
 
+/**
+ * Creates and configures a tool definition using the provided name and configuration block.
+ *
+ * This function initializes a [ToolBuilder] with the specified name, applies the given
+ * configuration block to define the tool's metadata, parameters, and behavior, and then
+ * builds and returns a [ToolDefinition] instance.
+ *
+ * @param name The unique name of the tool to be created.
+ * @param block A configuration block that is applied to the [ToolBuilder] to define the tool's attributes and behavior.
+ * @return A [ToolDefinition] instance representing the configured tool.
+ */
 fun tool(name: String, block: ToolBuilder.() -> Unit): ToolDefinition =
     ToolBuilder(name).apply(block).build()
 
+/**
+ * An annotation used to provide a human-readable description for a tool parameter.
+ *
+ * This annotation can be applied to parameters of a function to define a description
+ * that explains the parameter's purpose or usage.
+ *
+ * @property value The descriptive text explaining the parameter's purpose or usage.
+ */
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Description(val value: String)

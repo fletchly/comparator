@@ -3,7 +3,16 @@ package io.fletchly.comparator.core.model.tool
 import kotlin.reflect.KType
 
 /**
- * Parameter in a [ToolDefinition] definition
+ * Represents a single parameter required by a tool.
+ *
+ * This class defines the structure and characteristics of a parameter, including its name, type,
+ * description, whether it is required, and an optional list of enumerated values it can take.
+ *
+ * @property name The unique name of the parameter.
+ * @property type The data type of the parameter, defined by the [Type] enum.
+ * @property description A brief description of the parameter, detailing its purpose or usage.
+ * @property required Indicates whether this parameter is mandatory. Defaults to true.
+ * @property enum An optional list of valid values the parameter can take. This is null if the parameter does not have enumerated values.
  */
 data class ToolParameter(
     val name: String,
@@ -15,6 +24,19 @@ data class ToolParameter(
     enum class Type { STRING, INTEGER, NUMBER, BOOLEAN, OBJECT }
 }
 
+/**
+ * Converts the current [KType] instance to the corresponding [ToolParameter.Type].
+ *
+ * This function maps Kotlin types to their respective tool parameter types
+ * defined in the [ToolParameter.Type] enum. The mapping is as follows:
+ * - `String` maps to `ToolParameter.Type.STRING`
+ * - `Int` or `Long` maps to `ToolParameter.Type.INTEGER`
+ * - `Float` or `Double` maps to `ToolParameter.Type.NUMBER`
+ * - `Boolean` maps to `ToolParameter.Type.BOOLEAN`
+ * - Any other type maps to `ToolParameter.Type.OBJECT`
+ *
+ * @return The [ToolParameter.Type] corresponding to the [KType].
+ */
 fun KType.toToolParameterType(): ToolParameter.Type = when (classifier) {
     String::class -> ToolParameter.Type.STRING
     Int::class, Long::class -> ToolParameter.Type.INTEGER
