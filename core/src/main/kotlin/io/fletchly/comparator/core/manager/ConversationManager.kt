@@ -1,0 +1,73 @@
+package io.fletchly.comparator.core.manager
+
+import io.fletchly.comparator.core.model.message.Message
+import io.fletchly.comparator.core.model.message.MessageResult
+import io.fletchly.comparator.core.model.message.ToolCall
+import io.fletchly.comparator.core.model.user.User
+import io.fletchly.comparator.core.port.`in`.SendMessage
+import io.fletchly.comparator.core.port.out.*
+
+/**
+ * Manages conversations between users and an AI-based assistant.
+ *
+ * The class orchestrates the flow of messages and interactions, handling user inputs,
+ * generating assistant responses, and managing tool executions within the conversation context.
+ *
+ * @property context Provides methods for retrieving and appending conversation data.
+ * @property system Supplies the system prompt required for generating assistant responses.
+ * @property ai Generates AI-driven assistant responses based on the current context and system prompt.
+ * @property tool Executes specific tool calls associated with an assistant response.
+ * @property chat Manages communication with users and the assistant during conversations.
+ * @property notification Handles notifications for errors or informational messages during conversation processing.
+ */
+class ConversationManager(
+    private val context: ContextPort,
+    private val system: SystemInfoPort,
+    private val ai: AIPort,
+    private val tool: ToolPort,
+    private val chat: ChatPort,
+    private val notification: NotificationPort
+) : SendMessage {
+
+    override suspend fun fromUser(
+        message: Message.User
+    ) {
+        startConversation(message)
+        AssistantLoop(message.sender).run()
+    }
+
+    private suspend fun startConversation(message: Message.User) {
+        context.append(message.sender, message)
+        chat.user(message.sender, message)
+    }
+
+    private inner class AssistantLoop(private val target: User) {
+        tailrec suspend fun run() {
+            val conversation = context.get(target)
+
+            when (val result = ai.generateResponse(system.getPrompt(), conversation)) {
+                is MessageResult.Failure -> {
+                    notification.error(target, result.error)
+                }
+
+                is MessageResult.Success<Message.Assistant> -> {
+                    val response = result.message
+                    chat.assistant(target, response)
+                    context.append(target, response)
+
+                    val toolCalls = response.toolCalls
+                    if (toolCalls.isNullOrEmpty()) return
+                    handleToolCalls(toolCalls)
+
+                    run()
+                }
+            }
+        }
+
+        private suspend fun handleToolCalls(toolCalls: List<ToolCall>) {
+            toolCalls
+                .map { tool.execute(it) }
+                .forEach { context.append(target, it) }
+        }
+    }
+}
