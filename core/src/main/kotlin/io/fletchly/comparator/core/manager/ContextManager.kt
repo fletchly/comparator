@@ -30,7 +30,7 @@ class ContextManager(
         sender: User,
         vararg target: User
     ) {
-        target.forEach { context.clear(it) }
+        clear(*target)
         notification.info(sender, "Cleared context for ${target.size} ${"player".pluralize(target.size)}")
     }
 
