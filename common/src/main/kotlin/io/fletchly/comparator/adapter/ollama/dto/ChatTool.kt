@@ -1,7 +1,7 @@
 package io.fletchly.comparator.adapter.ollama.dto
 
+import io.fletchly.comparator.util.JsonSchema
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 /**
  * ChatTool definition
@@ -12,7 +12,7 @@ import kotlinx.serialization.json.JsonObject
  * @property function tool function definition
  */
 @Serializable
-data class ChatTool(val function: ToolFunction) {
+data class ChatTool(val function: ChatToolFunction) {
     @Suppress("unused")
     val type: String = "function"
 }
@@ -27,8 +27,8 @@ data class ChatTool(val function: ToolFunction) {
  * @property parameters JSON Schema for the function parameters
  */
 @Serializable
-data class ToolFunction(
+data class ChatToolFunction(
     val name: String,
-    val parameters: JsonObject,
+    val parameters: JsonSchema,
     val description: String? = null
 )

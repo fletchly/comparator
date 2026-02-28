@@ -6,20 +6,41 @@ import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.tool.ToolParameter
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
+import io.fletchly.comparator.util.JsonProperty
+import io.fletchly.comparator.util.JsonSchema
 import io.fletchly.comparator.util.toJsonObject
+import io.fletchly.comparator.util.toMap
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.io.IOException
 
+/**
+ * An AI provider implementation that handles generating responses using the Ollama API.
+ *
+ * This class is responsible for integrating with the Ollama API to generate responses
+ * in conversational systems. It manages request construction, API communication, and
+ * response parsing. It also processes conversations, tools, and logging for system
+ * interactions.
+ *
+ * @param baseUrl The base URL of the Ollama API.
+ * @param apiKey The API key required for authentication with the Ollama API. Can be null if no authentication is needed.
+ * @param model The name of the AI model to use when generating responses.
+ * @param log An implementation of [LogPort] for logging information and warnings.
+ * @param toolRegistry An implementation of [ToolRegistry] to manage available tools for tool-based message handling.
+ */
 class OllamaAIProvider(
     private val baseUrl: Url,
     private val apiKey: String?,
     private val model: String,
     private val log: LogPort,
+    private val toolRegistry: ToolRegistry
 ) : AIPort {
     private val client = HttpClient.ktor
 
@@ -30,7 +51,7 @@ class OllamaAIProvider(
         val chatRequest = buildChatRequest(systemPrompt, conversation)
         val url = URLBuilder(baseUrl).apply { path("api", "chat") }.build()
 
-        runCatching {
+        val chatResponse: ChatResponse = runCatching {
             client.post(url) {
                 if (!apiKey.isNullOrBlank()) bearerAuth(apiKey)
                 contentType(ContentType.Application.Json)
@@ -47,7 +68,7 @@ class OllamaAIProvider(
             }
         }
 
-        TODO()
+        return MessageResult.Success(chatResponse.message.toAssistantMessage())
     }
 
     private fun buildChatRequest(systemPrompt: String, conversation: Conversation): ChatRequest {
@@ -60,7 +81,9 @@ class OllamaAIProvider(
             addAll(conversationMessages)
         }
 
-        val tools: List<ChatTool>? = null
+        val tools: List<ChatTool>? = toolRegistry.tools
+            .map { it.toChatTool() }
+            .ifEmpty { null }
 
         val options = ChatOptions(
             temperature = TEMPERATURE,
@@ -89,12 +112,49 @@ class OllamaAIProvider(
         }
     }
 
+    private fun ChatMessage.Assistant.toAssistantMessage() =
+        Message.Assistant(
+            content = this.content,
+            toolCalls = this.toolCalls?.map { it.toToolCall() }
+        )
+
     private fun ToolCall.toChatToolCall() = ChatToolCall(
         function = ToolCallFunction(
             name = this.name,
-            arguments = this.arguments?.toJsonObject()
+            arguments = this.arguments.toJsonObject()
         )
     )
+
+    private fun ChatToolCall.toToolCall() = ToolCall(
+        name = this.function.name,
+        arguments = this.function.arguments.toMap()
+    )
+
+    private fun Tool.toChatTool() = ChatTool(
+        function = ChatToolFunction(
+            name = this.name,
+            parameters = this.parameters.toJsonSchema()
+        )
+    )
+
+    private fun List<ToolParameter>.toJsonSchema(): JsonSchema {
+        val properties = this.associate { param ->
+            param.name to JsonProperty(
+                type = param.type.name.lowercase(),
+                description = param.description
+            )
+        }
+
+        val required = this
+            .filter { it.required }
+            .map { it.name }
+
+        return JsonSchema(
+            "object",
+            properties,
+            required
+        )
+    }
 
     companion object {
         private const val TEMPERATURE = 0.5F

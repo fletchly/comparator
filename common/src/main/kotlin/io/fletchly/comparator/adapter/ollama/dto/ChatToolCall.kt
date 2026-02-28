@@ -10,7 +10,7 @@ import kotlinx.serialization.json.JsonObject
  */
 @Serializable
 data class ChatToolCall(
-    val function: ToolCallFunction?
+    val function: ToolCallFunction
 )
 
 /**
@@ -24,5 +24,5 @@ data class ChatToolCall(
 @Serializable
 data class ToolCallFunction(
     val name: String,
-    val arguments: JsonObject?
+    val arguments: JsonObject
 )
