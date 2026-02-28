@@ -5,12 +5,7 @@ import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.SendMessage
-import io.fletchly.comparator.port.out.AIPort
-import io.fletchly.comparator.port.out.ChatPort
-import io.fletchly.comparator.port.out.ContextPort
-import io.fletchly.comparator.port.out.NotificationPort
-import io.fletchly.comparator.port.out.SystemInfoPort
-import io.fletchly.comparator.port.out.ToolPort
+import io.fletchly.comparator.port.out.*
 
 /**
  * Manages conversations between users and an AI-based assistant.
@@ -29,7 +24,7 @@ class ConversationManager(
     private val context: ContextPort,
     private val system: SystemInfoPort,
     private val ai: AIPort,
-    private val tool: ToolPort,
+    private val tool: ToolManager,
     private val chat: ChatPort,
     private val notification: NotificationPort
 ) : SendMessage {

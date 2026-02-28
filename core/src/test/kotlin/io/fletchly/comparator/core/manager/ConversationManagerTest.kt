@@ -1,21 +1,13 @@
 package io.fletchly.comparator.core.manager
 
+import io.fletchly.comparator.manager.ConversationManager
+import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.user.User
-import io.fletchly.comparator.port.out.AIPort
-import io.fletchly.comparator.port.out.ChatPort
-import io.fletchly.comparator.port.out.ContextPort
-import io.fletchly.comparator.port.out.NotificationPort
-import io.fletchly.comparator.port.out.SystemInfoPort
-import io.fletchly.comparator.port.out.ToolPort
-import io.fletchly.comparator.manager.ConversationManager
-import io.mockk.called
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
+import io.fletchly.comparator.port.out.*
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
@@ -23,7 +15,7 @@ class ConversationManagerTest {
     private val context = mockk<ContextPort>(relaxed = true)
     private val system = mockk<SystemInfoPort>(relaxed = true)
     private val ai = mockk<AIPort>(relaxed = true)
-    private val tool = mockk<ToolPort>(relaxed = true)
+    private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
 

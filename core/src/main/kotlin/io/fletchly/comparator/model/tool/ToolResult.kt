@@ -1,5 +1,6 @@
 package io.fletchly.comparator.model.tool
 
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 /**
@@ -24,7 +25,9 @@ sealed interface ToolResult {
      * @property toolName The name of the tool that generated this result.
      * @property value The result produced by the tool, represented as a [JsonElement].
      */
-    data class Success(override val toolName: String, val value: JsonElement) : ToolResult
+    data class Success(override val toolName: String, val value: JsonElement) : ToolResult {
+        override fun toString(): String = "$toolName: ${Json.encodeToString(JsonElement)}"
+    }
 
     /**
      * Represents a failed result of a tool's execution.
@@ -35,5 +38,7 @@ sealed interface ToolResult {
      * @property toolName The name of the tool that generated this failure result.
      * @property error A detailed message describing the reason for the failure.
      */
-    data class Failure(override val toolName: String, val error: String) : ToolResult
+    data class Failure(override val toolName: String, val error: String) : ToolResult {
+        override fun toString(): String = "$toolName error: $error"
+    }
 }
