@@ -7,19 +7,19 @@ package io.fletchly.comparator.model.message
  * of messages, including messages sent by users, responses generated
  * by an AI assistant, and outputs from tool executions.
  *
- * @property messageQueue The collection of messages that form the conversation.
+ * @property conversation The collection of messages that form the conversation.
  */
 @JvmInline
-value class Conversation(private val messageQueue: ArrayDeque<Message>) {
-    val size get() = messageQueue.size
-    val messages get() = messageQueue.toList()
+value class Conversation(private val conversation: ArrayDeque<Message>) {
+    val size get() = conversation.size
+    val messages get() = conversation.toList()
 
     fun add(message: Message) {
-        messageQueue.add(message)
+        conversation.add(message)
     }
 
     fun removeOldest() {
-        messageQueue.removeFirst()
+        conversation.removeFirst()
     }
 
 
