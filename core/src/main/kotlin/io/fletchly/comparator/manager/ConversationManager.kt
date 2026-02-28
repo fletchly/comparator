@@ -4,7 +4,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.user.User
-import io.fletchly.comparator.port.`in`.SendMessage
+import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 
 /**
@@ -27,7 +27,7 @@ class ConversationManager(
     private val tool: ToolManager,
     private val chat: ChatPort,
     private val notification: NotificationPort
-) : SendMessage {
+) : MessageSender {
 
     override suspend fun fromUser(
         message: Message.User

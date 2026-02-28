@@ -9,7 +9,7 @@ import io.fletchly.comparator.model.message.Message
  * and ensures appropriate processing of these messages within the system's
  * conversational context.
  */
-interface SendMessage {
+interface MessageSender {
     /**
      * Handles a message sent by a user within the conversational system.
      *

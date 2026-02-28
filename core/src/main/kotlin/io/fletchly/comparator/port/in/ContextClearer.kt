@@ -6,7 +6,7 @@ import io.fletchly.comparator.model.user.User
  * Provides an interface for clearing conversation context for one or more actors
  * in a conversational system.
  */
-interface ClearContext {
+interface ContextClearer {
     /**
      * Clears the conversational context for the specified target users.
      *

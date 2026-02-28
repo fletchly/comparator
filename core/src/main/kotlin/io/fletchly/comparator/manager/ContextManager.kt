@@ -1,7 +1,7 @@
 package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.model.user.User
-import io.fletchly.comparator.port.`in`.ClearContext
+import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.pluralize
@@ -21,7 +21,7 @@ import io.fletchly.comparator.util.pluralize
 class ContextManager(
     private val context: ContextPort,
     private val notification: NotificationPort
-) : ClearContext {
+) : ContextClearer {
     override suspend fun clear(vararg target: User) {
         target.forEach { context.clear(it) }
     }
