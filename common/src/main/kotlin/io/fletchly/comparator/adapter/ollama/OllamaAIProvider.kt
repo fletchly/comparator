@@ -37,6 +37,7 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import io.ktor.client.HttpClient as KtorClient
 import kotlinx.io.IOException
 
 /**
@@ -58,10 +59,9 @@ class OllamaAIProvider(
     private val apiKey: String?,
     private val model: String,
     private val log: LogPort,
-    private val toolRegistry: ToolRegistry
+    private val toolRegistry: ToolRegistry,
+    private val client: KtorClient = HttpClient.Ktor
 ) : AIPort {
-    private val client = HttpClient.Ktor
-
     override suspend fun generateResponse(
         systemPrompt: String,
         conversation: Conversation
