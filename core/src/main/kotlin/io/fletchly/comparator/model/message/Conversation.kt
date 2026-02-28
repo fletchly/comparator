@@ -22,7 +22,6 @@ value class Conversation(private val conversation: ArrayDeque<Message>) {
         conversation.removeFirst()
     }
 
-
     companion object {
         fun empty() = Conversation(ArrayDeque())
     }

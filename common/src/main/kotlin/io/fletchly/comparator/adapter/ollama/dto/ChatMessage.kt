@@ -38,13 +38,13 @@ sealed interface ChatMessage {
         override val content: String,
 
         @SerialName("tool_calls")
-        val toolCalls: List<ToolCall>
+        val toolCalls: List<ChatToolCall>?
     ): ChatMessage {
         override val role: String = "assistant"
     }
 
     /**
-     * Tool message
+     * ChatTool message
      *
      * @property role always `tool`
      */

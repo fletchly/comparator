@@ -52,7 +52,7 @@ class ToolBuilder(private val name: String) {
             try {
                 val mappedArgs = fn.parameters
                     .filter { it.kind == KParameter.Kind.VALUE }
-                    .associateWith { param -> args[param.name] }
+                    .associateWith { param -> args?.get(param.name) }
 
                 val json = when (val result = fn.callSuspendBy(mappedArgs)) {
                     is JsonElement -> result

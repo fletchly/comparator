@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 data class ChatRequest(
     val model: String,
     val messages: List<ChatMessage>,
-    val tools: List<Tool>?,
+    val tools: List<ChatTool>?,
     val options: ChatOptions,
     ) {
     @Suppress("unused")

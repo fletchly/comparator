@@ -16,5 +16,5 @@ import kotlinx.serialization.json.JsonObject
  */
 data class ToolCall(
     val name: String,
-    val arguments: Map<String, Any>
+    val arguments: Map<String, Any>?
 )

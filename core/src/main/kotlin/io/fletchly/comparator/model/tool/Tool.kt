@@ -16,7 +16,7 @@ class Tool(
     override val name: String,
     override val description: String,
     override val parameters: List<ToolParameter>,
-    private val handler: suspend (Map<String, Any>) -> ToolResult
+    private val handler: suspend (Map<String, Any>?) -> ToolResult
 ) : ToolDefinition {
-    override suspend fun execute(args: Map<String, Any>): ToolResult = handler(args)
+    override suspend fun execute(args: Map<String, Any>?): ToolResult = handler(args)
 }

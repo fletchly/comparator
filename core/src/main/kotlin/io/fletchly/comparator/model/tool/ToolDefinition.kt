@@ -16,5 +16,5 @@ interface ToolDefinition {
     val name: String
     val description: String
     val parameters: List<ToolParameter>
-    suspend fun execute(args: Map<String, Any>): ToolResult
+    suspend fun execute(args: Map<String, Any>?): ToolResult
 }

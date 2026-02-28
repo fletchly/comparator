@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 /**
- * Tool definition
+ * ChatTool definition
  *
  * @see <a href="https://docs.ollama.com/api/chat">Ollama Chat API docs</a>
  *
@@ -12,13 +12,13 @@ import kotlinx.serialization.json.JsonObject
  * @property function tool function definition
  */
 @Serializable
-data class Tool(val function: ToolFunction) {
+data class ChatTool(val function: ToolFunction) {
     @Suppress("unused")
     val type: String = "function"
 }
 
 /**
- * Tool function definition
+ * ChatTool function definition
  *
  * @see <a href="https://docs.ollama.com/api/chat">Ollama Chat API docs</a>
  *
