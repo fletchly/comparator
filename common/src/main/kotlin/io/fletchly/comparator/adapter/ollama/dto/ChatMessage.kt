@@ -23,7 +23,7 @@ sealed interface ChatMessage {
     @Serializable
     data class User(
         override val content: String,
-    ): ChatMessage {
+    ) : ChatMessage {
         override val role: String = "user"
     }
 
@@ -39,7 +39,7 @@ sealed interface ChatMessage {
 
         @SerialName("tool_calls")
         val toolCalls: List<ChatToolCall>?
-    ): ChatMessage {
+    ) : ChatMessage {
         override val role: String = "assistant"
     }
 
@@ -51,7 +51,7 @@ sealed interface ChatMessage {
     @Serializable
     data class Tool(
         override val content: String,
-    ): ChatMessage {
+    ) : ChatMessage {
         override val role: String = "tool"
     }
 
@@ -63,7 +63,7 @@ sealed interface ChatMessage {
     @Serializable
     data class System(
         override val content: String,
-    ): ChatMessage {
+    ) : ChatMessage {
         override val role: String = "system"
     }
 }

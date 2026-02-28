@@ -27,4 +27,4 @@ data class ChatOptions(
     val stop: String? = null,
     @SerialName("num_ctx") val numCtx: Int? = null,
     @SerialName("num_predict") val numPredict: Int? = null
-    )
+)

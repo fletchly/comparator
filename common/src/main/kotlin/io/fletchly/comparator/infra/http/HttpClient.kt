@@ -57,6 +57,7 @@ object HttpClient {
                         response,
                         "Client error: ${response.status.description}"
                     )
+
                     in 500..599 -> throw ServerResponseException(
                         response,
                         "Server error: ${response.status.description}"

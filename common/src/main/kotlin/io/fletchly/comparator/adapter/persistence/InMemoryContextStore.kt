@@ -6,7 +6,7 @@ import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ContextPort
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.util.UUID
+import java.util.*
 
 /**
  * A thread-safe implementation of the `ContextPort` interface using a `HashMap` to store user-specific conversational contexts.

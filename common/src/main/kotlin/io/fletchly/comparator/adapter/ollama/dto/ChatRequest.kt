@@ -19,7 +19,7 @@ data class ChatRequest(
     val messages: List<ChatMessage>,
     val tools: List<ChatTool>?,
     val options: ChatOptions,
-    ) {
+) {
     @Suppress("unused")
     val stream = false
 

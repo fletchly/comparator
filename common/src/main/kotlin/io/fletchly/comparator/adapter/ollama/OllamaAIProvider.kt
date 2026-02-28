@@ -1,12 +1,6 @@
 package io.fletchly.comparator.adapter.ollama
 
-import io.fletchly.comparator.adapter.ollama.dto.ChatMessage
-import io.fletchly.comparator.adapter.ollama.dto.ChatOptions
-import io.fletchly.comparator.adapter.ollama.dto.ChatRequest
-import io.fletchly.comparator.adapter.ollama.dto.ChatResponse
-import io.fletchly.comparator.adapter.ollama.dto.ChatTool
-import io.fletchly.comparator.adapter.ollama.dto.ChatToolCall
-import io.fletchly.comparator.adapter.ollama.dto.ToolCallFunction
+import io.fletchly.comparator.adapter.ollama.dto.*
 import io.fletchly.comparator.infra.http.HttpClient
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
@@ -15,18 +9,10 @@ import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.util.toJsonObject
-import io.ktor.client.call.body
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.request.bearerAuth
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.URLBuilder
-import io.ktor.http.Url
-import io.ktor.http.contentType
-import io.ktor.http.path
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.io.IOException
 
 class OllamaAIProvider(
@@ -44,7 +30,7 @@ class OllamaAIProvider(
         val chatRequest = buildChatRequest(systemPrompt, conversation)
         val url = URLBuilder(baseUrl).apply { path("api", "chat") }.build()
 
-        val chatResponse: ChatResponse = runCatching {
+        runCatching {
             client.post(url) {
                 if (!apiKey.isNullOrBlank()) bearerAuth(apiKey)
                 contentType(ContentType.Application.Json)
