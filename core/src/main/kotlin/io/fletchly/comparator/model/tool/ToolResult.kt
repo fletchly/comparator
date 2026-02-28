@@ -26,7 +26,7 @@ sealed interface ToolResult {
      * @property value The result produced by the tool, represented as a [JsonElement].
      */
     data class Success(override val toolName: String, val value: JsonElement) : ToolResult {
-        override fun toString(): String = "$toolName: ${Json.encodeToString(JsonElement)}"
+        override fun toString(): String = "$toolName: ${Json.encodeToString(value)}"
     }
 
     /**
