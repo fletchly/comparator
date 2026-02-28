@@ -18,6 +18,8 @@
 
 package io.fletchly.comparator.model.message
 
+import kotlin.collections.emptyList
+
 /**
  * Represents a series of messages exchanged in a conversational system.
  *
@@ -27,8 +29,7 @@ package io.fletchly.comparator.model.message
  *
  * @property conversation The collection of messages that form the conversation.
  */
-class Conversation(messageList: List<Message>) {
-    private val conversation = ArrayDeque(messageList)
+data class Conversation(private val conversation: ArrayDeque<Message>) {
     val size get() = conversation.size
     val messages get() = conversation.toList()
 
@@ -39,8 +40,15 @@ class Conversation(messageList: List<Message>) {
     fun removeOldest() {
         conversation.removeFirst()
     }
-
-    companion object {
-        fun empty() = Conversation(emptyList())
-    }
 }
+
+/**
+ * Creates a `Conversation` instance from a variable number of `Message` objects.
+ * The provided messages are used to initialize the conversation's message list.
+ *
+ * @param messages A variable number of `Message` objects representing
+ *                 the initial set of messages in the conversation.
+ *                 These messages can be user-generated, AI responses, or tool outputs.
+ * @return A `Conversation` instance containing the provided messages.
+ */
+fun conversationOf(vararg messages: Message) = Conversation(ArrayDeque(messages.toList()))

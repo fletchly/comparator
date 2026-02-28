@@ -23,6 +23,7 @@ import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.ToolRegistry
@@ -55,7 +56,7 @@ class OllamaAIProviderTest {
     )
 
     private fun conversation(vararg messages: Message) =
-        Conversation(messages.toList())
+        conversationOf(*messages)
 
     private fun successResponse(content: String = "Hello!") = """
     {

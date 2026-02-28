@@ -20,6 +20,7 @@ package io.fletchly.comparator.adapter.persistence
 
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ContextPort
 import kotlinx.coroutines.sync.Mutex
@@ -47,7 +48,7 @@ class InMemoryContextStore(private val conversationMessageLimit: Int) : ContextP
      * @return The conversation associated with the specified user or an empty conversation if none exists.
      */
     override suspend fun get(user: User): Conversation = mutex.withLock {
-        context[user.uniqueId] ?: Conversation.empty()
+        context[user.uniqueId] ?: conversationOf()
     }
 
     /**
@@ -61,7 +62,7 @@ class InMemoryContextStore(private val conversationMessageLimit: Int) : ContextP
      * @param message The message to add to the user's conversation context.
      */
     override suspend fun append(user: User, message: Message): Unit = mutex.withLock {
-        val conversation = context.getOrPut(user.uniqueId) { Conversation.empty() }
+        val conversation = context.getOrPut(user.uniqueId) { conversationOf() }
         conversation.add(message)
         if (conversation.size >= conversationMessageLimit) {
             conversation.removeOldest()
