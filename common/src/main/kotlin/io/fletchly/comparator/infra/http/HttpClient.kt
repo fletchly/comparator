@@ -26,6 +26,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
+import io.ktor.client.HttpClient as KtorClient
 
 /**
  * A singleton object for initializing and managing a configured HttpClient instance using Ktor.
@@ -39,7 +40,7 @@ object HttpClient {
     private const val MAX_DELAY_MS = 10_000L  // 10 seconds
     private const val RANDOMIZATION_MS = 500L // 0.5 seconds
 
-    val Ktor = HttpClient(CIO) {
+    val defaultConfig: HttpClientConfig<*>.() -> Unit = {
         expectSuccess = false
         install(ContentNegotiation) {
             json(Json {
@@ -84,4 +85,6 @@ object HttpClient {
             }
         }
     }
+
+    val Ktor = KtorClient(CIO, defaultConfig)
 }

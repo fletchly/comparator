@@ -9,6 +9,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization)
     implementation(libs.bundles.ktor.client)
+    implementation("io.ktor:ktor-client-cio-jvm:3.4.0")
 
     testImplementation(kotlin("test"))
     testImplementation(libs.ktor.client.mock)
