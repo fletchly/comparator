@@ -11,7 +11,7 @@ package io.fletchly.comparator.model.message
  */
 @JvmInline
 value class Conversation(private val messages: ArrayDeque<Message>) {
-    fun size() = messages.size
+    val size get() = messages.size
 
     fun add(message: Message) {
         messages.add(message)

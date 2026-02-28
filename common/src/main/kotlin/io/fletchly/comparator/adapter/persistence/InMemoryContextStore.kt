@@ -45,7 +45,7 @@ class InMemoryContextStore(private val conversationMessageLimit: Int) : ContextP
     override suspend fun append(user: User, message: Message): Unit = mutex.withLock {
         val conversation = context.getOrPut(user.uniqueId) { Conversation.empty() }
         conversation.add(message)
-        if (conversation.size() >= conversationMessageLimit) {
+        if (conversation.size >= conversationMessageLimit) {
             conversation.removeOldest()
         }
     }
