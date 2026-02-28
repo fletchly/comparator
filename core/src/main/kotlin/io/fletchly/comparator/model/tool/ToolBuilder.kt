@@ -31,7 +31,7 @@ class ToolBuilder(private val name: String) {
         handler = fn
     }
 
-    fun build(): ToolDefinition {
+    fun build(): Tool {
         val fn = requireNotNull(handler) { "handler function must be provided" }
         require(fn.isSuspend) { "handler function must be a suspend function" }
         validateReturnType(fn.returnType)
@@ -95,13 +95,13 @@ class ToolBuilder(private val name: String) {
  *
  * This function initializes a [ToolBuilder] with the specified name, applies the given
  * configuration block to define the tool's metadata, parameters, and behavior, and then
- * builds and returns a [ToolDefinition] instance.
+ * builds and returns a [Tool] instance.
  *
  * @param name The unique name of the tool to be created.
  * @param block A configuration block that is applied to the [ToolBuilder] to define the tool's attributes and behavior.
- * @return A [ToolDefinition] instance representing the configured tool.
+ * @return A [Tool] instance representing the configured tool.
  */
-fun tool(name: String, block: ToolBuilder.() -> Unit): ToolDefinition =
+fun tool(name: String, block: ToolBuilder.() -> Unit): Tool =
     ToolBuilder(name).apply(block).build()
 
 /**

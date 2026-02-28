@@ -15,7 +15,7 @@ data class SerializableOutput(val value: String)
 
 @Suppress("RedundantSuspendModifier")
 class ToolBuilderTest {
-    private fun buildSimpleTool(): ToolDefinition = tool("simple") {
+    private fun buildSimpleTool(): Tool = tool("simple") {
         description = "A simple tool"
         executes(::simpleHandler)
     }

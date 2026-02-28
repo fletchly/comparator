@@ -21,7 +21,7 @@ object HttpClient {
     private const val MAX_DELAY_MS = 10_000L  // 10 seconds
     private const val RANDOMIZATION_MS = 500L // 0.5 seconds
 
-    val ktor = HttpClient(CIO) {
+    val Ktor = HttpClient(CIO) {
         expectSuccess = false
         install(ContentNegotiation) {
             json(Json {

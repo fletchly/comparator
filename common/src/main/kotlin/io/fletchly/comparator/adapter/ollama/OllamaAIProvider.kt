@@ -42,7 +42,7 @@ class OllamaAIProvider(
     private val log: LogPort,
     private val toolRegistry: ToolRegistry
 ) : AIPort {
-    private val client = HttpClient.ktor
+    private val client = HttpClient.Ktor
 
     override suspend fun generateResponse(
         systemPrompt: String,
@@ -60,7 +60,11 @@ class OllamaAIProvider(
         }.getOrElse { ex ->
             log.warn("[OllamaAIProvider] ${ex.stackTraceToString()}")
             return when (ex) {
-                is ClientRequestException -> MessageResult.Failure("Client error")
+                is ClientRequestException -> {
+                    if (ex.response.status == HttpStatusCode.Unauthorized)
+                        log.warn("Got 'unauthorized' response from Ollama server! Is your API key set?")
+                    MessageResult.Failure("Client error")
+                }
                 is ServerResponseException -> MessageResult.Failure("Server error")
                 is HttpRequestTimeoutException -> MessageResult.Failure("Request timed out")
                 is IOException -> MessageResult.Failure("Network error")
