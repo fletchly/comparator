@@ -11,9 +11,9 @@ import kotlinx.serialization.json.Json
 
 object HttpClient {
     private const val MAX_RETRIES = 4
-    private const val REQUEST_TIMEOUT_MS: Long = 30_000L   // 30 seconds
-    private const val CONNECT_TIMEOUT_MS: Long = 10_000L   // 10 seconds
-    private const val SOCKET_TIMEOUT_MS: Long = 30_000L    // 30 seconds
+    private const val REQUEST_TIMEOUT_MS = 30_000L   // 30 seconds
+    private const val CONNECT_TIMEOUT_MS = 10_000L   // 10 seconds
+    private const val SOCKET_TIMEOUT_MS = 30_000L    // 30 seconds
     private const val BASE_DELAY_MS = 1_000L // 1 second
     private const val MAX_DELAY_MS = 10_000L  // 10 seconds
     private const val RANDOMIZATION_MS = 500L // 0.5 seconds
