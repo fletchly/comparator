@@ -20,7 +20,7 @@ import io.fletchly.comparator.port.`in`.ToolRegistry
  * @param tools A list of `Tool` instances to be managed by the `ToolManager`.
  * @throws IllegalArgumentException if duplicate tool names are provided in the list.
  */
-class ToolManager(tools: List<Tool>): ToolRegistry {
+class ToolManager(tools: List<Tool>) : ToolRegistry {
     private val toolRegistry: Map<String, Tool>
 
     override val tools: List<Tool>

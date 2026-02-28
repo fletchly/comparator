@@ -2,11 +2,7 @@ package io.fletchly.comparator.core.model.tool
 
 import io.fletchly.comparator.exception.ToolDefinitionException
 import io.fletchly.comparator.exception.ToolException
-import io.fletchly.comparator.model.tool.Description
-import io.fletchly.comparator.model.tool.ToolDefinition
-import io.fletchly.comparator.model.tool.ToolParameter
-import io.fletchly.comparator.model.tool.ToolResult
-import io.fletchly.comparator.model.tool.tool
+import io.fletchly.comparator.model.tool.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject

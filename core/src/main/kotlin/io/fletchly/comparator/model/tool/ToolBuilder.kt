@@ -8,7 +8,6 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.serializer
 import java.lang.reflect.InvocationTargetException
-import kotlin.collections.get
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
@@ -62,7 +61,10 @@ class ToolBuilder(private val name: String) {
                     // Pass the serializer explicitly rather than letting Json infer it from the runtime
                     // type, as type inference loses information and fails for some class hierarchies
                     // serialization is guaranteed to succeed here by validateReturnType
-                    else -> Json.encodeToJsonElement(serializer(fn.returnType), result) // requires @Serializable on return type
+                    else -> Json.encodeToJsonElement(
+                        serializer(fn.returnType),
+                        result
+                    ) // requires @Serializable on return type
                 }
 
                 ToolResult.Success(name, json)

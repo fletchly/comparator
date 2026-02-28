@@ -1,7 +1,5 @@
 package io.fletchly.comparator.model.message
 
-import kotlinx.serialization.json.JsonObject
-
 /**
  * Represents a tool call within the system, encapsulating the name of the tool
  * to be executed and its associated arguments.
