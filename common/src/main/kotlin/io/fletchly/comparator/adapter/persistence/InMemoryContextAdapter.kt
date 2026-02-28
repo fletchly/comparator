@@ -1,4 +1,4 @@
-package io.fletchly.comparator.adapter.context
+package io.fletchly.comparator.adapter.persistence
 
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
