@@ -17,7 +17,7 @@ import java.util.UUID
  * @constructor Initializes the adapter with a specified message limit for each conversation.
  * @param conversationMessageLimit The maximum number of messages allowed per conversation. When this limit is exceeded, the oldest messages are removed.
  */
-class InMemoryContextAdapter(private val conversationMessageLimit: Int) : ContextPort {
+class InMemoryContextStore(private val conversationMessageLimit: Int) : ContextPort {
     private val mutex = Mutex()
     private val context = HashMap<UUID, Conversation>()
 
