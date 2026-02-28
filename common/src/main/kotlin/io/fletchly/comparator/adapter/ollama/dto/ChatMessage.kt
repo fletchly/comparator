@@ -29,6 +29,7 @@ import kotlinx.serialization.Serializable
  * @property content message text content
  * @property role author of the message.
  */
+@Serializable
 sealed interface ChatMessage {
     val content: String
     val role: String
