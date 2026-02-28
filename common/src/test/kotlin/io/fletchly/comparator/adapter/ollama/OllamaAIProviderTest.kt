@@ -22,6 +22,7 @@ import io.fletchly.comparator.infra.http.HttpClient
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
+import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.ToolRegistry
@@ -292,5 +293,90 @@ class OllamaAIProviderTest {
         provider.generateResponse("prompt", conversation())
 
         assertFalse(capturedBody!!.contains("\"tools\":[]"))
+    }
+
+    @Test
+    fun `parses tool calls from response`() = runTest {
+        val provider = createProvider {
+            respond(
+                content = """
+                {
+                    "model": "llama3",
+                    "created_at": "2024-01-01T00:00:00Z",
+                    "message": {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                            {
+                                "function": {
+                                    "name": "get_weather",
+                                    "arguments": {
+                                        "location": "London",
+                                        "unit": "celsius"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            """.trimIndent(),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+
+        val result = provider.generateResponse("prompt", conversation())
+
+        assertIs<MessageResult.Success<Message.Assistant>>(result)
+        val toolCalls = result.message.toolCalls
+        assertNotNull(toolCalls)
+        assertEquals(1, toolCalls.size)
+        assertEquals("get_weather", toolCalls[0].name)
+        assertEquals("London", toolCalls[0].arguments["location"])
+        assertEquals("celsius", toolCalls[0].arguments["unit"])
+    }
+
+    @Test
+    fun `returns null tool calls when response has none`() = runTest {
+        val provider = createProvider {
+            respond(
+                successResponse(),
+                HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+
+        val result = provider.generateResponse("prompt", conversation())
+
+        assertIs<MessageResult.Success<Message.Assistant>>(result)
+        assertNull(result.message.toolCalls)
+    }
+
+    @Test
+    fun `sends tool messages from conversation correctly`() = runTest {
+        var capturedBody: String? = null
+        val provider = createProvider { request ->
+            capturedBody = request.body.toByteArray().decodeToString()
+            respond(
+                successResponse(),
+                HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+
+        provider.generateResponse(
+            systemPrompt = "prompt",
+            conversation = conversation(
+                Message.Assistant(
+                    content = "",
+                    toolCalls = listOf(ToolCall("get_weather", mapOf("location" to "London")))
+                ),
+                Message.Tool("The weather in London is 15°C")
+            )
+        )
+
+        assertNotNull(capturedBody)
+        assertTrue(capturedBody.contains("get_weather"))
+        assertTrue(capturedBody.contains("The weather in London is 15°C"))
     }
 }
