@@ -9,6 +9,9 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 
+/**
+ * A singleton object for initializing and managing a configured HttpClient instance using Ktor.
+ */
 object HttpClient {
     private const val MAX_RETRIES = 4
     private const val REQUEST_TIMEOUT_MS = 30_000L   // 30 seconds
