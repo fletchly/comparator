@@ -31,6 +31,7 @@ import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.util.JsonProperty
 import io.fletchly.comparator.util.JsonSchema
+import io.fletchly.comparator.util.OllamaConfig
 import io.fletchly.comparator.util.toJsonObject
 import io.fletchly.comparator.util.toMap
 import io.ktor.client.call.*
@@ -55,9 +56,7 @@ import kotlinx.io.IOException
  * @param toolRegistry An implementation of [ToolRegistry] to manage available tools for tool-based message handling.
  */
 class OllamaAIProvider(
-    private val baseUrl: Url,
-    private val apiKey: String?,
-    private val model: String,
+    private val config: OllamaConfig,
     private val log: LogPort,
     private val toolRegistry: ToolRegistry,
     private val client: KtorClient = HttpClient.Ktor
@@ -67,11 +66,11 @@ class OllamaAIProvider(
         conversation: Conversation
     ): MessageResult<Message.Assistant> {
         val chatRequest = buildChatRequest(systemPrompt, conversation)
-        val url = URLBuilder(baseUrl).apply { path("api", "chat") }.build()
+        val url = URLBuilder(config.baseUrl).apply { path("api", "chat") }.build()
 
         val chatResponse: ChatResponse = runCatching {
             client.post(url) {
-                if (!apiKey.isNullOrBlank()) bearerAuth(apiKey)
+                if (!config.apiKey.isNullOrBlank()) bearerAuth(config.apiKey)
                 contentType(ContentType.Application.Json)
                 setBody(chatRequest)
             }.body<ChatResponse>()
@@ -115,7 +114,7 @@ class OllamaAIProvider(
         )
 
         return ChatRequest(
-            model,
+            config.model,
             messages,
             tools,
             options

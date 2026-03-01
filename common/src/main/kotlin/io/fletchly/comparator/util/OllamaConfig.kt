@@ -16,7 +16,19 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.tool
+package io.fletchly.comparator.util
 
-@JvmInline
-value class ToolList(val tools: List<Tool>)
+import io.ktor.http.Url
+
+/**
+ * Configuration settings required for integrating with the Ollama API.
+ *
+ * @property baseUrl The base URL for the Ollama API.
+ * @property apiKey Optional API key for authenticating requests to the Ollama system.
+ * @property model The identifier of the model to be used for generating responses.
+ */
+data class OllamaConfig(
+    val baseUrl: Url,
+    val apiKey: String?,
+    val model: String
+)
