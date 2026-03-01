@@ -28,7 +28,9 @@ import io.ktor.http.Url
  * @property model The identifier of the model to be used for generating responses.
  */
 data class OllamaOptions(
-    val baseUrl: Url,
+    private val baseUrlString: String,
     val apiKey: String?,
     val model: String
-)
+) {
+    val baseUrl: Url = Url(baseUrlString)
+}
