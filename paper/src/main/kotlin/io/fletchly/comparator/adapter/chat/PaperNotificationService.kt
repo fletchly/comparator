@@ -30,6 +30,15 @@ import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * A service implementation of the `NotificationPort` for sending user notifications
+ * using the Bukkit API. This service facilitates player-specific notifications, such
+ * as sending informational or error messages, with integration to the Bukkit server environment.
+ *
+ * @constructor Initializes the `PaperNotificationService` with a plugin scheduler and plugin instance.
+ * @param pluginScheduler The scheduler used for managing tasks on the server's main thread.
+ * @param plugin The plugin instance providing the server context and resources.
+ */
 class PaperNotificationService(
     private val pluginScheduler: PluginScheduler,
     plugin: JavaPlugin
