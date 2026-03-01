@@ -18,12 +18,16 @@
 
 package io.fletchly.comparator.manager
 
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
+import kotlinx.coroutines.sync.Mutex
+import java.util.concurrent.TimeUnit
 
 /**
  * Manages conversations between users and an AI-based assistant.
@@ -46,12 +50,26 @@ class ConversationManager(
     private val chat: ChatPort,
     private val notification: NotificationPort
 ) : MessageSender {
+    private val userLocks: Cache<User, Mutex> = CacheBuilder.newBuilder()
+        .expireAfterAccess(10, TimeUnit.MINUTES)
+        .build()
 
     override suspend fun fromUser(
         message: Message.User
     ) {
-        startConversation(message)
-        AssistantLoop(message.sender).run()
+        val mutex = userLocks.get(message.sender) { Mutex() }
+
+        if (!mutex.tryLock()) {
+            chat.message(message.sender, Message.Assistant("A response is already in progress, please wait."))
+            return
+        }
+
+        try {
+            startConversation(message)
+            AssistantLoop(message.sender).run()
+        } finally {
+            mutex.unlock()
+        }
     }
 
     private suspend fun startConversation(message: Message.User) {
