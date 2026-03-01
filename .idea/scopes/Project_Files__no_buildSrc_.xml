@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Project Files (no buildSrc)" pattern="(file[comparator.*]:*//*||file[comparator.*]:*/)&amp;&amp;!file[comparator.buildSrc*]:*//*" />
+</component>
