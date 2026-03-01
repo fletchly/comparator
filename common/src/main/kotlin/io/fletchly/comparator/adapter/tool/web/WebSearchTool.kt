@@ -20,6 +20,7 @@ package io.fletchly.comparator.adapter.tool.web
 
 import io.fletchly.comparator.adapter.tool.web.dto.WebSearchRequest
 import io.fletchly.comparator.exception.ToolException
+import io.fletchly.comparator.infra.http.HttpClient
 import io.fletchly.comparator.model.options.WebSearchOptions
 import io.fletchly.comparator.model.tool.Description
 import io.fletchly.comparator.model.tool.ToolDefinition
@@ -31,6 +32,8 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.JsonElement
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
 class WebSearchTool(
     private val config: WebSearchOptions,
@@ -64,6 +67,10 @@ class WebSearchTool(
     }
 
     companion object {
+        val module = module {
+            single { WebSearchTool(get(), get(), HttpClient.Ktor) } bind ToolDefinition::class
+        }
+
         private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"
     }
 }
