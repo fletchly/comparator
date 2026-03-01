@@ -22,6 +22,7 @@ import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.util.ContextConfig
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.joinAll
@@ -40,7 +41,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `returns empty conversation for unknown user`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
 
         val result = store.get(user1)
 
@@ -49,7 +50,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `returns correct conversation for user`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         val message = Message.User("Hello", user1)
         store.append(user1, message)
 
@@ -60,7 +61,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `returns independent conversations per user`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         store.append(user1, Message.User("Hello from user1", user1))
         store.append(user2, Message.User("Hello from user2", user1))
 
@@ -74,7 +75,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `appends multiple messages in order`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         val messages = listOf(
             Message.User("First", user1),
             Message.Assistant("Second", null),
@@ -88,7 +89,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `removes oldest message when limit is reached`() = runTest {
-        val store = InMemoryContextStore(3)
+        val store = InMemoryContextStore(ContextConfig(3))
         store.append(user1, Message.User("First", user1))
         store.append(user1, Message.User("Second", user1))
         store.append(user1, Message.User("Third", user1))
@@ -101,7 +102,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `does not remove messages when under limit`() = runTest {
-        val store = InMemoryContextStore(5)
+        val store = InMemoryContextStore(ContextConfig(5))
         store.append(user1, Message.User("First", user1))
         store.append(user1, Message.User("Second", user1))
 
@@ -110,7 +111,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `clear removes conversation for specified user`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         store.append(user1, Message.User("Hello", user1))
 
         store.clear(user1)
@@ -120,7 +121,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `clear does not affect other users`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         store.append(user1, Message.User("Hello from user1", user1))
         store.append(user2, Message.User("Hello from user2", user2))
 
@@ -132,14 +133,14 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `clear on unknown user does not throw`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
 
         store.clear(user1) // should be a no-op
     }
 
     @Test
     fun `clearAll removes all conversations`() = runTest {
-        val store = InMemoryContextStore(10)
+        val store = InMemoryContextStore(ContextConfig(10))
         store.append(user1, Message.User("Hello from user1", user1))
         store.append(user2, Message.User("Hello from user2", user2))
 
@@ -151,7 +152,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `handles concurrent appends without data loss`() = runTest {
-        val store = InMemoryContextStore(1000)
+        val store = InMemoryContextStore(ContextConfig(1000))
         val messageCount = 100
 
         val jobs = (1..messageCount).map { i ->
@@ -165,7 +166,7 @@ class InMemoryContextStoreTest {
 
     @Test
     fun `handles concurrent access from multiple users`() = runTest {
-        val store = InMemoryContextStore(1000)
+        val store = InMemoryContextStore(ContextConfig(1000))
 
         val jobs = listOf(
             launch { repeat(50) { store.append(user1, Message.User("user1 message", user1)) } },
