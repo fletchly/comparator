@@ -24,6 +24,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.util.ToolList
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.out.LogPort
 
 /**
  * Manages a collection of tools and facilitates their execution based on tool calls.
@@ -39,7 +40,10 @@ import io.fletchly.comparator.port.`in`.ToolRegistry
  * @param toolList A list of `Tool` instances to be managed by the `ToolManager`.
  * @throws IllegalArgumentException if duplicate tool names are provided in the list.
  */
-class ToolManager(toolList: ToolList) : ToolRegistry {
+class ToolManager(
+    toolList: ToolList,
+    val log: LogPort
+    ) : ToolRegistry {
     private val toolRegistry: Map<String, Tool>
 
     override val tools: List<Tool>
@@ -55,7 +59,10 @@ class ToolManager(toolList: ToolList) : ToolRegistry {
 
     suspend fun execute(toolCall: ToolCall): Message.Tool =
         when (val result = toolRegistry[toolCall.name]?.execute(toolCall.arguments)) {
-            is ToolResult -> Message.Tool(result.toString())
+            is ToolResult -> {
+                log.info("Executed: ${result.toString().take(20)}", result.toolName)
+                Message.Tool(result.toString())
+            }
             null -> Message.Tool("tool not found: ${toolCall.name}")
         }
 }

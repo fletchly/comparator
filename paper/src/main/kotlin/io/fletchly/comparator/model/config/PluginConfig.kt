@@ -74,7 +74,11 @@ data class OllamaConfig(
 data class ToolConfig(
     @Setting("web-search")
     @Comment("Web search tool options")
-    val webSearch: WebSearchConfig = WebSearchConfig()
+    val webSearch: WebSearchConfig = WebSearchConfig(),
+
+    @Setting("game-version")
+    @Comment("Game version tool options")
+    val gameVersion: GameVersionConfig = GameVersionConfig()
 )
 
 @ConfigSerializable
@@ -86,6 +90,12 @@ data class WebSearchConfig(
     @Comment("Ollama Cloud API key. Will use ai-provider.ollama.api-key if left blank")
     val apiKey: String? = ""
 ) : ToolImplementationConfig
+
+@ConfigSerializable
+data class GameVersionConfig(
+    @Comment("Enable game version check")
+    override val enabled: Boolean = true
+): ToolImplementationConfig
 
 interface ToolImplementationConfig {
     val enabled: Boolean

@@ -44,8 +44,6 @@ class WebSearchTool(
     private val log: LogPort,
     private val client: HttpClient
 ): ToolDefinition {
-
-
     private suspend fun doWebSearch(
         @Description("Web search query") query: String
     ): JsonElement {
