@@ -16,19 +16,20 @@
  * limitations under the License.
  */
 
-plugins {
-    id("buildsrc.convention.kotlin-jvm")
-    id("buildsrc.convention.dokka-convention")
-    alias(libs.plugins.kotlinPluginSerialization)
-}
+package io.fletchly.comparator.di
 
-dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
+import io.fletchly.comparator.manager.ContextManager
+import io.fletchly.comparator.manager.ConversationManager
+import io.fletchly.comparator.manager.ToolManager
+import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.MessageSender
+import io.fletchly.comparator.port.`in`.ToolRegistry
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
+val coreModule = module {
+    singleOf(::ContextManager) bind ContextClearer::class
+    singleOf(::ConversationManager) bind MessageSender::class
+    singleOf(::ToolManager) bind ToolRegistry::class
 }
