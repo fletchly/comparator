@@ -40,7 +40,7 @@ import io.fletchly.comparator.port.out.*
  */
 class ConversationManager(
     private val context: ContextPort,
-    private val system: SystemInfoPort,
+    private val system: SystemConfigPort,
     private val ai: AIPort,
     private val tool: ToolManager,
     private val chat: ChatPort,
@@ -63,7 +63,7 @@ class ConversationManager(
         tailrec suspend fun run() {
             val conversation = context.get(target)
 
-            when (val result = ai.generateResponse(system.getPrompt(), conversation)) {
+            when (val result = ai.generateResponse(system.prompt, conversation)) {
                 is MessageResult.Failure -> {
                     notification.error(target, result.error)
                 }

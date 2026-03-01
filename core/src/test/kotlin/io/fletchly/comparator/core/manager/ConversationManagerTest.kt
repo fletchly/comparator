@@ -31,7 +31,7 @@ import kotlin.test.Test
 
 class ConversationManagerTest {
     private val context = mockk<ContextPort>(relaxed = true)
-    private val system = mockk<SystemInfoPort>(relaxed = true)
+    private val system = mockk<SystemConfigPort>(relaxed = true)
     private val ai = mockk<AIPort>(relaxed = true)
     private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)

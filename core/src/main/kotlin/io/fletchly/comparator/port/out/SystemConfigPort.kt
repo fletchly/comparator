@@ -28,5 +28,5 @@ interface SystemConfigPort {
      *
      * @return A string representing the system-level prompt.
      */
-    suspend fun getPrompt(): String
+    val prompt: String
 }
