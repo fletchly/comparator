@@ -30,8 +30,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val coreModule = module {
-    single { ToolList(getAll()) }
+    singleOf(::ToolManager) bind ToolRegistry::class
     singleOf(::ContextManager) bind ContextClearer::class
     singleOf(::ConversationManager) bind MessageSender::class
-    singleOf(::ToolManager) bind ToolRegistry::class
 }

@@ -25,18 +25,19 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import java.time.LocalDate
 
 class GameVersionTool(
     private val plugin: JavaPlugin,
     private val pluginScheduler: PluginScheduler
 ): ToolDefinition {
-    private suspend fun getGameVersion() = pluginScheduler.runTask {
-        mapOf("version" to plugin.server.version)
+    suspend fun getGameVersion() = pluginScheduler.runTask {
+        mapOf("version" to plugin.server.version, "date" to LocalDate.now().toString())
     }
 
     override val definition = tool("game_version") {
-        description = "Get the version of the current server"
-        executes(GameVersionTool::getGameVersion)
+        description = "Get the version of the current server and the current date. Used to ensure up-to-date information."
+        executes(this@GameVersionTool::getGameVersion)
     }
 
     companion object {

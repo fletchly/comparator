@@ -19,6 +19,7 @@
 package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.util.ToolList
 
 /**
  * Defines a registry for managing a collection of tools within the system.
@@ -32,4 +33,5 @@ import io.fletchly.comparator.model.tool.Tool
  */
 interface ToolRegistry {
     val tools: List<Tool>
+    fun register(toolList: ToolList)
 }

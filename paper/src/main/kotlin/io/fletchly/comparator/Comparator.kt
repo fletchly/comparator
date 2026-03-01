@@ -28,6 +28,8 @@ import io.fletchly.comparator.infra.scheduler.PluginScheduler
 import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.util.ToolList
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
@@ -104,6 +106,7 @@ class Comparator : JavaPlugin() {
 
     private fun registerTools() {
         val toolConfig = koin.get<PluginConfigService>().config.tool
+        val toolRegistry = koin.get<ToolRegistry>()
 
         loadKoinModules(
             buildList {
@@ -113,6 +116,7 @@ class Comparator : JavaPlugin() {
         )
 
         val tools = koin.getAll<ToolDefinition>()
+        toolRegistry.register(ToolList(tools.map { it.definition }))
 
         logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
     }

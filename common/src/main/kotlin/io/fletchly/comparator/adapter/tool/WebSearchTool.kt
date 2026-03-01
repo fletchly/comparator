@@ -44,7 +44,7 @@ class WebSearchTool(
     private val log: LogPort,
     private val client: HttpClient
 ): ToolDefinition {
-    private suspend fun doWebSearch(
+    suspend fun doWebSearch(
         @Description("Web search query") query: String
     ): JsonElement {
         val webSearchRequest = WebSearchRequest(query)
@@ -65,7 +65,7 @@ class WebSearchTool(
 
     override val definition = tool("web_search") {
         description = "Search the web for answers"
-        executes(WebSearchTool::doWebSearch)
+        executes(this@WebSearchTool::doWebSearch)
     }
 
     companion object {
