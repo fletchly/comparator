@@ -44,6 +44,8 @@ class Comparator : JavaPlugin() {
         registerCommands()
         registerEventListeners()
         registerTools()
+
+        logger.info { "Successfully enabled Comparator ${pluginMeta.version}. Happy chatting! \uD83D\uDCA1" }
     }
 
     override fun onDisable() {
