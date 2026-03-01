@@ -29,13 +29,16 @@ import kotlinx.coroutines.sync.withLock
 import java.util.*
 
 /**
- * A thread-safe implementation of the `ContextPort` interface using a `HashMap` to store user-specific conversational contexts.
+ * An implementation of `ContextPort` that stores conversational contexts for users in memory.
  *
- * This class provides functionality to manage and manipulate conversations for individual users, including retrieving,
- * appending messages, and clearing contexts, with each operation being synchronized to ensure thread safety.
+ * This class provides methods to manage user-specific conversational states, allowing for
+ * retrieval, modification, and deletion of conversations. It uses an in-memory
+ * `HashMap` to store the contexts, identified by user UUIDs, and ensures thread safety
+ * via a `Mutex`.
  *
- * @constructor Initializes the adapter with a specified message limit for each conversation.
- * @param conversationMessageLimit The maximum number of messages allowed per conversation. When this limit is exceeded, the oldest messages are removed.
+ * @constructor Initializes the `InMemoryContextStore` with the provided configuration options.
+ * @param config Configuration options that determine operational parameters such as the
+ *               maximum allowed messages per conversation.
  */
 class InMemoryContextStore(private val config: ContextOptions) : ContextPort {
     private val mutex = Mutex()

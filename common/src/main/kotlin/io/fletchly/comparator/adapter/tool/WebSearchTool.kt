@@ -39,11 +39,29 @@ import kotlinx.serialization.json.JsonElement
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
+/**
+ * A tool for performing web searches using predefined configurations and HTTP client requests.
+ *
+ * This class implements the [ToolDefinition] interface, enabling it to be registered and used
+ * as a tool within a larger system. It provides functionality to perform web searches based on
+ * user-provided queries and returns results in JSON format.
+ *
+ * @param config The configuration settings required for authenticating and interacting with the web search service.
+ * @param log A logging interface for recording informational and warning messages.
+ * @param client The HTTP client used to send requests to the web search service.
+ */
 class WebSearchTool(
     private val config: WebSearchOptions,
     private val log: LogPort,
     private val client: HttpClient
 ): ToolDefinition {
+    /**
+     * Executes a web search based on the provided query string and returns the response as a JSON element.
+     *
+     * @param query The search query to be used for the web search.
+     * @return A [JsonElement] representing the response from the web search service.
+     * @throws ToolException If an error occurs while communicating with the web search client.
+     */
     suspend fun doWebSearch(
         @Description("Web search query") query: String
     ): JsonElement {

@@ -27,6 +27,18 @@ import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.reflect.KClass
 
+/**
+ * A configuration loader implementation that facilitates reading, migrating, and saving
+ * configuration data in the HOCON (Human-Optimized Config Object Notation) format.
+ *
+ * This class integrates with the Configurate library to provide typesafe operations for managing
+ * configuration files. It supports schema migrations through versions and allows client-defined
+ * behavior for handling migration and save failures.
+ *
+ * @param C The type of the configuration object being managed, constrained to non-nullable types.
+ * @property path The file path to the configuration file.
+ * @property type The KClass representation of the configuration type, used for deserialization.
+ */
 class HoconConfigLoader<C : Any>(
     val path: Path, private val type: KClass<C>
 ) : ConfigLoader<C, ConfigurationTransformation.Versioned> {

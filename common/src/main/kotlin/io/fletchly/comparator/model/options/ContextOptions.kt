@@ -18,6 +18,12 @@
 
 package io.fletchly.comparator.model.options
 
+/**
+ * Configuration options for managing conversational contexts within the application.
+ *
+ * @property conversationMessageLimit The maximum number of messages allowed in a single conversation context.
+ *                                    When the limit is reached, the oldest messages are removed to accommodate new ones.
+ */
 data class ContextOptions(
     val conversationMessageLimit: Int
 )

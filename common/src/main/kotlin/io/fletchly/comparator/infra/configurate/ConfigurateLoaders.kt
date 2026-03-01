@@ -24,7 +24,22 @@ import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.util.MapFactories
 import java.nio.file.Path
 
+/**
+ * Utility object that provides preconfigured loader builders for the Configurate framework.
+ */
 object ConfigurateLoaders {
+    /**
+     * A lambda function for creating a preconfigured instance of [HoconConfigurationLoader].
+     *
+     * This loader is initialized with:
+     * - Header preservation to retain comments from the configuration file.
+     * - Pretty-printing enabled with an indent of 2 spaces.
+     * - Comments emitted during save operations.
+     * - A natural key ordering for maps.
+     * - Annotated object serializers registered via [objectMapperFactory].
+     *
+     * The configuration file path is provided as the input parameter.
+     */
     val HOCON: (Path) -> HoconConfigurationLoader = { path ->
         HoconConfigurationLoader.builder()
             .headerMode(HeaderMode.PRESERVE)
