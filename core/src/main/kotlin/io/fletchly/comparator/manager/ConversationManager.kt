@@ -56,7 +56,7 @@ class ConversationManager(
 
     private suspend fun startConversation(message: Message.User) {
         context.append(message.sender, message)
-        chat.user(message.sender, message)
+        chat.message(message.sender, message)
     }
 
     private inner class AssistantLoop(private val target: User) {
@@ -70,7 +70,7 @@ class ConversationManager(
 
                 is MessageResult.Success<Message.Assistant> -> {
                     val response = result.message
-                    chat.assistant(target, response)
+                    chat.message(target, response)
                     context.append(target, response)
 
                     val toolCalls = response.toolCalls

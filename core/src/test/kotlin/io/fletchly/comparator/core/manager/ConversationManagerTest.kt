@@ -55,7 +55,7 @@ class ConversationManagerTest {
     fun `fromUser sends user message to chat`() = runTest {
         stubAiSuccess(toolCalls = null)
         manager.fromUser(message)
-        coVerify { chat.user(sender, message) }
+        coVerify { chat.message(sender, message) }
     }
 
     @Test
@@ -88,7 +88,7 @@ class ConversationManagerTest {
     fun `sends assistant response to chat`() = runTest {
         val response = stubAiSuccess(toolCalls = null)
         manager.fromUser(message)
-        coVerify { chat.assistant(sender, response) }
+        coVerify { chat.message(sender, response) }
     }
 
     @Test

@@ -1,0 +1,100 @@
+/*
+ * This file is part of comparator, licensed under the Apache License 2.0
+ *
+ * Copyright (c) 2026 fletchly <https://github.com/fletchly>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.fletchly.comparator.adapter.chat
+
+import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.model.BukkitPlayerUser
+import io.fletchly.comparator.model.ConsoleUser
+import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.port.out.ChatPort
+import io.papermc.paper.registry.keys.SoundEventKeys
+import net.kyori.adventure.sound.Sound
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.plugin.java.JavaPlugin
+
+/**
+ * Handles the display of chat messages to users using a Bukkit-based server.
+ *
+ * This class bridges the `ChatPort` interface with a server-driven implementation,
+ * allowing customized rendering of messages from users, assistants, or tools.
+ * It uses the provided `PluginScheduler` to ensure tasks are executed on the appropriate
+ * server thread and manages message formatting for different user types.
+ *
+ * @constructor Creates an instance of `PaperChatService`.
+ * @param pluginScheduler A scheduler used to execute tasks on the server thread.
+ * @param plugin The plugin instance associated with the chat service.
+ */
+class PaperChatService(
+    private val pluginScheduler: PluginScheduler,
+    plugin: JavaPlugin
+) : ChatPort {
+    private val server = plugin.server
+
+    override suspend fun message(
+        target: User,
+        message: Message
+    ) = pluginScheduler.runTask {
+        when (message) {
+            is Message.User -> target.sendMessage(userMessage(message))
+            is Message.Assistant -> target.sendMessage(assistantMessage(message))
+            is Message.Tool -> error("Tool messages should not be directly displayed in chat")
+        }
+    }
+
+    private fun User.sendMessage(message: Component) {
+        if (!this.isOnline) return
+        when (this) {
+            is BukkitPlayerUser -> {
+                this.player.playSound(RESPONSE_SOUND)
+                this.player.sendMessage(message)
+            }
+
+            is ConsoleUser -> server.consoleSender.sendMessage(message)
+        }
+    }
+
+    private fun userMessage(message: Message.User) =
+        PLAYER_PREFIX
+            .append { text(message.sender.displayName, NamedTextColor.WHITE) }
+            .append { ARROW }
+            .append { text(message.content, NamedTextColor.GRAY) }
+
+    private fun assistantMessage(message: Message.Assistant) =
+        AGENT_PREFIX
+            .append { AGENT_NAME }
+            .append { ARROW }
+            .append { text(message.content, NamedTextColor.WHITE) }
+
+    private companion object {
+        val ARROW = text(" → ")
+        val PLAYER_PREFIX = text("\uD83D\uDCA1 ", NamedTextColor.AQUA) // 💡
+        val AGENT_PREFIX = text("\uD83D\uDC64 ", NamedTextColor.YELLOW) // 👤
+        val AGENT_NAME = text("Comparator", NamedTextColor.GREEN)
+
+        val RESPONSE_SOUND = Sound.sound(
+            SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
+            Sound.Source.MASTER,
+            1f,
+            1f,
+        )
+    }
+}

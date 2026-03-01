@@ -49,19 +49,17 @@ class PaperNotificationService(
     override suspend fun info(user: User, message: String) =
         pluginScheduler.runTask { user.sendMessage(infoMessage(message)) }
 
-    override suspend fun error(user: User, message: String) = pluginScheduler.runTask {
-        user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) }
-    }
+    override suspend fun error(user: User, message: String) =
+        pluginScheduler.runTask { user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
 
     private fun User.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
         if (!this.isOnline) return
         when (this) {
             is BukkitPlayerUser -> {
                 onPlayer?.invoke(this.player)
-                this.player.sendMessage { message }
+                this.player.sendMessage(message)
             }
-
-            is ConsoleUser -> server.consoleSender.sendMessage { message }
+            is ConsoleUser -> server.consoleSender.sendMessage(message)
         }
     }
 
