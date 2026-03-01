@@ -25,7 +25,13 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core"))
+    implementation(project(":common"))
+
+    implementation(libs.kotlinx.coroutines)
+
     paperweight.paperDevBundle(libs.versions.paper)
+
 }
 
 tasks {
