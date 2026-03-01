@@ -30,17 +30,19 @@ import kotlinx.coroutines.sync.Mutex
 import java.util.concurrent.TimeUnit
 
 /**
- * Manages conversations between users and an AI-based assistant.
+ * Manages user conversations and ensures efficient response generation while handling concurrent requests.
  *
- * The class orchestrates the flow of messages and interactions, handling user inputs,
- * generating assistant responses, and managing tool executions within the conversation context.
+ * The `ConversationManager` coordinates interactions between various components involved in a conversational system.
+ * It manages user-specific contexts, generates AI responses, and invokes tools as necessary to fulfill user queries.
  *
- * @property context Provides methods for retrieving and appending conversation data.
- * @property system Supplies the system prompt required for generating assistant responses.
- * @property ai Generates AI-driven assistant responses based on the current context and system prompt.
- * @property tool Executes specific tool calls associated with an assistant response.
- * @property chat Manages communication with users and the assistant during conversations.
- * @property notification Handles notifications for errors or informational messages during conversation processing.
+ * @constructor Instantiates a new `ConversationManager` with the specified dependencies.
+ *
+ * @param context The system for managing user-specific conversational contexts.
+ * @param system The configuration providing system-level prompts and behavior.
+ * @param ai The AI response generation engine.
+ * @param tool The manager responsible for executing tool invocations.
+ * @param chat The interface for sending messages to users.
+ * @param notification The component for sending notifications to users.
  */
 class ConversationManager(
     private val context: ContextPort,

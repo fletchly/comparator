@@ -18,8 +18,6 @@
 
 package io.fletchly.comparator.model.message
 
-import kotlin.collections.emptyList
-
 /**
  * Represents a series of messages exchanged in a conversational system.
  *

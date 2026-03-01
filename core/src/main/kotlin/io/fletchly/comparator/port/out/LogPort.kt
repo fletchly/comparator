@@ -18,7 +18,23 @@
 
 package io.fletchly.comparator.port.out
 
+/**
+ * Provides methods for logging informational and warning messages within the system.
+ */
 interface LogPort {
+    /**
+     * Logs an informational message, optionally associated with a specific source.
+     *
+     * @param message The informational message to be logged.
+     * @param source The source of the message, which can be used to categorize or identify the origin of the log entry. Defaults to null if not specified.
+     */
     fun info(message: String, source: String? = null)
+
+    /**
+     * Logs a warning message, optionally associated with a specific source.
+     *
+     * @param message The warning message to be logged.
+     * @param source The source of the warning, which can be used to categorize or identify the origin of the log entry. Defaults to null if not specified.
+     */
     fun warn(message: String, source: String? = null)
 }

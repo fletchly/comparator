@@ -25,11 +25,10 @@ import io.fletchly.comparator.adapter.tool.GameVersionTool
 import io.fletchly.comparator.adapter.tool.WebSearchTool
 import io.fletchly.comparator.di.*
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
-import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolRegistry
-import io.fletchly.comparator.util.ToolList
+import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking

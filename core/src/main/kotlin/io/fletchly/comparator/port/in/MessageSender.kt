@@ -31,11 +31,6 @@ interface MessageSender {
     /**
      * Handles a message sent by a user within the conversational system.
      *
-     * This method is responsible for processing user-generated messages
-     * and incorporating them into the conversation flow. The implementation
-     * may include steps such as validating the message content, updating
-     * relevant context, or triggering a system response.
-     *
      * @param message The user-generated message to be processed. The message
      *                includes its content and the sender's information.
      */

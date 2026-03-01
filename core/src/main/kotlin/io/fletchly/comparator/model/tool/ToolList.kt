@@ -16,6 +16,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.exception
+package io.fletchly.comparator.model.tool
 
-class ConfigurationException(override val message: String, override val cause: Throwable? = null): Exception()
+/**
+ * Represents a collection of tools, encapsulating a list of [Tool] instances.
+ *
+ * @property tools The list of [Tool] objects contained within this collection.
+ */
+@JvmInline
+value class ToolList(val tools: List<Tool>)

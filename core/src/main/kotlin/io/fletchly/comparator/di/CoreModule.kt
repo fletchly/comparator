@@ -24,7 +24,6 @@ import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.`in`.ToolRegistry
-import io.fletchly.comparator.util.ToolList
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

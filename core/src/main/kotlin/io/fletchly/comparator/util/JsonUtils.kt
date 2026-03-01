@@ -21,10 +21,22 @@ package io.fletchly.comparator.util
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
+/**
+ * Converts this map to a JSON object, with each key-value pair being
+ * transformed into a corresponding JSON representation. The map values
+ * are recursively converted to JSON elements using the `toJsonElement` function.
+ *
+ * @return A [JsonObject] representing the serialized structure of this map.
+ */
 fun Map<String, Any>.toJsonObject(): JsonObject {
     return JsonObject(mapValues { (_, value) -> value.toJsonElement() })
 }
 
+/**
+ * Converts this object to a [JsonElement].
+ *
+ * @return A [JsonElement] representation of this object.
+ */
 fun Any?.toJsonElement(): JsonElement = when (this) {
     is Boolean -> JsonPrimitive(this)
     is Number -> JsonPrimitive(this)

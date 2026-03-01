@@ -19,7 +19,7 @@
 package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.util.ToolList
+import io.fletchly.comparator.model.tool.ToolList
 
 /**
  * Defines a registry for managing a collection of tools within the system.

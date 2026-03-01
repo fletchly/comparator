@@ -24,21 +24,18 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.util.ToolList
+import io.fletchly.comparator.model.tool.ToolList
 
 /**
- * Manages a collection of tools and facilitates their execution based on tool calls.
+ * Manages the registration and execution of tools within a system.
  *
- * The `ToolManager` class is responsible for handling a set of tools, ensuring that
- * each tool has a unique name within the collection. It provides functionality to
- * execute a tool based on a given `ToolCall` and return the result wrapped as a
- * `Message.Tool`. If the tool specified in the `ToolCall` is not found, an appropriate
- * message is returned.
+ * The `ToolManager` class provides functionality to manage a collection of tools,
+ * enabling registration, retrieval, and execution of tools. It implements the
+ * `ToolRegistry` interface and acts as the core component for handling tool-based
+ * operations.
  *
- * @constructor Initializes the `ToolManager` with a list of tools.
- *              Ensures that all tools have unique names during the initialization.
- * @param toolList A list of `Tool` instances to be managed by the `ToolManager`.
- * @throws IllegalArgumentException if duplicate tool names are provided in the list.
+ * @property log An instance of `LogPort` used to capture logs related to tool
+ *               executions and registrations.
  */
 class ToolManager(
     val log: LogPort

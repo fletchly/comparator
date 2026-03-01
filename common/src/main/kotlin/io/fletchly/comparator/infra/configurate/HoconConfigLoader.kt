@@ -18,7 +18,6 @@
 
 package io.fletchly.comparator.infra.configurate
 
-import io.fletchly.comparator.exception.ConfigurationException
 import io.fletchly.comparator.model.config.ConfigLoader
 import io.fletchly.comparator.model.config.ConfigResult
 import org.spongepowered.configurate.ConfigurateException
