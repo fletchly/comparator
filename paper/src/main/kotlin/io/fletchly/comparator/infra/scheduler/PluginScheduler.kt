@@ -1,0 +1,81 @@
+/*
+ * This file is part of comparator, licensed under the Apache License 2.0
+ *
+ * Copyright (c) 2026 fletchly <https://github.com/fletchly>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.fletchly.comparator.infra.scheduler
+
+import kotlinx.coroutines.*
+import org.bukkit.plugin.java.JavaPlugin
+
+/**
+ * A utility class for scheduling and managing tasks and coroutines in the context of a Bukkit plugin.
+ *
+ * This class provides functionality to run synchronous tasks on the primary server thread, as well as managing
+ * coroutines in a dedicated coroutine scope tied to the plugin's lifecycle.
+ *
+ * @constructor Creates an instance of PluginScheduler for the given JavaPlugin.
+ * @param plugin The plugin instance associated with this scheduler.
+ */
+class PluginScheduler(private val plugin: JavaPlugin) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    /**
+     * Executes a task, ensuring it runs on the primary server thread if required. If already on the primary thread,
+     * the task is executed immediately. Otherwise, it is scheduled and resumed asynchronously.
+     *
+     * This method is useful for safely interacting with Bukkit's API, which requires operations to occur
+     * on the server's main thread.
+     *
+     * @param block The task to execute, represented as a lambda function returning a result of type [T].
+     * @return The result of the executed task.
+     */
+    suspend fun <T> runTask(block: () -> T): T {
+        if (plugin.server.isPrimaryThread) return block()
+        return suspendCancellableCoroutine { continuation ->
+            plugin.server.scheduler.runTask(plugin, Runnable {
+                continuation.resumeWith(runCatching(block))
+            })
+        }
+    }
+
+    /**
+     * Launches a coroutine within the plugin's dedicated coroutine scope.
+     *
+     * This method allows for asynchronous execution of tasks within the lifecycle
+     * of the associated plugin. The provided suspendable block will be executed in
+     * the context of the coroutine scope, which uses a SupervisorJob and the IO dispatcher.
+     *
+     * @param block A suspendable lambda expression representing the coroutine logic
+     * to be executed. The lambda operates within the receiver of a [CoroutineScope].
+     */
+    fun runCoroutine(block: suspend CoroutineScope.() -> Unit) {
+        scope.launch(block = block)
+    }
+
+    /**
+     * Cancels all ongoing coroutines managed by the plugin's coroutine scope.
+     *
+     * This method is used to terminate any active or pending tasks within the
+     * dedicated scope of the plugin, ensuring proper resource cleanup. It is
+     * typically called during the plugin's shutdown process to prevent
+     * memory leaks and to ensure that no tasks remain running after the plugin
+     * has stopped.
+     */
+    fun cancel() {
+        scope.cancel()
+    }
+}
