@@ -56,7 +56,7 @@ data class OllamaConfig(
 
     @Setting("api-key")
     @Comment("Your key for the Ollama cloud API. This only needs to be set if you are using an Ollama cloud model.")
-    val apiKey: String? = null,
+    val apiKey: String? = "",
 
     @Comment("The identifier of the model to use for response generation")
     val model: String = "deepseek-v3.1:671b"
@@ -76,7 +76,7 @@ data class WebSearchConfig(
 
     @Setting("api-key")
     @Comment("Ollama Cloud API key. Will use ai-provider.ollama.api-key if left blank")
-    val apiKey: String? = null
+    val apiKey: String? = ""
 ) : ToolImplementationConfig
 
 interface ToolImplementationConfig {

@@ -57,7 +57,7 @@ sealed interface ChatMessage {
         override val content: String,
 
         @SerialName("tool_calls")
-        val toolCalls: List<ChatToolCall>?
+        val toolCalls: List<ChatToolCall>? = null
     ) : ChatMessage {
         override val role: String = "assistant"
     }
