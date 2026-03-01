@@ -32,6 +32,8 @@ dependencies {
 
     paperweight.paperDevBundle(libs.versions.paper)
 
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 }
 
 tasks {
