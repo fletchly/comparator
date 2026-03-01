@@ -19,6 +19,7 @@
 package io.fletchly.comparator.adapter.config
 
 import io.fletchly.comparator.infra.configurate.HoconConfigLoader
+import io.fletchly.comparator.model.config.ConfigResult
 import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.port.out.LogPort
 import org.bukkit.plugin.java.JavaPlugin
@@ -31,11 +32,17 @@ class PluginConfigService(
     private val loader = HoconConfigLoader.of<PluginConfig>(Path.of(plugin.dataFolder.path, "comparator.conf"))
     lateinit var config: PluginConfig
 
-    fun loadConfig() = runCatching {
-        config = loader.load()
-    }.getOrElse { ex ->
-        log.warn("There were errors loading the config. Using default config instead\n\n${ex.stackTrace}", this::class.simpleName)
-        config = PluginConfig()
+    init {
+        saveDefault()
+        loadConfig()
+    }
+
+    fun loadConfig() = when (val result = loader.load()) {
+        is ConfigResult.Success -> config = result.config
+        is ConfigResult.Failure -> {
+            log.warn("Error loading config: ${result.error}, falling back to default", this::class.simpleName)
+            config = PluginConfig()
+        }
     }
 
     fun saveDefault() = runCatching {

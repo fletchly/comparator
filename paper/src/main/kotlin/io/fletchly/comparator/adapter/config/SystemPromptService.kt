@@ -33,6 +33,11 @@ class SystemPromptService(
     private val loader = HoconConfigLoader.of<SystemPromptConfig>(Path.of(plugin.dataFolder.path, PROMPT_NAME))
     override lateinit var prompt: String
 
+    init {
+        saveDefault()
+        loadPrompt()
+    }
+
     fun loadPrompt() = runCatching {
         prompt = loader.load().prompt
     }.getOrElse { ex ->

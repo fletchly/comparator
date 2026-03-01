@@ -43,7 +43,6 @@ class Comparator : JavaPlugin() {
     private lateinit var koin: Koin
 
     override fun onEnable() {
-        loadConfig()
         initializeModules()
         registerCommands()
         // registerEventListeners()
@@ -65,21 +64,14 @@ class Comparator : JavaPlugin() {
         stopKoin()
     }
 
-    private fun loadConfig() {
-        koin.get<PluginConfigService>().saveDefault()
-        koin.get<SystemPromptService>().saveDefault()
-        koin.get<PluginConfigService>().loadConfig()
-        koin.get<SystemPromptService>().loadPrompt()
-    }
-
     private fun initializeModules() {
         startKoin {
             modules(
                 coreModule,
-                paperConfigModule,
                 commonAdapterModule,
                 paperInfraModule(this@Comparator),
-                paperAdapterModule
+                paperAdapterModule,
+                paperConfigModule
             )
         }
 

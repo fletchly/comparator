@@ -34,7 +34,7 @@ interface ConfigLoader<C,T> {
      *
      * @return The configuration object of type `C`.
      */
-    fun load(): C
+    fun load(): ConfigResult<out C>
 
     /**
      * Executes a migration process for the configuration using the provided transformation logic.

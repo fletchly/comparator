@@ -20,6 +20,7 @@ package io.fletchly.comparator.infra.configurate
 
 import io.fletchly.comparator.exception.ConfigurationException
 import io.fletchly.comparator.model.config.ConfigLoader
+import io.fletchly.comparator.model.config.ConfigResult
 import org.spongepowered.configurate.ConfigurateException
 import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
@@ -34,12 +35,12 @@ class HoconConfigLoader<C : Any>(
 
     private val loader = ConfigurateLoaders.HOCON(path)
 
-    override fun load(): C = try {
-        loader.load().get(type) ?: throw ConfigurationException(
-            "Config at '$path' was empty or could not be deserialized into ${type.simpleName}"
-        )
-    } catch (ex: ConfigurateException) {
-        throw ConfigurationException("Error while loading config file at '$path'", ex)
+    override fun load(): ConfigResult<out C> = runCatching {
+        val config = loader.load().get(type)
+            ?: return@runCatching ConfigResult.Failure("Config at '$path' was empty or could not be deserialized into ${type.simpleName}")
+        ConfigResult.Success(config)
+    }.getOrElse {
+        ConfigResult.Failure("Error while loading config file at '$path'")
     }
 
     override fun migrate(
