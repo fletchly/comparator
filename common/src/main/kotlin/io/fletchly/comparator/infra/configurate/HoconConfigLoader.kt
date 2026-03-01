@@ -29,8 +29,7 @@ import kotlin.io.path.exists
 import kotlin.reflect.KClass
 
 class HoconConfigLoader<C : Any>(
-    val path: Path,
-    private val type: KClass<C>
+    val path: Path, private val type: KClass<C>
 ) : ConfigLoader<C, ConfigurationTransformation.Versioned> {
 
     private val loader = ConfigurateLoaders.HOCON(path)
@@ -45,7 +44,8 @@ class HoconConfigLoader<C : Any>(
 
     override fun migrate(
         transformation: ConfigurationTransformation.Versioned,
-        onMigrate: ((from: Int, to: Int) -> Unit)?
+        onMigrate: ((from: Int, to: Int) -> Unit)?,
+        onFailure: ((String) -> Unit)?
     ) {
         try {
             val root = loader.load()
@@ -56,12 +56,14 @@ class HoconConfigLoader<C : Any>(
             if (from != to) onMigrate?.invoke(from, to)
 
             loader.save(root)
-        } catch (ex: ConfigurateException) {
-            throw ConfigurationException("Error while migrating config file at '$path'", ex)
+        } catch (_: ConfigurateException) {
+            onFailure?.invoke("Error while migrating config file at '$path'")
         }
     }
 
-    override fun save(config: C, header: String?, overwrite: Boolean) {
+    override fun save(
+        config: C, header: String?, overwrite: Boolean, onFailure: ((String) -> Unit)?
+    ) {
         if (!overwrite && path.exists()) return
 
         try {
@@ -72,8 +74,8 @@ class HoconConfigLoader<C : Any>(
                 node().set(type.java, config)
             }
             loader.save(root)
-        } catch (ex: ConfigurateException) {
-            throw ConfigurationException("Error while saving config file at '$path'", ex)
+        } catch (_: ConfigurateException) {
+            onFailure?.invoke("Error while saving config file at '$path'")
         }
     }
 
@@ -85,7 +87,6 @@ class HoconConfigLoader<C : Any>(
          * val loader = HoconConfigLoader.of<MyConfig>(path)
          * ```
          */
-        inline fun <reified C : Any> of(path: Path): HoconConfigLoader<C> =
-            HoconConfigLoader(path, C::class)
+        inline fun <reified C : Any> of(path: Path): HoconConfigLoader<C> = HoconConfigLoader(path, C::class)
     }
 }

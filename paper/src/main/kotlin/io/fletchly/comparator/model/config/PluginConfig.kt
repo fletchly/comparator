@@ -48,6 +48,7 @@ data class AIProviderConfig(
     val ollama: OllamaConfig = OllamaConfig()
 )
 
+@ConfigSerializable
 data class OllamaConfig(
     @Setting("base-url")
     @Comment("The base URL of the Ollama instance.")

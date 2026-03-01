@@ -19,6 +19,8 @@
 package io.fletchly.comparator.adapter.config
 
 import io.fletchly.comparator.infra.configurate.HoconConfigLoader
+import io.fletchly.comparator.model.config.ConfigResult
+import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.model.config.SystemPromptConfig
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.SystemConfigPort
@@ -38,11 +40,12 @@ class SystemPromptService(
         loadPrompt()
     }
 
-    fun loadPrompt() = runCatching {
-        prompt = loader.load().prompt
-    }.getOrElse { ex ->
-        log.warn("There were errors loading the system prompt. Using default prompt instead.\n\n${ex.stackTrace}", this::class.simpleName)
-        prompt = SystemPromptConfig().prompt
+    fun loadPrompt() = when (val result = loader.load()) {
+        is ConfigResult.Success -> prompt = result.config.prompt
+        is ConfigResult.Failure -> {
+            log.warn("Error loading prompt: ${result.error}, falling back to default", this::class.simpleName)
+            prompt = SystemPromptConfig().prompt
+        }
     }
 
     fun saveDefault() {

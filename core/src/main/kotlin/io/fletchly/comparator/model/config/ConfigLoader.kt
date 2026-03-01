@@ -28,7 +28,7 @@ package io.fletchly.comparator.model.config
  * @param C The type of the configuration object being managed.
  * @param T The type of the transformation logic used for migration.
  */
-interface ConfigLoader<C,T> {
+interface ConfigLoader<C, T> {
     /**
      * Loads the configuration object from the storage backend.
      *
@@ -47,7 +47,11 @@ interface ConfigLoader<C,T> {
      * @param onMigrate An optional callback function invoked with the source (`from`) and target (`to`)
      *                  version numbers during the migration. Default is `null`, meaning no callback is invoked.
      */
-    fun migrate(transformation: T, onMigrate: ((from: Int, to: Int) -> Unit)? = null)
+    fun migrate(
+        transformation: T,
+        onMigrate: ((from: Int, to: Int) -> Unit)? = null,
+        onFailure: ((error: String) -> Unit)? = null
+    )
 
     /**
      * Saves the given configuration object to the storage backend.
@@ -59,5 +63,10 @@ interface ConfigLoader<C,T> {
      * @param overwrite A boolean flag indicating whether to overwrite the
      *                  existing configuration if one exists. Defaults to `false`.
      */
-    fun save(config: C, header: String? = null, overwrite: Boolean = false)
+    fun save(
+        config: C,
+        header: String? = null,
+        overwrite: Boolean = false,
+        onFailure: ((error: String) -> Unit)? = null
+    )
 }

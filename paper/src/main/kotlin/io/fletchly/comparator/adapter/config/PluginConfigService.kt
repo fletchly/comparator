@@ -40,14 +40,12 @@ class PluginConfigService(
     fun loadConfig() = when (val result = loader.load()) {
         is ConfigResult.Success -> config = result.config
         is ConfigResult.Failure -> {
-            log.warn("Error loading config: ${result.error}, falling back to default", this::class.simpleName)
+            log.warn("${result.error}, falling back to default", this::class.simpleName)
             config = PluginConfig()
         }
     }
 
-    fun saveDefault() = runCatching {
-        loader.save(PluginConfig())
-    }.getOrElse { ex ->
-        log.warn("There were errors saving the default config\n${ex.stackTrace}", this::class.simpleName)
+    fun saveDefault() = loader.save(PluginConfig()) { error ->
+        log.warn("Couldn't save default config: $error", this::class.simpleName)
     }
 }
