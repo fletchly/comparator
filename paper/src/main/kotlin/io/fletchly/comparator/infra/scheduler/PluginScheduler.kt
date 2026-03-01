@@ -66,16 +66,20 @@ class PluginScheduler(private val plugin: JavaPlugin) {
         scope.launch(block = block)
     }
 
+
     /**
-     * Cancels all ongoing coroutines managed by the plugin's coroutine scope.
+     * Cancels all scheduled tasks and the associated coroutine scope for the plugin.
      *
-     * This method is used to terminate any active or pending tasks within the
-     * dedicated scope of the plugin, ensuring proper resource cleanup. It is
-     * typically called during the plugin's shutdown process to prevent
-     * memory leaks and to ensure that no tasks remain running after the plugin
-     * has stopped.
+     * This method terminates the plugin's coroutine scope, preventing any further
+     * asynchronous operations managed by the scope. Additionally, it cancels all
+     * tasks scheduled via the Bukkit server's scheduler for the plugin.
+     *
+     * It is typically invoked during the plugin shutdown phase to ensure that
+     * resources and tasks are properly cleaned up and no lingering operations
+     * remain active.
      */
     fun cancel() {
         scope.cancel()
+        plugin.server.scheduler.cancelTasks(plugin)
     }
 }

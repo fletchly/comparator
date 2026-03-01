@@ -18,14 +18,94 @@
 
 package io.fletchly.comparator
 
+import io.fletchly.comparator.adapter.command.model.CommandDefinition
+import io.fletchly.comparator.adapter.command.model.registerCommand
+import io.fletchly.comparator.di.commonAdapterModule
+import io.fletchly.comparator.di.coreModule
+import io.fletchly.comparator.di.paperAdapterModule
+import io.fletchly.comparator.di.paperInfraModule
+import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.model.tool.ToolDefinition
+import io.fletchly.comparator.port.`in`.ContextClearer
+import kotlinx.coroutines.runBlocking
+import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.Koin
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.core.module.Module
+import org.koin.java.KoinJavaComponent.getKoin
 
 class Comparator : JavaPlugin() {
+    private lateinit var koin: Koin
+
     override fun onEnable() {
-        logger.info { "Hello!" }
+        initializeModules()
+        registerCommands()
+        registerEventListeners()
+        registerTools()
     }
 
     override fun onDisable() {
-        logger.info { "Goodbye!" }
+        val context = koin.get<ContextClearer>()
+        val scheduler = koin.get<PluginScheduler>()
+
+        logger.info { "Clearing context for all users" }
+        runBlocking { context.clearAll() }
+
+        logger.info { "Shutting down plugin scheduler" }
+        scheduler.cancel()
+
+        stopKoin()
+    }
+
+    private fun loadConfig(): Module {
+        TODO("Not implemented yet")
+    }
+
+    private fun initializeModules() {
+        val configModule = loadConfig()
+
+        startKoin {
+            modules(
+                configModule,
+                coreModule,
+                commonAdapterModule,
+                paperInfraModule(this@Comparator),
+                paperAdapterModule
+            )
+        }
+
+        koin = getKoin()
+    }
+
+    private fun registerCommands() {
+        val commands = koin.getAll<CommandDefinition>()
+        var registered = 0
+
+        commands.forEach {
+            registerCommand(it.definition)
+            registered++
+        }
+
+        logger.info { "Registered $registered commands" }
+    }
+
+    private fun registerEventListeners() {
+        val eventListeners = koin.getAll<Listener>()
+        var registered = 0
+
+        eventListeners.forEach { _ ->
+            registered++
+            TODO("extension function")
+        }
+
+        logger.info { "Registered $registered event listeners" }
+    }
+
+    private fun registerTools() {
+        val tools = koin.getAll<ToolDefinition>()
+
+        TODO("Not implemented yet")
     }
 }
