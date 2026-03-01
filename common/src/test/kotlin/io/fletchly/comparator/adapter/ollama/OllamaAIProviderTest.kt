@@ -19,7 +19,6 @@
 package io.fletchly.comparator.adapter.ollama
 
 import io.fletchly.comparator.infra.http.HttpClient
-import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
@@ -28,6 +27,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.port.out.LogPort
+import io.fletchly.comparator.util.OllamaConfig
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
@@ -47,9 +47,11 @@ class OllamaAIProviderTest {
     private val model = "llama3"
 
     private fun createProvider(handler: MockRequestHandler) = OllamaAIProvider(
-        baseUrl = baseUrl,
-        apiKey = null,
-        model = model,
+        OllamaConfig(
+            baseUrl = baseUrl,
+            apiKey = null,
+            model = model
+        ),
         log = log,
         toolRegistry = toolRegistry,
         client = KtorClient(MockEngine { handler(it) }, HttpClient.defaultConfig)
@@ -107,9 +109,11 @@ class OllamaAIProviderTest {
     fun `attaches bearer token when apiKey is provided`() = runTest {
         var capturedAuth: String? = null
         val provider = OllamaAIProvider(
-            baseUrl = baseUrl,
-            apiKey = "my-secret-key",
-            model = model,
+            OllamaConfig(
+                baseUrl = baseUrl,
+                apiKey = "my-secret-key",
+                model = model
+            ),
             log = log,
             toolRegistry = toolRegistry,
             client = KtorClient(MockEngine { request ->
@@ -259,9 +263,11 @@ class OllamaAIProviderTest {
             every { parameters } returns emptyList()
         }
         val provider = OllamaAIProvider(
-            baseUrl = baseUrl,
-            apiKey = null,
-            model = model,
+            OllamaConfig(
+                baseUrl = baseUrl,
+                apiKey = null,
+                model = model
+            ),
             log = log,
             toolRegistry = mockk { every { tools } returns listOf(tool) },
             client = KtorClient(MockEngine { request ->
