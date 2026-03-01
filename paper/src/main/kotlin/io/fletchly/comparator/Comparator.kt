@@ -20,9 +20,12 @@ package io.fletchly.comparator
 
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.registerCommand
+import io.fletchly.comparator.adapter.config.PluginConfigService
+import io.fletchly.comparator.adapter.config.SystemPromptService
 import io.fletchly.comparator.di.commonAdapterModule
 import io.fletchly.comparator.di.coreModule
 import io.fletchly.comparator.di.paperAdapterModule
+import io.fletchly.comparator.di.paperConfigModule
 import io.fletchly.comparator.di.paperInfraModule
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
 import io.fletchly.comparator.model.tool.ToolDefinition
@@ -40,10 +43,11 @@ class Comparator : JavaPlugin() {
     private lateinit var koin: Koin
 
     override fun onEnable() {
+        loadConfig()
         initializeModules()
         registerCommands()
-        registerEventListeners()
-        registerTools()
+        // registerEventListeners()
+        // registerTools()
 
         logger.info { "Successfully enabled Comparator ${pluginMeta.version}. Happy chatting! \uD83D\uDCA1" }
     }
@@ -61,17 +65,18 @@ class Comparator : JavaPlugin() {
         stopKoin()
     }
 
-    private fun loadConfig(): Module {
-        TODO("Not implemented yet")
+    private fun loadConfig() {
+        koin.get<PluginConfigService>().saveDefault()
+        koin.get<SystemPromptService>().saveDefault()
+        koin.get<PluginConfigService>().loadConfig()
+        koin.get<SystemPromptService>().loadPrompt()
     }
 
     private fun initializeModules() {
-        val configModule = loadConfig()
-
         startKoin {
             modules(
-                configModule,
                 coreModule,
+                paperConfigModule,
                 commonAdapterModule,
                 paperInfraModule(this@Comparator),
                 paperAdapterModule
@@ -105,9 +110,9 @@ class Comparator : JavaPlugin() {
         logger.info { "Registered $registered event listeners" }
     }
 
-    private fun registerTools() {
-        val tools = koin.getAll<ToolDefinition>()
-
-        TODO("Not implemented yet")
-    }
+//    private fun registerTools() {
+//        val tools = koin.getAll<ToolDefinition>()
+//
+//        TODO("Not implemented yet")
+//    }
 }

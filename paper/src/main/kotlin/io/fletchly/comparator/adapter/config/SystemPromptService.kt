@@ -23,13 +23,14 @@ import io.fletchly.comparator.model.config.SystemPromptConfig
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.SystemConfigPort
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 import java.nio.file.Path
 
 class SystemPromptService(
     private val log: LogPort,
-    plugin: JavaPlugin,
+    private val plugin: JavaPlugin,
 ): SystemConfigPort {
-    private val loader = HoconConfigLoader.of<SystemPromptConfig>(Path.of(plugin.dataFolder.path, "system-prompt.conf"))
+    private val loader = HoconConfigLoader.of<SystemPromptConfig>(Path.of(plugin.dataFolder.path, PROMPT_NAME))
     override lateinit var prompt: String
 
     fun loadPrompt() = runCatching {
@@ -37,5 +38,16 @@ class SystemPromptService(
     }.getOrElse { ex ->
         log.warn("There were errors loading the system prompt. Using default prompt instead.\n\n${ex.stackTrace}", this::class.simpleName)
         prompt = SystemPromptConfig().prompt
+    }
+
+    fun saveDefault() {
+        val file = File(plugin.dataFolder, PROMPT_NAME)
+        if (!file.exists()) {
+            plugin.saveResource(PROMPT_NAME, false)
+        }
+    }
+
+    private companion object {
+        const val PROMPT_NAME = "system-prompt.conf"
     }
 }
