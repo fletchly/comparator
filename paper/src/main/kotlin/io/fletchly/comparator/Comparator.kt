@@ -21,7 +21,7 @@ package io.fletchly.comparator
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.registerCommand
 import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.adapter.tool.web.WebSearchTool
+import io.fletchly.comparator.adapter.tool.WebSearchTool
 import io.fletchly.comparator.di.*
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
 import io.fletchly.comparator.model.config.PluginConfig
