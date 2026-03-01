@@ -29,6 +29,7 @@ dependencies {
     implementation(project(":common"))
 
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.bundles.configurate)
 
     paperweight.paperDevBundle(libs.versions.paper)
 
