@@ -25,21 +25,18 @@ import io.fletchly.comparator.model.user.User
  * in a conversational system.
  */
 interface ContextClearer {
-    /**
-     * Clears the conversational context for the specified target users.
-     *
-     * @param target A vararg parameter representing the users whose context
-     *               should be cleared.
-     */
-    suspend fun clear(vararg target: User)
+
 
     /**
-     * Clears the conversational context for the specified target users and notifies the sender.
-     *
-     * @param sender The user initiating the clear operation, typically for notification or logging purposes.
-     * @param target A vararg parameter representing the users whose context should be cleared.
+     * Clears the conversational context associated with a user.
      */
-    suspend fun clearWithFeedback(sender: User, vararg target: User)
+    suspend fun User.clearSelf()
+
+    /**
+     * Clears the conversational context for a specified list of users.
+     *
+     */
+    suspend fun User.clearOther(targets: List<User>)
 
     /**
      * Clears all conversational contexts within the system.

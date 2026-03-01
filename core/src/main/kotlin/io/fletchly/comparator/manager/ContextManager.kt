@@ -40,16 +40,18 @@ class ContextManager(
     private val context: ContextPort,
     private val notification: NotificationPort
 ) : ContextClearer {
-    override suspend fun clear(vararg target: User) {
-        target.forEach { context.clear(it) }
+    override suspend fun User.clearSelf() {
+        context.clear(this)
+        notification.info(this,"Cleared chat context")
     }
 
-    override suspend fun clearWithFeedback(
-        sender: User,
-        vararg target: User
+    override suspend fun User.clearOther(
+        targets: List<User>
     ) {
-        clear(*target)
-        notification.info(sender, "Cleared context for ${target.size} ${"player".pluralize(target.size)}")
+        targets.forEach {
+            context.clear(it)
+        }
+        notification.info(this, "Cleared chat context for ${targets.size} ${"player".pluralize(targets.size)}")
     }
 
     override suspend fun clearAll() {
