@@ -32,7 +32,7 @@ class PluginConfigService(
 ) : HoconConfigService<PluginConfig>(
     PluginConfig::class,
     Path.of(plugin.dataFolder.path),
-    "comparator.yml",
+    "comparator.conf",
     PluginConfig.Default,
     migrations,
     log
