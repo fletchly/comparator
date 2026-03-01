@@ -25,6 +25,7 @@ import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.tool
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.tool.web.dto.WebSearchRequest
+import io.fletchly.comparator.util.WebSearchConfig
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -32,7 +33,7 @@ import io.ktor.http.*
 import kotlinx.serialization.json.JsonElement
 
 class WebSearchTool(
-    private val apiKey: String?,
+    private val config: WebSearchConfig,
     private val log: LogPort
 ) {
     private val client = HttpClient.Ktor
@@ -45,7 +46,7 @@ class WebSearchTool(
 
         return runCatching {
             client.post(url) {
-                if (!apiKey.isNullOrBlank()) bearerAuth(apiKey)
+                if (!config.apiKey.isNullOrBlank()) bearerAuth(config.apiKey)
                 contentType(ContentType.Application.Json)
                 setBody(webSearchRequest)
             }.body<JsonElement>()
