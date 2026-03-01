@@ -33,11 +33,14 @@ class PluginConfigService(
     PluginConfig::class,
     Path.of(plugin.dataFolder.path),
     "comparator.yml",
+    PluginConfig.Default,
+    migrations,
     log
 ) {
-    override val default = PluginConfig()
-    override val migrations = ConfigurationTransformation.versionedBuilder()
-        .versionKey(ConfigLoader.VERSION_KEY)
-        .addVersion(0, ConfigurationTransformation.empty())
-        .build()
+    private companion object {
+        val migrations = ConfigurationTransformation.versionedBuilder()
+            .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(0, ConfigurationTransformation.empty())
+            .build()
+    }
 }

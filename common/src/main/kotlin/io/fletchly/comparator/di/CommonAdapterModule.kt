@@ -21,6 +21,7 @@ package io.fletchly.comparator.di
 import io.fletchly.comparator.adapter.ollama.OllamaAIProvider
 import io.fletchly.comparator.adapter.persistence.InMemoryContextStore
 import io.fletchly.comparator.adapter.tool.web.WebSearchTool
+import io.fletchly.comparator.infra.http.HttpClient
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.ContextPort
@@ -29,7 +30,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val commonAdapterModule = module {
-    singleOf(::OllamaAIProvider) bind AIPort::class
+    single { OllamaAIProvider(get(), get(), get(), HttpClient.Ktor) } bind AIPort::class
     singleOf(::InMemoryContextStore) bind ContextPort::class
-    singleOf(::WebSearchTool) bind ToolDefinition::class
+    single { WebSearchTool(get(), get(), HttpClient.Ktor) } bind ToolDefinition::class
 }

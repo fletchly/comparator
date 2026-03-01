@@ -20,12 +20,12 @@ package io.fletchly.comparator.adapter.tool.web
 
 import io.fletchly.comparator.adapter.tool.web.dto.WebSearchRequest
 import io.fletchly.comparator.exception.ToolException
-import io.fletchly.comparator.infra.http.HttpClient
+import io.fletchly.comparator.model.options.WebSearchOptions
 import io.fletchly.comparator.model.tool.Description
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.tool
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.model.options.WebSearchOptions
+import io.ktor.client.HttpClient as KtorClient
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -34,9 +34,10 @@ import kotlinx.serialization.json.JsonElement
 
 class WebSearchTool(
     private val config: WebSearchOptions,
-    private val log: LogPort
+    private val log: LogPort,
+    private val client: KtorClient
 ): ToolDefinition {
-    private val client = HttpClient.Ktor
+
 
     private suspend fun doWebSearch(
         @Description("Web search query") query: String

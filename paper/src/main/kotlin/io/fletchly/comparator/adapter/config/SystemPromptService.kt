@@ -33,13 +33,16 @@ class SystemPromptService(
     SystemPromptConfig::class,
     Path.of(plugin.dataFolder.path),
     "system-prompt.conf",
+    SystemPromptConfig.Default,
+    migrations,
     log
 ), SystemConfigPort {
-    override val default = SystemPromptConfig()
-    override val migrations = ConfigurationTransformation.versionedBuilder()
-        .versionKey(ConfigLoader.VERSION_KEY)
-        .addVersion(0, ConfigurationTransformation.empty())
-        .build()
-
     override val prompt = config.prompt
+
+    private companion object {
+        val migrations = ConfigurationTransformation.versionedBuilder()
+            .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(0, ConfigurationTransformation.empty())
+            .build()
+    }
 }

@@ -29,14 +29,13 @@ abstract class HoconConfigService<C: Any>(
     type: KClass<C>,
     dataFolderPath: Path,
     fileName: String,
+    protected val default: C,
+    protected val migrations: ConfigurationTransformation.Versioned,
     private val log: LogPort,
 ) {
     private val path = dataFolderPath.resolve(fileName)
     private val loader = HoconConfigLoader(path, type)
     lateinit var config: C
-
-    protected abstract val default: C
-    protected abstract val migrations: ConfigurationTransformation.Versioned
 
     init {
         saveDefault()

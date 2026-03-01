@@ -25,14 +25,16 @@ import org.spongepowered.configurate.objectmapping.meta.Setting
 @ConfigSerializable
 data class SystemPromptConfig(
     @Comment("Set of instructions given to the AI model before each conversation, defining its behavior, persona, and constraints.")
-    val prompt: String = DEFAULT_PROMPT,
+    val prompt: String = DEFAULT_PROMPT.trimIndent(),
 
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Don't change this. Doing so could overwrite existing config")
     val version: Int = 0
 ) {
     companion object {
-        val DEFAULT_PROMPT = """
+        val Default = SystemPromptConfig()
+
+        private const val DEFAULT_PROMPT = """
             # Minecraft Helper Agent System Prompt
 
             You are a helpful assistant specializing in Minecraft: Java Edition. 
@@ -77,6 +79,6 @@ data class SystemPromptConfig(
 
             Java Edition only. If asked about Bedrock or other versions, note that your expertise 
             is Java Edition and mechanics may differ.
-        """.trimIndent()
+        """
     }
 }
