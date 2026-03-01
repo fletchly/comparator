@@ -27,6 +27,12 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 import java.time.LocalDate
 
+/**
+ * A tool that retrieves the current game server version and the current date.
+ *
+ * @property plugin The JavaPlugin instance associated with this tool.
+ * @property pluginScheduler A scheduler utility for running tasks and coroutines safely within the plugin context.
+ */
 class GameVersionTool(
     private val plugin: JavaPlugin,
     private val pluginScheduler: PluginScheduler

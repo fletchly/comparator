@@ -21,6 +21,11 @@ package io.fletchly.comparator.util
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
+/**
+ * Registers an event listener within the plugin, enabling it to listen for Bukkit events.
+ *
+ * @param eventListener The event listener to register.
+ */
 fun JavaPlugin.registerEventListener(eventListener: Listener) {
     server.pluginManager.registerEvents(eventListener, this)
 }

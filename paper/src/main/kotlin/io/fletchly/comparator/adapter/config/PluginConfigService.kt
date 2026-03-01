@@ -26,6 +26,21 @@ import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 
 
+/**
+ * Provides configuration management for the plugin by extending the `HoconConfigService` class
+ * specialized for the `PluginConfig` type.
+ *
+ * This service is responsible for managing the lifecycle of the plugin configuration, including
+ * loading, saving, and applying schema migrations. It ensures that the plugin's configuration
+ * data is correctly loaded from and saved to a HOCON file stored in the plugin's data folder.
+ *
+ * The default configuration is maintained and used as a fallback when configuration loading
+ * encounters errors. Schema migrations are handled through a versioned transformation defined
+ * within the service.
+ *
+ * @param log A logging interface for recording operations, including warnings and informational messages.
+ * @param plugin The JavaPlugin instance whose data folder is used for storing the configuration file.
+ */
 class PluginConfigService(
     log: LogPort,
     plugin: JavaPlugin,

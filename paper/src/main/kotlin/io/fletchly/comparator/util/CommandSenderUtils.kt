@@ -23,6 +23,11 @@ import io.fletchly.comparator.model.user.ConsoleUser
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
+/**
+ * Converts a `CommandSender` instance into a `User` implementation.
+ *
+ * @return A `User` representation of the sender, either as `BukkitPlayerUser` or `ConsoleUser`.
+ */
 fun CommandSender.toUser() = when (this) {
     is Player -> BukkitPlayerUser(this)
     else -> ConsoleUser

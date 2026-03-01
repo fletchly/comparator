@@ -25,6 +25,21 @@ import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 import kotlin.reflect.KClass
 
+/**
+ * Manages the lifecycle and operations of a HOCON-based configuration file for a specific type.
+ *
+ * This class handles loading, saving, and migrating configuration data through the `HoconConfigLoader`.
+ * It ensures a default configuration is saved and provides mechanisms for applying schema migrations
+ * and recovering from errors by falling back to a default configuration when configuration loading fails.
+ *
+ * @param C The type of configuration managed by this service.
+ * @param type The Kotlin class reference for the configuration data type.
+ * @param dataFolderPath The file system path to the directory where the configuration file is stored.
+ * @param fileName The name of the configuration file.
+ * @param default The default configuration instance. Used when the configuration file cannot be loaded.
+ * @param migrations The versioned transformation used to migrate the configuration schema.
+ * @param log A logging interface for recording informational and warning messages during operations.
+ */
 abstract class HoconConfigService<C: Any>(
     type: KClass<C>,
     dataFolderPath: Path,

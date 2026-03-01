@@ -25,6 +25,17 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
 
+/**
+ * Handles player-related Bukkit events and performs asynchronous operations
+ * based on the player's interaction with the server.
+ *
+ * This class listens for Bukkit `PlayerQuitEvent` and integrates with
+ * conversational systems or other context-sensitive features by utilizing
+ * `ContextClearer` and `PluginScheduler` components.
+ *
+ * @param context A `ContextClearer` instance used for clearing the player's conversational context.
+ * @param pluginScheduler A `PluginScheduler` instance for managing asynchronous tasks within the plugin's lifecycle.
+ */
 class BukkitPlayerEvents(
     private val context: ContextClearer,
     private val pluginScheduler: PluginScheduler

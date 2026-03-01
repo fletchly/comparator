@@ -32,11 +32,6 @@ import org.bukkit.permissions.PermissionDefault
 /**
  * Represents the `/ask` command within the system, which allows users to ask questions.
  *
- * This command integrates with a messaging system to process user input and provide
- * responses. Users invoke the command with a question prompt, which is then processed
- * asynchronously. It supports permissions, aliases, and a structured argument system.
- *
- * @constructor Initializes the `AskCommand` with the required dependencies.
  * @param messageSender The service responsible for processing and sending user-generated messages.
  * @param pluginScheduler The scheduler utility used for managing asynchronous tasks and coroutines.
  */

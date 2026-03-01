@@ -30,6 +30,12 @@ import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSele
 import org.bukkit.permissions.Permission
 import org.bukkit.permissions.PermissionDefault
 
+/**
+ * Represents the administrative command definition for managing the Comparator system.
+ *
+ * @param contextClearer The utility that performs clearing of conversational contexts for users.
+ * @param pluginScheduler The scheduler for managing asynchronous command execution and tasks.
+ */
 class AdminCommand(
     contextClearer: ContextClearer,
     pluginScheduler: PluginScheduler

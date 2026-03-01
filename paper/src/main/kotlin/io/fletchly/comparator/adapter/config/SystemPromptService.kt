@@ -26,6 +26,17 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 
+/**
+ * Service for managing and providing the system-level prompt configuration.
+ *
+ * This class handles loading, saving, and migrating the system prompt configuration using
+ * a HOCON-based configuration file. It extends the functionality of `HoconConfigService`
+ * to include operations specifically tailored to manage the configuration of a system-wide
+ * prompt for guiding conversational assistants.
+ *
+ * @param log The logging interface used to record informational and warning messages.
+ * @param plugin The plugin reference to determine the base file directory for configuration storage.
+ */
 class SystemPromptService(
     log: LogPort,
     plugin: JavaPlugin,
