@@ -19,6 +19,6 @@
 package io.fletchly.comparator.port.out
 
 interface LogPort {
-    fun info(message: String)
-    fun warn(message: String)
+    fun info(message: String, source: String? = null)
+    fun warn(message: String, source: String? = null)
 }

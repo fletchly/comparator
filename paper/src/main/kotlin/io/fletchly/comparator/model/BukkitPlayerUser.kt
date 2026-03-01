@@ -34,4 +34,5 @@ value class BukkitPlayerUser(val player: Player): User {
     override val displayName get() = player.name
     override val uniqueId get() = player.uniqueId
     override val isOp get() = player.isOp
+    override val isOnline get() = player.isOnline
 }

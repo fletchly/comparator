@@ -75,7 +75,7 @@ class OllamaAIProvider(
                 setBody(chatRequest)
             }.body<ChatResponse>()
         }.getOrElse { ex ->
-            log.warn("[OllamaAIProvider] ${ex.stackTraceToString()}")
+            log.warn(ex.stackTraceToString(), this::class.simpleName)
             return when (ex) {
                 is ClientRequestException -> {
                     if (ex.response.status == HttpStatusCode.Unauthorized)

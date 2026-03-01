@@ -34,4 +34,5 @@ interface User {
     val displayName: String
     val uniqueId: UUID
     val isOp: Boolean
+    val isOnline: Boolean
 }

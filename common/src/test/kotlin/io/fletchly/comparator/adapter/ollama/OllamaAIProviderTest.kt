@@ -229,7 +229,7 @@ class OllamaAIProviderTest {
 
         provider.generateResponse("prompt", conversation())
 
-        verify { log.warn(any()) }
+        verify { log.warn(any(), any()) }
     }
 
     @Test

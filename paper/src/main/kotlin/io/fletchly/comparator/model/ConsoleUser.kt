@@ -35,4 +35,5 @@ object ConsoleUser: User {
     override val displayName: String = "Console"
     override val uniqueId: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
     override val isOp = true
+    override val isOnline = true
 }

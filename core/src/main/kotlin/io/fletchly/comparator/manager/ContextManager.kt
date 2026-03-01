@@ -21,6 +21,7 @@ package io.fletchly.comparator.manager
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.pluralize
 
@@ -38,10 +39,12 @@ import io.fletchly.comparator.util.pluralize
  */
 class ContextManager(
     private val context: ContextPort,
-    private val notification: NotificationPort
+    private val notification: NotificationPort,
+    private val log: LogPort
 ) : ContextClearer {
     override suspend fun User.clearSelf() {
         context.clear(this)
+        log.info("Cleared chat context for ${this.displayName}", this@ContextManager::class.simpleName)
         notification.info(this,"Cleared chat context")
     }
 
@@ -51,7 +54,10 @@ class ContextManager(
         targets.forEach {
             context.clear(it)
         }
-        notification.info(this, "Cleared chat context for ${targets.size} ${"player".pluralize(targets.size)}")
+        val message = "Cleared chat context for ${targets.size} ${"player".pluralize(targets.size)}"
+
+        log.info(message, this@ContextManager::class.simpleName)
+        notification.info(this, message)
     }
 
     override suspend fun clearAll() {

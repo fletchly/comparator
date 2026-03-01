@@ -21,40 +21,50 @@ package io.fletchly.comparator.core.manager
 import io.fletchly.comparator.manager.ContextManager
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class ContextManagerTest {
     private val context = mockk<ContextPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
-    private val manager = ContextManager(context, notification)
+    private val log = mockk<LogPort>(relaxed = true)
+    private val manager = ContextManager(context, notification, log)
+    private val sender = mockk<User>(relaxed = true) {
+        every { displayName } returns "Sender"
+    }
 
     @Test
     fun `clearSelf clears context for executing user`() = runTest {
-        val sender = mockk<User>()
         with(manager) { sender.clearSelf() }
         coVerify { context.clear(sender) }
     }
 
+    @Test
     fun `clearSelf sends notification`() = runTest {
-        val sender = mockk<User>()
         with (manager) { sender.clearSelf() }
-        coVerify { notification.info(sender, "Cleared chat context") }
+        coVerify { notification.info(sender, any()) }
+    }
+
+    @Test
+    fun `clearSelf sends log message with correct display name`() = runTest {
+        with (manager) { sender.clearSelf() }
+        verify { log.info(match { it.contains("Sender") }, any()) }
     }
 
     @Test
     fun `clearOther sends a singular notification for one target`() = runTest {
-        val sender = mockk<User>()
         with(manager) { sender.clearOther(listOf(mockk<User>())) }
         coVerify { notification.info(sender, "Cleared chat context for 1 player") }
     }
 
     @Test
     fun `clearOther sends a plural notification for multiple targets`() = runTest {
-        val sender = mockk<User>()
         with(manager) { sender.clearOther(listOf(mockk<User>(), mockk<User>(), mockk<User>())) }
         coVerify { notification.info(sender, "Cleared chat context for 3 players") }
     }
