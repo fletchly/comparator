@@ -18,44 +18,28 @@
 
 package io.fletchly.comparator.adapter.config
 
-import io.fletchly.comparator.infra.configurate.HoconConfigLoader
-import io.fletchly.comparator.model.config.ConfigResult
-import io.fletchly.comparator.model.config.PluginConfig
+import io.fletchly.comparator.model.config.ConfigLoader
 import io.fletchly.comparator.model.config.SystemPromptConfig
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.SystemConfigPort
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
+import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 
 class SystemPromptService(
-    private val log: LogPort,
-    private val plugin: JavaPlugin,
-): SystemConfigPort {
-    private val loader = HoconConfigLoader.of<SystemPromptConfig>(Path.of(plugin.dataFolder.path, PROMPT_NAME))
-    override lateinit var prompt: String
+    log: LogPort,
+    plugin: JavaPlugin,
+): HoconConfigService<SystemPromptConfig>(
+    SystemPromptConfig::class,
+    Path.of(plugin.dataFolder.path),
+    "system-prompt.conf",
+    log
+), SystemConfigPort {
+    override val default = SystemPromptConfig()
+    override val migrations = ConfigurationTransformation.versionedBuilder()
+        .versionKey(ConfigLoader.VERSION_KEY)
+        .addVersion(0, ConfigurationTransformation.empty())
+        .build()
 
-    init {
-        saveDefault()
-        loadPrompt()
-    }
-
-    fun loadPrompt() = when (val result = loader.load()) {
-        is ConfigResult.Success -> prompt = result.config.prompt
-        is ConfigResult.Failure -> {
-            log.warn("Error loading prompt: ${result.error}, falling back to default", this::class.simpleName)
-            prompt = SystemPromptConfig().prompt
-        }
-    }
-
-    fun saveDefault() {
-        val file = File(plugin.dataFolder, PROMPT_NAME)
-        if (!file.exists()) {
-            plugin.saveResource(PROMPT_NAME, false)
-        }
-    }
-
-    private companion object {
-        const val PROMPT_NAME = "system-prompt.conf"
-    }
+    override val prompt = config.prompt
 }

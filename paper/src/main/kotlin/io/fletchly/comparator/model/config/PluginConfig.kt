@@ -32,7 +32,11 @@ data class PluginConfig(
     val aiProvider: AIProviderConfig = AIProviderConfig(),
 
     @Comment("Tool options")
-    val tool : ToolConfig = ToolConfig()
+    val tool : ToolConfig = ToolConfig(),
+
+    @Setting(ConfigLoader.VERSION_KEY)
+    @Comment("Don't change this. Doing so could overwrite existing config")
+    val version: Int = 0
 )
 
 @ConfigSerializable

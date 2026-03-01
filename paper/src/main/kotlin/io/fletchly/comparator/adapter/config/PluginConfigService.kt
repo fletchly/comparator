@@ -18,34 +18,26 @@
 
 package io.fletchly.comparator.adapter.config
 
-import io.fletchly.comparator.infra.configurate.HoconConfigLoader
-import io.fletchly.comparator.model.config.ConfigResult
+import io.fletchly.comparator.model.config.ConfigLoader
 import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.port.out.LogPort
 import org.bukkit.plugin.java.JavaPlugin
+import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 
+
 class PluginConfigService(
-    private val log: LogPort,
+    log: LogPort,
     plugin: JavaPlugin,
+) : HoconConfigService<PluginConfig>(
+    PluginConfig::class,
+    Path.of(plugin.dataFolder.path),
+    "comparator.yml",
+    log
 ) {
-    private val loader = HoconConfigLoader.of<PluginConfig>(Path.of(plugin.dataFolder.path, "comparator.conf"))
-    lateinit var config: PluginConfig
-
-    init {
-        saveDefault()
-        loadConfig()
-    }
-
-    fun loadConfig() = when (val result = loader.load()) {
-        is ConfigResult.Success -> config = result.config
-        is ConfigResult.Failure -> {
-            log.warn("${result.error}, falling back to default", this::class.simpleName)
-            config = PluginConfig()
-        }
-    }
-
-    fun saveDefault() = loader.save(PluginConfig()) { error ->
-        log.warn("Couldn't save default config: $error", this::class.simpleName)
-    }
+    override val default = PluginConfig()
+    override val migrations = ConfigurationTransformation.versionedBuilder()
+        .versionKey(ConfigLoader.VERSION_KEY)
+        .addVersion(0, ConfigurationTransformation.empty())
+        .build()
 }

@@ -27,7 +27,6 @@ import io.fletchly.comparator.port.out.SystemConfigPort
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.getKoin
 
 val paperConfigModule = module {
     singleOf(::PluginConfigService)
