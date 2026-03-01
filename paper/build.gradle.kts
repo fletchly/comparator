@@ -12,7 +12,8 @@ dependencies {
 
 tasks {
     runServer {
-        minecraftVersion(libs.versions.minecraft.toString())
+        notCompatibleWithConfigurationCache("Invocation of 'Task.project' by task ':paper:runServer' at execution time is unsupported with the configuration cache.")
+        minecraftVersion(libs.versions.minecraft.get())
     }
 
     build {
