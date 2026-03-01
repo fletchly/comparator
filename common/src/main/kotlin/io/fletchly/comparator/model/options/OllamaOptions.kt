@@ -16,13 +16,19 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.util
+package io.fletchly.comparator.model.options
+
+import io.ktor.http.Url
 
 /**
- * Configuration settings required for integrating with a web search service.
+ * Configuration settings required for integrating with the Ollama API.
  *
- * @property apiKey Optional API key for authenticating requests to the web search service.
+ * @property baseUrl The base URL for the Ollama API.
+ * @property apiKey Optional API key for authenticating requests to the Ollama system.
+ * @property model The identifier of the model to be used for generating responses.
  */
-data class WebSearchConfig(
+data class OllamaOptions(
+    val baseUrl: Url,
     val apiKey: String?,
+    val model: String
 )

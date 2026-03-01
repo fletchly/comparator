@@ -16,8 +16,13 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.util
+package io.fletchly.comparator.model.options
 
-data class ContextConfig(
-    val conversationMessageLimit: Int
+/**
+ * Configuration settings required for integrating with a web search service.
+ *
+ * @property apiKey Optional API key for authenticating requests to the web search service.
+ */
+data class WebSearchOptions(
+    val apiKey: String?,
 )

@@ -23,7 +23,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ContextPort
-import io.fletchly.comparator.util.ContextConfig
+import io.fletchly.comparator.model.options.ContextOptions
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*
@@ -37,7 +37,7 @@ import java.util.*
  * @constructor Initializes the adapter with a specified message limit for each conversation.
  * @param conversationMessageLimit The maximum number of messages allowed per conversation. When this limit is exceeded, the oldest messages are removed.
  */
-class InMemoryContextStore(private val config: ContextConfig) : ContextPort {
+class InMemoryContextStore(private val config: ContextOptions) : ContextPort {
     private val mutex = Mutex()
     private val context = HashMap<UUID, Conversation>()
 

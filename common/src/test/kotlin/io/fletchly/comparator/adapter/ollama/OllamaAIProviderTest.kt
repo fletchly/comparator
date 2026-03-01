@@ -27,7 +27,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.util.OllamaConfig
+import io.fletchly.comparator.model.options.OllamaOptions
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
@@ -47,7 +47,7 @@ class OllamaAIProviderTest {
     private val model = "llama3"
 
     private fun createProvider(handler: MockRequestHandler) = OllamaAIProvider(
-        OllamaConfig(
+        OllamaOptions(
             baseUrl = baseUrl,
             apiKey = null,
             model = model
@@ -109,7 +109,7 @@ class OllamaAIProviderTest {
     fun `attaches bearer token when apiKey is provided`() = runTest {
         var capturedAuth: String? = null
         val provider = OllamaAIProvider(
-            OllamaConfig(
+            OllamaOptions(
                 baseUrl = baseUrl,
                 apiKey = "my-secret-key",
                 model = model
@@ -263,7 +263,7 @@ class OllamaAIProviderTest {
             every { parameters } returns emptyList()
         }
         val provider = OllamaAIProvider(
-            OllamaConfig(
+            OllamaOptions(
                 baseUrl = baseUrl,
                 apiKey = null,
                 model = model

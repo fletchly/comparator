@@ -31,7 +31,7 @@ import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.util.JsonProperty
 import io.fletchly.comparator.util.JsonSchema
-import io.fletchly.comparator.util.OllamaConfig
+import io.fletchly.comparator.model.options.OllamaOptions
 import io.fletchly.comparator.util.toJsonObject
 import io.fletchly.comparator.util.toMap
 import io.ktor.client.call.*
@@ -46,7 +46,7 @@ import kotlinx.io.IOException
  * in a conversational system.
  *
  * This class handles communication with the Ollama REST API for chat functionalities, including sending
- * chat requests, handling errors, and processing responses. It supports configuration through [OllamaConfig]
+ * chat requests, handling errors, and processing responses. It supports configuration through [OllamaOptions]
  * and utilizes tools managed by a [ToolRegistry].
  *
  * @constructor Creates an instance of the [OllamaAIProvider] with the specified configuration, logging,
@@ -60,7 +60,7 @@ import kotlinx.io.IOException
  * @see AIPort
  */
 class OllamaAIProvider(
-    private val config: OllamaConfig,
+    private val config: OllamaOptions,
     private val log: LogPort,
     private val toolRegistry: ToolRegistry,
     private val client: KtorClient = HttpClient.Ktor
