@@ -18,9 +18,15 @@
 
 package io.fletchly.comparator.di
 
+import io.fletchly.comparator.adapter.chat.PaperChatService
+import io.fletchly.comparator.adapter.chat.PaperNotificationService
 import io.fletchly.comparator.adapter.command.AdminCommand
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
+import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
+import io.fletchly.comparator.port.out.ChatPort
+import io.fletchly.comparator.port.out.LogPort
+import io.fletchly.comparator.port.out.NotificationPort
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -28,4 +34,7 @@ import org.koin.dsl.module
 val paperAdapterModule = module {
     singleOf(::AdminCommand) bind CommandDefinition::class
     singleOf(::AskCommand) bind CommandDefinition::class
+    singleOf(::PaperNotificationService) bind NotificationPort::class
+    singleOf(::PaperChatService) bind ChatPort::class
+    singleOf(::BukkitPluginLogger) bind LogPort::class
 }
