@@ -30,7 +30,9 @@ import org.bukkit.plugin.java.JavaPlugin
  * @constructor Creates an instance of PluginScheduler for the given JavaPlugin.
  * @param plugin The plugin instance associated with this scheduler.
  */
-class PluginScheduler(private val plugin: JavaPlugin) {
+class PluginScheduler(
+    private val plugin: JavaPlugin
+) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /**

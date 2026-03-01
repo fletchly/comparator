@@ -20,8 +20,10 @@ package io.fletchly.comparator.di
 
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 fun paperInfraModule(plugin: JavaPlugin) = module {
-    single { PluginScheduler(plugin) }
+    single { plugin }
+    singleOf(::PluginScheduler)
 }
