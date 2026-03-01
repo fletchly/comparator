@@ -27,6 +27,7 @@ import io.fletchly.comparator.model.BukkitPlayerUser
 import io.fletchly.comparator.model.ConsoleUser
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.port.`in`.MessageSender
+import io.fletchly.comparator.util.toUser
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionDefault
@@ -58,11 +59,7 @@ class AskCommand(
                 Commands.argument("prompt", StringArgumentType.greedyString())
                     .executes { ctx ->
                         val prompt = StringArgumentType.getString(ctx, "prompt")
-                        val user = when (val sender = ctx.source.sender) {
-                            is Player -> BukkitPlayerUser(sender)
-                            else -> ConsoleUser
-                        }
-
+                        val user =  ctx.source.sender.toUser()
                         val userMessage = Message.User(prompt, user)
 
                         pluginScheduler.runCoroutine {
