@@ -21,6 +21,7 @@ package io.fletchly.comparator.manager
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.`in`.ToolRegistry
 
@@ -35,21 +36,21 @@ import io.fletchly.comparator.port.`in`.ToolRegistry
  *
  * @constructor Initializes the `ToolManager` with a list of tools.
  *              Ensures that all tools have unique names during the initialization.
- * @param tools A list of `Tool` instances to be managed by the `ToolManager`.
+ * @param toolList A list of `Tool` instances to be managed by the `ToolManager`.
  * @throws IllegalArgumentException if duplicate tool names are provided in the list.
  */
-class ToolManager(tools: List<Tool>) : ToolRegistry {
+class ToolManager(toolList: ToolList) : ToolRegistry {
     private val toolRegistry: Map<String, Tool>
 
     override val tools: List<Tool>
         get() = toolRegistry.values.toList()
 
     init {
-        val duplicates = tools.groupBy { it.name }.filter { it.value.size > 1 }.keys
+        val duplicates = toolList.tools.groupBy { it.name }.filter { it.value.size > 1 }.keys
         require(duplicates.isEmpty()) {
             "Duplicate tool names: $duplicates"
         }
-        this.toolRegistry = tools.associateBy { it.name }
+        this.toolRegistry = toolList.tools.associateBy { it.name }
     }
 
     suspend fun execute(toolCall: ToolCall): Message.Tool =
