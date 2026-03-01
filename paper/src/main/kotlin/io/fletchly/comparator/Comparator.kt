@@ -20,23 +20,18 @@ package io.fletchly.comparator
 
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.registerCommand
-import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.adapter.config.SystemPromptService
-import io.fletchly.comparator.di.commonAdapterModule
-import io.fletchly.comparator.di.coreModule
-import io.fletchly.comparator.di.paperAdapterModule
-import io.fletchly.comparator.di.paperConfigModule
-import io.fletchly.comparator.di.paperInfraModule
+import io.fletchly.comparator.di.*
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.util.pluralize
+import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.core.module.Module
 import org.koin.java.KoinJavaComponent.getKoin
 
 class Comparator : JavaPlugin() {
@@ -45,7 +40,7 @@ class Comparator : JavaPlugin() {
     override fun onEnable() {
         initializeModules()
         registerCommands()
-        // registerEventListeners()
+        registerEventListeners()
         // registerTools()
 
         logger.info { "Successfully enabled Comparator ${pluginMeta.version}. Happy chatting! \uD83D\uDCA1" }
@@ -87,24 +82,24 @@ class Comparator : JavaPlugin() {
             registered++
         }
 
-        logger.info { "Registered $registered commands" }
+        logger.info { "Registered $registered ${"command".pluralize(registered)}" }
     }
 
     private fun registerEventListeners() {
         val eventListeners = koin.getAll<Listener>()
         var registered = 0
 
-        eventListeners.forEach { _ ->
+        eventListeners.forEach {
+            registerEventListener(it)
             registered++
-            TODO("extension function")
         }
 
-        logger.info { "Registered $registered event listeners" }
+        logger.info { "Registered $registered event ${"listener".pluralize(registered)}" }
     }
 
-//    private fun registerTools() {
-//        val tools = koin.getAll<ToolDefinition>()
-//
-//        TODO("Not implemented yet")
-//    }
+    private fun registerTools() {
+        val tools = koin.getAll<ToolDefinition>()
+
+        TODO("Not implemented yet")
+    }
 }

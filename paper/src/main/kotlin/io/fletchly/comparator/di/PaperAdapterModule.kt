@@ -23,17 +23,27 @@ import io.fletchly.comparator.adapter.chat.PaperNotificationService
 import io.fletchly.comparator.adapter.command.AdminCommand
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
+import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
 import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
 import io.fletchly.comparator.port.out.ChatPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
+import org.bukkit.event.Listener
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val paperAdapterModule = module {
+private val commands = module {
     singleOf(::AdminCommand) bind CommandDefinition::class
     singleOf(::AskCommand) bind CommandDefinition::class
+}
+
+private val events = module {
+    singleOf(::BukkitPlayerEvents) bind Listener::class
+}
+
+val paperAdapterModule = module {
+    includes(commands, events)
     singleOf(::PaperNotificationService) bind NotificationPort::class
     singleOf(::PaperChatService) bind ChatPort::class
     singleOf(::BukkitPluginLogger) bind LogPort::class
