@@ -18,8 +18,8 @@
 
 package io.fletchly.comparator.util
 
-import io.fletchly.comparator.model.BukkitPlayerUser
-import io.fletchly.comparator.model.ConsoleUser
+import io.fletchly.comparator.model.user.BukkitPlayerUser
+import io.fletchly.comparator.model.user.ConsoleUser
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 

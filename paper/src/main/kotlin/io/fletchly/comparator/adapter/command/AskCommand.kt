@@ -23,13 +23,10 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.command
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
-import io.fletchly.comparator.model.BukkitPlayerUser
-import io.fletchly.comparator.model.ConsoleUser
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.toUser
 import io.papermc.paper.command.brigadier.Commands
-import org.bukkit.entity.Player
 import org.bukkit.permissions.PermissionDefault
 
 /**

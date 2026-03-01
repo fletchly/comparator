@@ -19,8 +19,8 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
-import io.fletchly.comparator.model.BukkitPlayerUser
-import io.fletchly.comparator.model.ConsoleUser
+import io.fletchly.comparator.model.user.BukkitPlayerUser
+import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort

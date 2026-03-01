@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model
+package io.fletchly.comparator.model.user
 
-import io.fletchly.comparator.model.user.User
 import org.bukkit.entity.Player
 
 /**
