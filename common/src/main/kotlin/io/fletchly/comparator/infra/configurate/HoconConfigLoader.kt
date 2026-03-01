@@ -21,20 +21,26 @@ package io.fletchly.comparator.infra.configurate
 import io.fletchly.comparator.exception.ConfigurationException
 import io.fletchly.comparator.model.config.ConfigLoader
 import org.spongepowered.configurate.ConfigurateException
-import org.spongepowered.configurate.ConfigurationOptions
 import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
 import java.nio.file.Path
 import kotlin.io.path.exists
+import kotlin.reflect.KClass
 
-class HoconConfigLoader<C : Any>(val path: Path) :
-    ConfigLoader<C, ConfigurationTransformation.Versioned> {
+class HoconConfigLoader<C : Any>(
+    val path: Path,
+    private val type: KClass<C>
+) : ConfigLoader<C, ConfigurationTransformation.Versioned> {
+
     private val loader = ConfigurateLoaders.HOCON(path)
 
-    override fun load(): C = runCatching {
-        val root = loader.load()
-        root.get() ?: throw ConfigurationException("Config not found")
-    }.getOrElse { throw ConfigurationException("Error while loading config file", it) }
+    override fun load(): C = try {
+        loader.load().get(type) ?: throw ConfigurationException(
+            "Config at '$path' was empty or could not be deserialized into ${type.simpleName}"
+        )
+    } catch (ex: ConfigurateException) {
+        throw ConfigurationException("Error while loading config file at '$path'", ex)
+    }
 
     override fun migrate(
         transformation: ConfigurationTransformation.Versioned,
@@ -50,15 +56,35 @@ class HoconConfigLoader<C : Any>(val path: Path) :
 
             loader.save(root)
         } catch (ex: ConfigurateException) {
-            throw ConfigurationException("Error while migrating config file", ex)
+            throw ConfigurationException("Error while migrating config file at '$path'", ex)
         }
     }
 
     override fun save(config: C, header: String?, overwrite: Boolean) {
         if (!overwrite && path.exists()) return
-        val root = loader.createNode(
-            ConfigurationOptions.defaults().header(header)
-        ).node().set(config::class.java, config)
-        loader.save(root)
+
+        try {
+            // Create a root node using the loader's own options so that all
+            // registered serializers and settings are inherited correctly.
+            val root = loader.createNode().apply {
+                header?.let { node().options().header(it) }
+                node().set(type.java, config)
+            }
+            loader.save(root)
+        } catch (ex: ConfigurateException) {
+            throw ConfigurationException("Error while saving config file at '$path'", ex)
+        }
+    }
+
+    companion object {
+        /**
+         * Preferred construction path — avoids having to pass [KClass] manually at call sites.
+         *
+         * ```kotlin
+         * val loader = HoconConfigLoader.of<MyConfig>(path)
+         * ```
+         */
+        inline fun <reified C : Any> of(path: Path): HoconConfigLoader<C> =
+            HoconConfigLoader(path, C::class)
     }
 }
