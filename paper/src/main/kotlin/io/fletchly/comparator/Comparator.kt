@@ -20,8 +20,11 @@ package io.fletchly.comparator
 
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.registerCommand
+import io.fletchly.comparator.adapter.config.PluginConfigService
+import io.fletchly.comparator.adapter.tool.web.WebSearchTool
 import io.fletchly.comparator.di.*
 import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.model.config.PluginConfig
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.pluralize
@@ -30,6 +33,7 @@ import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.java.KoinJavaComponent.getKoin
@@ -41,7 +45,7 @@ class Comparator : JavaPlugin() {
         initializeModules()
         registerCommands()
         registerEventListeners()
-        // registerTools()
+        registerTools()
 
         logger.info { "Successfully enabled Comparator ${pluginMeta.version}. Happy chatting! \uD83D\uDCA1" }
     }
@@ -98,8 +102,16 @@ class Comparator : JavaPlugin() {
     }
 
     private fun registerTools() {
+        val toolConfig = koin.get<PluginConfigService>().config.tool
+
+        loadKoinModules(
+            buildList {
+                if (toolConfig.webSearch.enabled) add(WebSearchTool.module)
+            }
+        )
+
         val tools = koin.getAll<ToolDefinition>()
 
-        TODO("Not implemented yet")
+        logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
     }
 }
