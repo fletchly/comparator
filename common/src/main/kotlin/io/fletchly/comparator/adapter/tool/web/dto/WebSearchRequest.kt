@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.tool.web.dto
+package io.fletchly.comparator.adapter.tool.web.dto
 
 import kotlinx.serialization.Serializable
 

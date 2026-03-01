@@ -16,15 +16,15 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.tool.web
+package io.fletchly.comparator.adapter.tool.web
 
+import io.fletchly.comparator.adapter.tool.web.dto.WebSearchRequest
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.infra.http.HttpClient
 import io.fletchly.comparator.model.tool.Description
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.tool
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.tool.web.dto.WebSearchRequest
 import io.fletchly.comparator.util.WebSearchConfig
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -35,7 +35,7 @@ import kotlinx.serialization.json.JsonElement
 class WebSearchTool(
     private val config: WebSearchConfig,
     private val log: LogPort
-) {
+): ToolDefinition {
     private val client = HttpClient.Ktor
 
     private suspend fun doWebSearch(
@@ -57,12 +57,12 @@ class WebSearchTool(
         }
     }
 
-    companion object: ToolDefinition {
-        private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"
+    override val definition = tool("web_search") {
+        description = "Search the web for answers"
+        executes(WebSearchTool::doWebSearch)
+    }
 
-        override val definition = tool("web_search") {
-            description = "Search the web for answers"
-            executes(WebSearchTool::doWebSearch)
-        }
+    companion object {
+        private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"
     }
 }
