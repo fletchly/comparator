@@ -28,6 +28,7 @@ import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -49,13 +50,17 @@ class PaperNotificationService(
         pluginScheduler.runTask { user.sendMessage(infoMessage(message)) }
 
     override suspend fun error(user: User, message: String) = pluginScheduler.runTask {
-        if (user is BukkitPlayerUser) user.player.playSound(ERROR_SOUND)
-        user.sendMessage(errorMessage(message))
+        user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) }
     }
 
-    private fun User.sendMessage(message: Component) {
+    private fun User.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
+        if (!this.isOnline) return
         when (this) {
-            is BukkitPlayerUser -> this.player.sendMessage { message }
+            is BukkitPlayerUser -> {
+                onPlayer?.invoke(this.player)
+                this.player.sendMessage { message }
+            }
+
             is ConsoleUser -> server.consoleSender.sendMessage { message }
         }
     }
