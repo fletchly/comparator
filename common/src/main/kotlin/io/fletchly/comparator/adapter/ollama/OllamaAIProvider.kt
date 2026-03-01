@@ -42,18 +42,22 @@ import io.ktor.client.HttpClient as KtorClient
 import kotlinx.io.IOException
 
 /**
- * An AI provider implementation that handles generating responses using the Ollama API.
+ * An implementation of the [AIPort] interface that integrates with the Ollama API to generate responses
+ * in a conversational system.
  *
- * This class is responsible for integrating with the Ollama API to generate responses
- * in conversational systems. It manages request construction, API communication, and
- * response parsing. It also processes conversations, tools, and logging for system
- * interactions.
+ * This class handles communication with the Ollama REST API for chat functionalities, including sending
+ * chat requests, handling errors, and processing responses. It supports configuration through [OllamaConfig]
+ * and utilizes tools managed by a [ToolRegistry].
  *
- * @param baseUrl The base URL of the Ollama API.
- * @param apiKey The API key required for authentication with the Ollama API. Can be null if no authentication is needed.
- * @param model The name of the AI model to use when generating responses.
- * @param log An implementation of [LogPort] for logging information and warnings.
- * @param toolRegistry An implementation of [ToolRegistry] to manage available tools for tool-based message handling.
+ * @constructor Creates an instance of the [OllamaAIProvider] with the specified configuration, logging,
+ * tool registry, and HTTP client.
+ *
+ * @property config The configuration for the Ollama API, including the base URL, API key, and model identifier.
+ * @property log A logging interface for recording information and warnings during API interactions.
+ * @property toolRegistry A registry for managing tools that the system can use during message processing.
+ * @property client The HTTP client used for making requests to the Ollama API. Defaults to [HttpClient.Ktor].
+ *
+ * @see AIPort
  */
 class OllamaAIProvider(
     private val config: OllamaConfig,

@@ -54,8 +54,8 @@ class ContextManager(
         targets.forEach {
             context.clear(it)
         }
-        val message = "Cleared chat context for ${targets.size} ${"player".pluralize(targets.size)}"
 
+        val message = "Cleared chat context for ${targets.size} ${"player".pluralize(targets.size)}"
         log.info(message, this@ContextManager::class.simpleName)
         notification.info(this, message)
     }
