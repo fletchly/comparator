@@ -57,7 +57,7 @@ class WebSearchTool(
                 setBody(webSearchRequest)
             }.body<JsonElement>()
         }.getOrElse {
-            if (it is ClientRequestException && it.response.status == HttpStatusCode.Companion.Unauthorized)
+            if (it is ClientRequestException && it.response.status == HttpStatusCode.Unauthorized)
                 log.warn("Got 'unauthorized' response from Ollama server! Is your API key set?")
             throw ToolException("Error communicating with web search client")
         }
