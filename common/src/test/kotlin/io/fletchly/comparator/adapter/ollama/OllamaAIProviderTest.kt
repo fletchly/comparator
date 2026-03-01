@@ -43,12 +43,12 @@ class OllamaAIProviderTest {
     private val toolRegistry = mockk<ToolRegistry> {
         every { tools } returns emptyList()
     }
-    private val baseUrl = Url("https://ollama.example.com")
+    private val baseUrl = "https://ollama.example.com"
     private val model = "llama3"
 
     private fun createProvider(handler: MockRequestHandler) = OllamaAIProvider(
         OllamaOptions(
-            baseUrl = baseUrl,
+            baseUrlString = baseUrl,
             apiKey = null,
             model = model
         ),
@@ -110,7 +110,7 @@ class OllamaAIProviderTest {
         var capturedAuth: String? = null
         val provider = OllamaAIProvider(
             OllamaOptions(
-                baseUrl = baseUrl,
+                baseUrlString = baseUrl,
                 apiKey = "my-secret-key",
                 model = model
             ),
@@ -264,7 +264,7 @@ class OllamaAIProviderTest {
         }
         val provider = OllamaAIProvider(
             OllamaOptions(
-                baseUrl = baseUrl,
+                baseUrlString = baseUrl,
                 apiKey = null,
                 model = model
             ),
