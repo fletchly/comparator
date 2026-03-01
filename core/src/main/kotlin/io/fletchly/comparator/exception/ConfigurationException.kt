@@ -18,8 +18,4 @@
 
 package io.fletchly.comparator.exception
 
-sealed class ConfigurationException(override val message: String): Exception(message) {
-    class ConfigurationNotFound(message: String): ConfigurationException(message)
-    class Invalid(message: String): ConfigurationException(message)
-    class LoaderError(message: String): ConfigurationException(message)
-}
+class ConfigurationException(override val message: String, override val cause: Throwable? = null): Exception()

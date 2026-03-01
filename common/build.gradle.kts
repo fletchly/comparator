@@ -27,7 +27,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization)
     implementation(libs.bundles.ktor.client)
-    implementation("io.ktor:ktor-client-cio-jvm:3.4.0")
+    implementation(libs.bundles.configurate)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
