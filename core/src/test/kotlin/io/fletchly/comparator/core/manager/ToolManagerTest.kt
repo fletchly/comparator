@@ -21,7 +21,7 @@ package io.fletchly.comparator.core.manager
 import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.tool.ToolList
+import io.fletchly.comparator.util.ToolList
 import io.fletchly.comparator.model.tool.ToolResult
 import io.mockk.coEvery
 import io.mockk.coVerify
