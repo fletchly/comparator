@@ -21,7 +21,7 @@ package io.fletchly.comparator.port.out
 /**
  * Represents a port for retrieving system-level contextual information.
  */
-interface SystemInfoPort {
+interface SystemConfigPort {
     /**
      * Retrieves a system-level prompt used for initializing or guiding the behavior
      * of a conversational system or assistant.
