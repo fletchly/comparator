@@ -9,6 +9,11 @@ kotlinx-coroutines = "1.10.2"
 dokka = "2.1.0"
 mockk = "1.14.9"
 ktor = "3.4.0"
+minecraft = "1.21.11"
+paperweight = "2.0.0-beta.19"
+paper = "1.21.11-R0.1-SNAPSHOT"
+shadowJar = "8.3.0"
+runPaper = "2.3.1"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -30,3 +35,6 @@ ktor-client = [ "ktor-client-core", "ktor-client-cio", "ktor-client-contentNegot
 
 [plugins]
 kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+paperweightUserdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
+shadowJar = { id = "com.gradleup.shadow", version.ref = "shadowJar"}
+runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }

@@ -8,6 +8,7 @@ dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
     repositories {
         mavenCentral()
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 }
 
@@ -18,5 +19,6 @@ plugins {
 
 include(":core")
 include(":common")
+include(":paper")
 
 rootProject.name = "comparator"
