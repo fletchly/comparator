@@ -1,0 +1,77 @@
+/*
+ * This file is part of comparator, licensed under the Apache License 2.0
+ *
+ * Copyright (c) 2026 fletchly <https://github.com/fletchly>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.fletchly.comparator.adapter.command
+
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.arguments.StringArgumentType
+import io.fletchly.comparator.adapter.command.model.CommandDefinition
+import io.fletchly.comparator.adapter.command.model.command
+import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.model.BukkitPlayerUser
+import io.fletchly.comparator.model.ConsoleUser
+import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.port.`in`.MessageSender
+import io.papermc.paper.command.brigadier.Commands
+import org.bukkit.entity.Player
+import org.bukkit.permissions.PermissionDefault
+
+/**
+ * Represents the `/ask` command within the system, which allows users to ask questions.
+ *
+ * This command integrates with a messaging system to process user input and provide
+ * responses. Users invoke the command with a question prompt, which is then processed
+ * asynchronously. It supports permissions, aliases, and a structured argument system.
+ *
+ * @constructor Initializes the `AskCommand` with the required dependencies.
+ * @param messageSender The service responsible for processing and sending user-generated messages.
+ * @param pluginScheduler The scheduler utility used for managing asynchronous tasks and coroutines.
+ */
+class AskCommand(
+    messageSender: MessageSender,
+    pluginScheduler: PluginScheduler
+): CommandDefinition {
+    override val definition = command("ask") {
+        description = "Ask a question"
+        aliases = listOf("c")
+        permission = "comparator.ask"
+        permissionDescription = "Allows a player to ask questions"
+        permissionDefault = PermissionDefault.TRUE
+
+        node {
+            then(
+                Commands.argument("prompt", StringArgumentType.greedyString())
+                    .executes { ctx ->
+                        val prompt = StringArgumentType.getString(ctx, "prompt")
+                        val user = when (val sender = ctx.source.sender) {
+                            is Player -> BukkitPlayerUser(sender)
+                            else -> ConsoleUser
+                        }
+
+                        val userMessage = Message.User(prompt, user)
+
+                        pluginScheduler.runCoroutine {
+                            messageSender.fromUser(userMessage)
+                        }
+
+                        Command.SINGLE_SUCCESS
+                    }
+            )
+        }
+    }
+}
