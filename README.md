@@ -1,4 +1,4 @@
-![Comparator](https://uc3d612c992cfbb14ed3e447bd2e.dl.dropboxusercontent.com/cd/0/inline/C73jaiNeOydHRBq-zyv4D3aXop3-3pGvnh32NtGSGK2LcN5XxaGQXjtlW4ZBV1lEk71PZ5QzopdNDK5VQriPl3b3jsAsJX7-sMemcxRUu7AqN4AtPUGBCux2uwaqnsi-iErpOr1m9a87icwFUxd1vwLC/file#)
+![Comparator](https://www.dropbox.com/scl/fi/qk3sqt46garmoyoqei3pa/comparator-banner.png?rlkey=mt61gg70qxlvond5sys82jac6&st=z7pytba9&raw=1)
 
 > #### The AI agent built for Minecraft.
 
