@@ -28,8 +28,7 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            build/libs/*.jar
-            build/distributions/*
+          if-no-files-found: error
 
   create-release:
     needs: build
@@ -65,7 +64,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/**/*
+          files: artifacts/comparator-*-paper.jar
           draft: true
           prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
