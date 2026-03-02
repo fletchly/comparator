@@ -24,7 +24,7 @@
 4. Follow the [quickstart guide]() to complete setup
 
 ## Support
-- [Documentation]()
+- [Documentation](https://fletchly.gitbook.io/comparator-docs/)
 - [Github Issues](https://github.com/fletchly/comparator/issues)
 
 ## Contributing
