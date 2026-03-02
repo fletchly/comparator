@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.core.model.tool
+package io.fletchly.comparator.model.tool
 
 import io.fletchly.comparator.exception.ToolDefinitionException
 import io.fletchly.comparator.exception.ToolException
-import io.fletchly.comparator.model.tool.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject

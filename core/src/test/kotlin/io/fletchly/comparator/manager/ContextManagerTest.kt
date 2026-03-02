@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.core.manager
+package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.manager.ContextManager
 import io.fletchly.comparator.model.user.User

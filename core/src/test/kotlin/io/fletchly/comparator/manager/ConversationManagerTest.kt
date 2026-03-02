@@ -16,10 +16,8 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.core.manager
+package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.manager.ConversationManager
-import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall

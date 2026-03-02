@@ -16,21 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.core.manager
+package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.out.LogPort
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonPrimitive
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
