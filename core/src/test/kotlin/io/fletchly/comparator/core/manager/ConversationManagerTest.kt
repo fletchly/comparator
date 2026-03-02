@@ -85,10 +85,17 @@ class ConversationManagerTest {
     }
 
     @Test
-    fun `sends assistant response to chat`() = runTest {
-        val response = stubAiSuccess(toolCalls = null)
+    fun `sends assistant response to chat when assistant returns content`() = runTest {
+        val response = stubAiSuccess(toolCalls = null, withContent = true)
         manager.fromUser(message)
         coVerify { chat.message(sender, response) }
+    }
+
+    @Test
+    fun `does not send assistant response to chat when assistant empty content`() = runTest {
+        val response = stubAiSuccess(toolCalls = null)
+        manager.fromUser(message)
+        coVerify(exactly = 0) { chat.message(sender, response) }
     }
 
     @Test
@@ -134,10 +141,12 @@ class ConversationManagerTest {
 
     private fun stubAiSuccess(
         toolCalls: List<ToolCall>?,
-        thenNoTools: Boolean = false
+        thenNoTools: Boolean = false,
+        withContent: Boolean = false,
     ): Message.Assistant {
         val response = mockk<Message.Assistant>(relaxed = true) {
             every { this@mockk.toolCalls } returns toolCalls
+            if (withContent) every { this@mockk.content } returns "content"
         }
         val successResult = MessageResult.Success(response)
 
