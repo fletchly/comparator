@@ -39,13 +39,23 @@ dependencies {
 }
 
 tasks {
+    jar {
+        enabled = false
+    }
+
+    shadowJar {
+        archiveBaseName = rootProject.name
+        archiveVersion = rootProject.version.toString()
+        archiveClassifier = "paper"
+    }
+
+    assemble {
+        dependsOn(shadowJar)
+    }
+
     runServer {
         notCompatibleWithConfigurationCache("Invocation of 'Task.project' at execution time is unsupported with the configuration cache.")
         minecraftVersion(libs.versions.minecraft.get())
-    }
-
-    build {
-        dependsOn("shadowJar")
     }
 
     processResources {
