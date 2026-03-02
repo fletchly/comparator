@@ -1,7 +1,7 @@
 ![Comparator](https://uc3d612c992cfbb14ed3e447bd2e.dl.dropboxusercontent.com/cd/0/inline/C73jaiNeOydHRBq-zyv4D3aXop3-3pGvnh32NtGSGK2LcN5XxaGQXjtlW4ZBV1lEk71PZ5QzopdNDK5VQriPl3b3jsAsJX7-sMemcxRUu7AqN4AtPUGBCux2uwaqnsi-iErpOr1m9a87icwFUxd1vwLC/file#)
 
-> The AI agent built for Minecraft.
-> 
+> #### The AI agent built for Minecraft.
+
 [![Github](https://img.shields.io/badge/github-comparator-yellow?logo=github)](https://github.com/fletchly/genius)
 ![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
@@ -9,13 +9,13 @@
 ![Release](https://img.shields.io/github/v/release/fletchly/comparator)
 
 ## Features
-- [x] **AI-Powered Agent:** Embed a fully conversational AI agent directly into your Minecraft server.
-- [x] **Ollama Integration:** Choose from a selection of cloud-based or self-hosted models thanks to seamless integration with Ollama.
-- [x] **Multi-Turn Conversations:** Maintains context across messages for natural, coherent dialogue with players.
-- [x] **Tool Calling:** The agent can invoke tools and take actions in response to player requests.
-- [x] **Fully Concurrent:** Built on Kotlin coroutines for non-blocking, high-performance execution that won't lag your server.
-- [x] **Configurable Prompting:** Customize the agent's personality, behavior, and context via config files.
-- [ ] *(Coming Soon)* **Extensible Tool System:** Register custom tools to expand what the agent can do in-game.
+- **AI-Powered Agent:** Embed a fully conversational AI agent directly into your Minecraft server.
+- **Ollama Integration:** Choose from a selection of cloud-based or self-hosted models thanks to seamless integration with Ollama.
+- **Multi-Turn Conversations:** Maintains context across messages for natural, coherent dialogue with players.
+- **Tool Calling:** The agent can invoke tools and take actions in response to player requests.
+- **Fully Concurrent:** Built on Kotlin coroutines for non-blocking, high-performance execution that won't lag your server.
+- **Configurable Prompting:** Customize the agent's personality, behavior, and context via config files.
+- *(Coming Soon)* **Extensible Tool System:** Register custom tools to expand what the agent can do in-game.
 
 ## Installation
 1. Download the plugin `jar` from [GitHub](https://github.com/fletchly/comparator/releases/latest)
