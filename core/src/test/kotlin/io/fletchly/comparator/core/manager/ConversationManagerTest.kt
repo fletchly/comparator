@@ -23,145 +23,230 @@ import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.*
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ConversationManagerTest {
+
     private val context = mockk<ContextPort>(relaxed = true)
-    private val system = mockk<SystemConfigPort>(relaxed = true)
-    private val ai = mockk<AIPort>(relaxed = true)
+    private val system = mockk<SystemConfigPort>()
+    private val ai = mockk<AIPort>()
     private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
+    private val scope = mockk<ScopePort>()
 
-    private val manager = ConversationManager(context, system, ai, tool, chat, notification)
+    private val user = mockk<User>()
 
-    private val sender = mockk<User>()
-    private val message = mockk<Message.User>(relaxed = true).also {
-        every { it.sender } returns sender
+    @BeforeTest
+    fun setUp() {
+        every { system.prompt } returns "You are a helpful assistant."
     }
 
-    @Test
-    fun `fromUser appends message to context`() = runTest {
-        stubAiSuccess(toolCalls = null)
-        manager.fromUser(message)
-        coVerify { context.append(sender, message) }
+    private fun TestScope.buildManager(): ConversationManager {
+        every { scope.launch(any()) } answers {
+            backgroundScope.launch(UnconfinedTestDispatcher(testScheduler), block = firstArg())
+        }
+        return ConversationManager(context, system, ai, tool, chat, notification, scope)
     }
 
-    @Test
-    fun `fromUser sends user message to chat`() = runTest {
-        stubAiSuccess(toolCalls = null)
-        manager.fromUser(message)
-        coVerify { chat.message(sender, message) }
-    }
+    // --- fromUser: basic flow ---
 
     @Test
-    fun `sends error notification on AI failure`() = runTest {
-        val error = "something went wrong"
-        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Failure(error)
+    fun `fromUser appends message to context and echoes it to chat`() = runTest {
+        val manager = buildManager()
+        val message = Message.User(content = "Hello", sender = user)
 
-        manager.fromUser(message)
-
-        coVerify { notification.error(sender, error) }
-    }
-
-    @Test
-    fun `does not append to context on AI failure`() = runTest {
-        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Failure("err")
+        coEvery { context.get(user) } returns conversationOf(message)
+        coEvery { ai.generateResponse(any(), any()) } returns
+                MessageResult.Success(Message.Assistant(content = "Hi!"))
 
         manager.fromUser(message)
 
-        coVerify(exactly = 0) { context.append(sender, any<Message.Assistant>()) }
+        coVerify { context.append(user, message) }
+        coVerify { chat.message(user, message) }
     }
 
     @Test
-    fun `appends assistant response to context`() = runTest {
-        val response = stubAiSuccess(toolCalls = null)
-        manager.fromUser(message)
-        coVerify { context.append(sender, response) }
+    fun `fromUser warns and does not queue when channel is full`() = runTest {
+        val manager = buildManager()
+        val message = Message.User(content = "Flood", sender = user)
+
+        coEvery { context.get(user) } returns conversationOf(message)
+        coEvery { ai.generateResponse(any(), any()) } coAnswers {
+            delay(Long.MAX_VALUE)
+            MessageResult.Success(Message.Assistant(content = ""))
+        }
+
+        repeat(ConversationManager.MAX_QUEUED_MESSAGES + 2) {
+            manager.fromUser(message)
+        }
+
+        coVerify(atLeast = 1) {
+            chat.message(user, Message.Assistant("Too many messages queued, please wait."))
+        }
+    }
+
+    // --- AssistantLoop: no tool calls ---
+
+    @Test
+    fun `assistant response with content is sent to chat and appended to context`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Hey", sender = user)
+        val assistantMessage = Message.Assistant(content = "Hello!")
+
+        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantMessage)
+
+        manager.fromUser(userMessage)
+
+        coVerify { chat.message(user, assistantMessage) }
+        coVerify { context.append(user, assistantMessage) }
+        coVerify(exactly = 0) { tool.execute(any()) }
     }
 
     @Test
-    fun `sends assistant response to chat when assistant returns content`() = runTest {
-        val response = stubAiSuccess(toolCalls = null, withContent = true)
-        manager.fromUser(message)
-        coVerify { chat.message(sender, response) }
+    fun `assistant response with blank content is appended to context but not sent to chat`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Hey", sender = user)
+        val blankAssistant = Message.Assistant(content = "   ")
+
+        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(blankAssistant)
+
+        manager.fromUser(userMessage)
+
+        coVerify(exactly = 0) { chat.message(user, blankAssistant) }
+        coVerify { context.append(user, blankAssistant) }
+    }
+
+    // --- AssistantLoop: tool calls ---
+
+    @Test
+    fun `single tool call is executed, result appended, then loop continues`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Search something", sender = user)
+        val toolCall = mockk<ToolCall>()
+        val toolResult = Message.Tool(content = "tool output")
+        val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
+        val finalAssistant = Message.Assistant(content = "Done!")
+
+        coEvery { tool.execute(toolCall) } returns toolResult
+        coEvery { context.get(user) } returnsMany listOf(
+            conversationOf(userMessage),
+            conversationOf(userMessage, assistantWithTool, toolResult)
+        )
+        coEvery { ai.generateResponse(any(), any()) } returnsMany listOf(
+            MessageResult.Success(assistantWithTool),
+            MessageResult.Success(finalAssistant)
+        )
+
+        manager.fromUser(userMessage)
+
+        coVerify { tool.execute(toolCall) }
+        coVerify { context.append(user, toolResult) }
+        coVerify { chat.message(user, finalAssistant) }
     }
 
     @Test
-    fun `does not send assistant response to chat when assistant empty content`() = runTest {
-        val response = stubAiSuccess(toolCalls = null)
-        manager.fromUser(message)
-        coVerify(exactly = 0) { chat.message(sender, response) }
-    }
-
-    @Test
-    fun `does not execute tools when there are no tool calls`() = runTest {
-        stubAiSuccess(toolCalls = null)
-        manager.fromUser(message)
-        coVerify { tool wasNot called }
-    }
-
-    @Test
-    fun `executes each tool call`() = runTest {
+    fun `multiple tool calls are all executed and their results appended`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Do many things", sender = user)
         val toolCall1 = mockk<ToolCall>()
         val toolCall2 = mockk<ToolCall>()
-        stubAiSuccess(toolCalls = listOf(toolCall1, toolCall2), thenNoTools = true)
+        val toolResult1 = Message.Tool(content = "result 1")
+        val toolResult2 = Message.Tool(content = "result 2")
+        val assistantWithTools = Message.Assistant(
+            content = "Calling tools",
+            toolCalls = listOf(toolCall1, toolCall2)
+        )
+        val finalAssistant = Message.Assistant(content = "All done")
 
-        manager.fromUser(message)
+        coEvery { tool.execute(toolCall1) } returns toolResult1
+        coEvery { tool.execute(toolCall2) } returns toolResult2
+        coEvery { context.get(user) } returnsMany listOf(
+            conversationOf(userMessage),
+            conversationOf(userMessage, assistantWithTools, toolResult1, toolResult2)
+        )
+        coEvery { ai.generateResponse(any(), any()) } returnsMany listOf(
+            MessageResult.Success(assistantWithTools),
+            MessageResult.Success(finalAssistant)
+        )
+
+        manager.fromUser(userMessage)
 
         coVerify { tool.execute(toolCall1) }
         coVerify { tool.execute(toolCall2) }
+        coVerify { context.append(user, toolResult1) }
+        coVerify { context.append(user, toolResult2) }
     }
 
     @Test
-    fun `appends tool results to context`() = runTest {
-        val toolCall = mockk<ToolCall>()
-        val toolResult = mockk<Message.Tool>()
-        coEvery { tool.execute(toolCall) } returns toolResult
-        stubAiSuccess(toolCalls = listOf(toolCall), thenNoTools = true)
+    fun `empty tool calls list is treated as terminal - loop does not recurse`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Hey", sender = user)
+        val assistantEmptyTools = Message.Assistant(content = "Done", toolCalls = emptyList())
 
-        manager.fromUser(message)
+        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantEmptyTools)
 
-        coVerify { context.append(sender, toolResult) }
+        manager.fromUser(userMessage)
+
+        coVerify(exactly = 1) { ai.generateResponse(any(), any()) }
+        coVerify(exactly = 0) { tool.execute(any()) }
     }
+
+    // --- AssistantLoop: failure ---
 
     @Test
-    fun `loops and calls AI again after handling tool calls`() = runTest {
-        val toolCall = mockk<ToolCall>()
-        stubAiSuccess(toolCalls = listOf(toolCall), thenNoTools = true)
+    fun `AI failure sends error notification without messaging chat`() = runTest {
+        val manager = buildManager()
+        val userMessage = Message.User(content = "Uh oh", sender = user)
+        val errorMessage = "AI unavailable"
 
-        manager.fromUser(message)
+        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Failure(errorMessage)
 
-        coVerify(exactly = 2) { ai.generateResponse(any(), any()) }
+        manager.fromUser(userMessage)
+
+        coVerify { notification.error(user, errorMessage) }
+        coVerify(exactly = 0) { chat.message(user, any<Message.Assistant>()) }
     }
 
-    private fun stubAiSuccess(
-        toolCalls: List<ToolCall>?,
-        thenNoTools: Boolean = false,
-        withContent: Boolean = false,
-    ): Message.Assistant {
-        val response = mockk<Message.Assistant>(relaxed = true) {
-            every { this@mockk.toolCalls } returns toolCalls
-            if (withContent) every { this@mockk.content } returns "content"
-        }
-        val successResult = MessageResult.Success(response)
+    // --- User isolation ---
 
-        if (thenNoTools) {
-            val secondResponse = mockk<Message.Assistant>(relaxed = true) {
-                every { this@mockk.toolCalls } returns null
-            }
-            coEvery { ai.generateResponse(any(), any()) } returnsMany listOf(
-                successResult,
-                MessageResult.Success(secondResponse)
-            )
-        } else {
-            coEvery { ai.generateResponse(any(), any()) } returns successResult
-        }
+    @Test
+    fun `two users receive independent conversations`() = runTest {
+        val manager = buildManager()
+        val user2 = mockk<User>()
+        val msg1 = Message.User(content = "From user 1", sender = user)
+        val msg2 = Message.User(content = "From user 2", sender = user2)
+        val response = Message.Assistant(content = "OK")
 
-        return response
+        coEvery { context.get(user) } returns conversationOf(msg1)
+        coEvery { context.get(user2) } returns conversationOf(msg2)
+        coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(response)
+
+        manager.fromUser(msg1)
+        manager.fromUser(msg2)
+
+        coVerify { context.append(user, msg1) }
+        coVerify { context.append(user2, msg2) }
+        coVerify(exactly = 0) { context.append(user, msg2) }
+        coVerify(exactly = 0) { context.append(user2, msg1) }
     }
 }
