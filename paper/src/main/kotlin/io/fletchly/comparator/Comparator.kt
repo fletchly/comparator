@@ -20,31 +20,24 @@ package io.fletchly.comparator
 
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.registerCommand
-import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.adapter.tool.GameVersionTool
-import io.fletchly.comparator.adapter.tool.WebSearchTool
-import io.fletchly.comparator.di.*
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.tool.ToolDefinition
+import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolRegistry
-import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.Koin
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
-import org.koin.java.KoinJavaComponent.getKoin
 
 class Comparator : JavaPlugin() {
-    private lateinit var koin: Koin
+    private var koinBootstrapper = KoinBootstrapper(this)
+    private val koin = koinBootstrapper.start()
 
     override fun onEnable() {
-        initializeModules()
         registerCommands()
         registerEventListeners()
         registerTools()
@@ -63,20 +56,6 @@ class Comparator : JavaPlugin() {
         scheduler.cancel()
 
         stopKoin()
-    }
-
-    private fun initializeModules() {
-        startKoin {
-            modules(
-                coreModule,
-                commonAdapterModule,
-                paperInfraModule(this@Comparator),
-                paperAdapterModule,
-                paperConfigModule
-            )
-        }
-
-        koin = getKoin()
     }
 
     private fun registerCommands() {
@@ -104,17 +83,10 @@ class Comparator : JavaPlugin() {
     }
 
     private fun registerTools() {
-        val toolConfig = koin.get<PluginConfigService>().config.tool
+        koinBootstrapper.loadToolModules(koin)
         val toolRegistry = koin.get<ToolRegistry>()
-
-        loadKoinModules(
-            buildList {
-                if (toolConfig.gameVersion.enabled) add(GameVersionTool.module)
-                if (toolConfig.webSearch.enabled) add(WebSearchTool.module)
-            }
-        )
-
         val tools = koin.getAll<ToolDefinition>()
+
         toolRegistry.register(ToolList(tools.map { it.definition }))
 
         logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
