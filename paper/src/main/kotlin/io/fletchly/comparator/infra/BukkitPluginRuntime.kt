@@ -16,9 +16,15 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.infra.scheduler
+package io.fletchly.comparator.infra
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -27,10 +33,10 @@ import org.bukkit.plugin.java.JavaPlugin
  * This class provides functionality to run synchronous tasks on the primary server thread, as well as managing
  * coroutines in a dedicated coroutine scope tied to the plugin's lifecycle.
  *
- * @constructor Creates an instance of PluginScheduler for the given JavaPlugin.
+ * @constructor Creates an instance of BukkitPluginRuntime for the given JavaPlugin.
  * @param plugin The plugin instance associated with this scheduler.
  */
-class PluginScheduler(
+class BukkitPluginRuntime(
     private val plugin: JavaPlugin
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -64,8 +70,8 @@ class PluginScheduler(
      * @param block A suspendable lambda expression representing the coroutine logic
      * to be executed. The lambda operates within the receiver of a [CoroutineScope].
      */
-    fun runCoroutine(block: suspend CoroutineScope.() -> Unit) {
-        scope.launch(block = block)
+    fun runCoroutine(block: suspend CoroutineScope.() -> Unit): Job {
+        return scope.launch(block = block)
     }
 
 

@@ -24,7 +24,7 @@ import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.adapter.tool.GameVersionTool
 import io.fletchly.comparator.adapter.tool.WebSearchTool
 import io.fletchly.comparator.di.*
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolRegistry
@@ -54,7 +54,7 @@ class Comparator : JavaPlugin() {
 
     override fun onDisable() {
         val context = koin.get<ContextClearer>()
-        val scheduler = koin.get<PluginScheduler>()
+        val scheduler = koin.get<BukkitPluginRuntime>()
 
         logger.info { "Clearing context for all users" }
         runBlocking { context.clearAll() }

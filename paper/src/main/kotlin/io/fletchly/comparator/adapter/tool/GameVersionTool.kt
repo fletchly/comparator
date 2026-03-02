@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.tool
 
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.tool
 import org.bukkit.plugin.java.JavaPlugin
@@ -31,13 +31,13 @@ import java.time.LocalDate
  * A tool that retrieves the current game server version and the current date.
  *
  * @property plugin The JavaPlugin instance associated with this tool.
- * @property pluginScheduler A scheduler utility for running tasks and coroutines safely within the plugin context.
+ * @property pluginRuntime A scheduler utility for running tasks and coroutines safely within the plugin context.
  */
 class GameVersionTool(
     private val plugin: JavaPlugin,
-    private val pluginScheduler: PluginScheduler
+    private val pluginRuntime: BukkitPluginRuntime
 ): ToolDefinition {
-    suspend fun getGameVersion() = pluginScheduler.runTask {
+    suspend fun getGameVersion() = pluginRuntime.runTask {
         mapOf("version" to plugin.server.version, "date" to LocalDate.now().toString())
     }
 
