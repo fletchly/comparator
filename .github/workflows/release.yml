@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,15 +23,51 @@ jobs:
       - name: Build and Test
         run: ./gradlew build test
 
-      - name: Gather artifacts
-        run: |
-          mkdir -p release-artifacts
-          cp paper/build/libs/*-paper-*.jar release-artifacts/ 2>/dev/null || true
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            build/libs/*.jar
+            build/distributions/*
 
-      - name: Create GitHub Release
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: artifacts
+
+      - name: Detect prerelease
+        id: prerelease
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          
+          echo "Tag: $TAG"
+          
+          # If tag contains a hyphen like 1.0.0-alpha.1 or v1.2.3-beta → prerelease
+          if [[ "$TAG" == *-* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: release-artifacts/*.jar
+          files: artifacts/**/*
+          draft: true
+          prerelease: ${{ steps.prerelease.outputs.is_prerelease }}
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
