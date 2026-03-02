@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.chat
 
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.message.Message
@@ -36,15 +36,15 @@ import org.bukkit.plugin.java.JavaPlugin
  *
  * This class bridges the `ChatPort` interface with a server-driven implementation,
  * allowing customized rendering of messages from users, assistants, or tools.
- * It uses the provided `PluginScheduler` to ensure tasks are executed on the appropriate
+ * It uses the provided `BukkitPluginRuntime` to ensure tasks are executed on the appropriate
  * server thread and manages message formatting for different user types.
  *
  * @constructor Creates an instance of `PaperChatService`.
- * @param pluginScheduler A scheduler used to execute tasks on the server thread.
+ * @param pluginRuntime A scheduler used to execute tasks on the server thread.
  * @param plugin The plugin instance associated with the chat service.
  */
 class PaperChatService(
-    private val pluginScheduler: PluginScheduler,
+    private val pluginRuntime: BukkitPluginRuntime,
     plugin: JavaPlugin
 ) : ChatPort {
     private val server = plugin.server
@@ -52,7 +52,7 @@ class PaperChatService(
     override suspend fun message(
         target: User,
         message: Message
-    ) = pluginScheduler.runTask {
+    ) = pluginRuntime.runTask {
         when (message) {
             is Message.User -> target.sendMessage(userMessage(message))
             is Message.Assistant -> target.sendMessage(assistantMessage(message))

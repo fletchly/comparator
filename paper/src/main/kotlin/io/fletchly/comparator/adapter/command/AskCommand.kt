@@ -22,7 +22,7 @@ import com.mojang.brigadier.Command
 import com.mojang.brigadier.arguments.StringArgumentType
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.command
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.toUser
@@ -33,11 +33,11 @@ import org.bukkit.permissions.PermissionDefault
  * Represents the `/ask` command within the system, which allows users to ask questions.
  *
  * @param messageSender The service responsible for processing and sending user-generated messages.
- * @param pluginScheduler The scheduler utility used for managing asynchronous tasks and coroutines.
+ * @param pluginRuntime The scheduler utility used for managing asynchronous tasks and coroutines.
  */
 class AskCommand(
     messageSender: MessageSender,
-    pluginScheduler: PluginScheduler
+    pluginRuntime: BukkitPluginRuntime
 ): CommandDefinition {
     override val definition = command("ask") {
         description = "Ask a question"
@@ -54,7 +54,7 @@ class AskCommand(
                         val user =  ctx.source.sender.toUser()
                         val userMessage = Message.User(prompt, user)
 
-                        pluginScheduler.runCoroutine {
+                        pluginRuntime.runCoroutine {
                             messageSender.fromUser(userMessage)
                         }
 

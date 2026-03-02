@@ -21,7 +21,7 @@ package io.fletchly.comparator.adapter.command
 import com.mojang.brigadier.Command
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.command.model.command
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toUser
 import io.papermc.paper.command.brigadier.Commands
@@ -34,11 +34,11 @@ import org.bukkit.permissions.PermissionDefault
  * Represents the administrative command definition for managing the Comparator system.
  *
  * @param contextClearer The utility that performs clearing of conversational contexts for users.
- * @param pluginScheduler The scheduler for managing asynchronous command execution and tasks.
+ * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
 class AdminCommand(
     contextClearer: ContextClearer,
-    pluginScheduler: PluginScheduler
+    pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
         description = "Manage Comparator"
@@ -72,7 +72,7 @@ class AdminCommand(
                     .executes { ctx ->
                         val user = ctx.source.sender.toUser()
 
-                        pluginScheduler.runCoroutine {
+                        pluginRuntime.runCoroutine {
                             with(contextClearer) { user.clearSelf() }
                         }
 
@@ -90,7 +90,7 @@ class AdminCommand(
                                 val targetUsers = targetResolver.resolve(ctx.source).map { it.toUser() }
                                 val feedbackUser = ctx.source.sender.toUser()
 
-                                pluginScheduler.runCoroutine {
+                                pluginRuntime.runCoroutine {
                                     with(contextClearer) { feedbackUser.clearOther(targetUsers) }
                                 }
 

@@ -28,7 +28,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
-    implementation(libs.guava)
+    implementation(libs.caffeine)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.mockk)

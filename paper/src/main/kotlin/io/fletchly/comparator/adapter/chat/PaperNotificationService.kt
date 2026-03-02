@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.chat
 
-import io.fletchly.comparator.infra.scheduler.PluginScheduler
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.user.User
@@ -37,20 +37,20 @@ import org.bukkit.plugin.java.JavaPlugin
  * as sending informational or error messages, with integration to the Bukkit server environment.
  *
  * @constructor Initializes the `PaperNotificationService` with a plugin scheduler and plugin instance.
- * @param pluginScheduler The scheduler used for managing tasks on the server's main thread.
+ * @param pluginRuntime The scheduler used for managing tasks on the server's main thread.
  * @param plugin The plugin instance providing the server context and resources.
  */
 class PaperNotificationService(
-    private val pluginScheduler: PluginScheduler,
+    private val pluginRuntime: BukkitPluginRuntime,
     plugin: JavaPlugin
 ) : NotificationPort {
     private val server = plugin.server
 
     override suspend fun info(user: User, message: String) =
-        pluginScheduler.runTask { user.sendMessage(infoMessage(message)) }
+        pluginRuntime.runTask { user.sendMessage(infoMessage(message)) }
 
     override suspend fun error(user: User, message: String) =
-        pluginScheduler.runTask { user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
+        pluginRuntime.runTask { user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
 
     private fun User.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
         if (!this.isOnline) return
