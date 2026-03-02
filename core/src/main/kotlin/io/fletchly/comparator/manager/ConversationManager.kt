@@ -90,7 +90,7 @@ class ConversationManager(
 
                 is MessageResult.Success<Message.Assistant> -> {
                     val response = result.message
-                    chat.message(target, response)
+                    if (response.content.isNotBlank()) chat.message(target, response)
                     context.append(target, response)
 
                     val toolCalls = response.toolCalls
