@@ -18,15 +18,15 @@
 
 package io.fletchly.comparator.manager
 
-import com.google.common.cache.Cache
-import com.google.common.cache.CacheBuilder
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
-import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.channels.Channel
 import java.util.concurrent.TimeUnit
 
 /**
@@ -50,28 +50,34 @@ class ConversationManager(
     private val ai: AIPort,
     private val tool: ToolManager,
     private val chat: ChatPort,
-    private val notification: NotificationPort
+    private val notification: NotificationPort,
+    private val scope: ScopePort
 ) : MessageSender {
-    private val userLocks: Cache<User, Mutex> = CacheBuilder.newBuilder()
+    private val userChannels: Cache<User, Channel<Message.User>> = Caffeine.newBuilder()
         .expireAfterAccess(10, TimeUnit.MINUTES)
+        .removalListener<User, Channel<Message.User>> { _, channel, _ -> channel?.close() }
         .build()
 
-    override suspend fun fromUser(
-        message: Message.User
-    ) {
-        val mutex = userLocks.get(message.sender) { Mutex() }
+    override suspend fun fromUser(message: Message.User) {
+        val channel = userChannels.get(message.sender) { createChannelFor(message.sender) }
 
-        if (!mutex.tryLock()) {
-            chat.message(message.sender, Message.Assistant("A response is already in progress, please wait."))
-            return
+        val sent = channel.trySend(message)
+        if (sent.isFailure) {
+            chat.message(message.sender, Message.Assistant("Too many messages queued, please wait."))
+        }
+    }
+
+    private fun createChannelFor(user: User): Channel<Message.User> {
+        val channel = Channel<Message.User>(capacity = MAX_QUEUED_MESSAGES)
+
+        scope.launch {
+            for (message in channel) {
+                startConversation(message)
+                AssistantLoop(user).run()
+            }
         }
 
-        try {
-            startConversation(message)
-            AssistantLoop(message.sender).run()
-        } finally {
-            mutex.unlock()
-        }
+        return channel
     }
 
     private suspend fun startConversation(message: Message.User) {
@@ -107,5 +113,9 @@ class ConversationManager(
                 .map { tool.execute(it) }
                 .forEach { context.append(target, it) }
         }
+    }
+
+    companion object {
+        const val MAX_QUEUED_MESSAGES = 16
     }
 }
