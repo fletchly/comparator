@@ -1,7 +1,8 @@
-# Comparator
+![Comparator](https://uc3d612c992cfbb14ed3e447bd2e.dl.dropboxusercontent.com/cd/0/inline/C73jaiNeOydHRBq-zyv4D3aXop3-3pGvnh32NtGSGK2LcN5XxaGQXjtlW4ZBV1lEk71PZ5QzopdNDK5VQriPl3b3jsAsJX7-sMemcxRUu7AqN4AtPUGBCux2uwaqnsi-iErpOr1m9a87icwFUxd1vwLC/file#)
 
 > The AI agent built for Minecraft.
-
+> 
+[![Github](https://img.shields.io/badge/github-comparator-yellow?logo=github)](https://github.com/fletchly/genius)
 ![Minecraft Version](https://img.shields.io/badge/Minecraft-1.21.x-brightgreen)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue)
 
@@ -14,27 +15,27 @@
 - [x] **Configurable Prompting:** Customize the agent's personality, behavior, and context via config files.
 - [ ] *(Coming Soon)* **Extensible Tool System:** Register custom tools to expand what the agent can do in-game.
 
-## Requirements
+## Installation
+1. Download the plugin `jar` from [GitHub](https://github.com/fletchly/comparator/releases/latest)
+2. Place the `.jar` into your server's `plugins/` folder.
+3. Restart your server
+4. Follow the [quickstart guide]() to complete setup
 
+## Support
+- [Documentation]()
+- [Github Issues](https://github.com/fletchly/comparator/issues)
 
-This project uses [Gradle](https://gradle.org/).
-To build and run the application, use the *Gradle* tool window by clicking the Gradle icon in the right-hand toolbar,
-or run it directly from the terminal:
+## Contributing
+Contributions are welcome!
 
-* Run `./gradlew run` to build and run the application.
-* Run `./gradlew build` to only build the application.
-* Run `./gradlew check` to run all checks, including tests.
-* Run `./gradlew clean` to clean all build outputs.
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Commit your changes: `git commit -m "Add my feature"`
+4. Push and open a Pull Request.
 
-Note the usage of the Gradle Wrapper (`./gradlew`).
-This is the suggested way to use Gradle in production projects.
+Please follow the existing code style and include tests where applicable.
 
-[Learn more about the Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html).
+For more info, see [contributing](https://github.com/fletchly/comparator/blob/main/CONTRIBUTING.md)
 
-[Learn more about Gradle tasks](https://docs.gradle.org/current/userguide/command_line_interface.html#common_tasks).
-
-This project follows the suggested multi-module setup and consists of the `app` and `utils` subprojects.
-The shared build logic was extracted to a convention plugin located in `buildSrc`.
-
-This project uses a version catalog (see `gradle/libs.versions.toml`) to declare and version dependencies
-and both a build cache and a configuration cache (see `gradle.properties`).
+## Credits
+- Banner icon: 'circuit' by Skena Grafis from [The Noun Project](https://thenounproject.com/icon/circuit-8187377/) (CC BY 3.0)
