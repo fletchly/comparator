@@ -1,6 +1,6 @@
 ![Comparator](https://www.dropbox.com/scl/fi/qk3sqt46garmoyoqei3pa/comparator-banner.png?rlkey=mt61gg70qxlvond5sys82jac6&st=z7pytba9&raw=1)
 
-> #### The AI agent built for Minecraft.
+> ### The AI agent built for Minecraft.
 
 [![Github](https://img.shields.io/badge/github-comparator-yellow?logo=github)](https://github.com/fletchly/genius)
 ![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
