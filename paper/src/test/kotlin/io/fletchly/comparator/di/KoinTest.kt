@@ -18,5 +18,65 @@
 
 package io.fletchly.comparator.di
 
-class KoinTest {
+import io.fletchly.comparator.adapter.config.PluginConfigService
+import io.fletchly.comparator.infra.KoinBootstrapper
+import io.fletchly.comparator.model.tool.ToolDefinition
+import io.mockk.every
+import io.mockk.mockk
+import org.bukkit.plugin.java.JavaPlugin
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.koin.core.context.loadKoinModules
+import org.koin.dsl.module
+import org.koin.test.KoinTest
+import kotlin.test.AfterTest
+import kotlin.test.Test
+
+class KoinBootstrapperTest : KoinTest {
+
+    private val mockPlugin = mockk<JavaPlugin>(relaxed = true) {
+        every { logger } returns mockk(relaxed = true)
+    }
+    private val bootstrapper = KoinBootstrapper(mockPlugin)
+
+    @AfterTest
+    fun tearDown() = bootstrapper.stop()
+
+    @Test
+    fun `start() resolves module graph without errors`() {
+        bootstrapper.start()
+    }
+
+    @Test
+    fun `loadToolModules() loads both tools when both enabled`() {
+        val koin = bootstrapper.start()
+
+        val mockConfig = mockk<PluginConfigService> {
+            every { config.tool.gameVersion.enabled } returns true
+            every { config.tool.webSearch.enabled } returns true
+            every { config.tool.webSearch.apiKey } returns "test-api-key"
+        }
+
+        loadKoinModules(module { single<PluginConfigService> { mockConfig } })
+
+        bootstrapper.loadToolModules(koin)
+
+        assertEquals(2, koin.getAll<ToolDefinition>().size)
+    }
+
+    @Test
+    fun `loadToolModules() loads no tools when both disabled`() {
+        val koin = bootstrapper.start()
+
+        val mockConfig = mockk<PluginConfigService> {
+            every { config.tool.gameVersion.enabled } returns false
+            every { config.tool.webSearch.enabled } returns false
+        }
+
+        loadKoinModules(module { single<PluginConfigService> { mockConfig } })
+
+        bootstrapper.loadToolModules(koin)
+
+        assertTrue(koin.getAll<ToolDefinition>().isEmpty())
+    }
 }
