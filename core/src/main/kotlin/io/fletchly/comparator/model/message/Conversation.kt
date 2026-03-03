@@ -28,13 +28,50 @@ package io.fletchly.comparator.model.message
  * @property conversation The collection of messages that form the conversation.
  */
 data class Conversation(private val conversation: ArrayDeque<Message>) {
+    @get:Synchronized
     val size get() = conversation.size
+
+    @get:Synchronized
     val messages get() = conversation.toList()
 
+    /**
+     * Adds a new message to the conversation.
+     *
+     * @param message The message to be added to the conversation.
+     */
     fun add(message: Message) {
         conversation.add(message)
     }
 
+    /**
+     * Adds a new message to the conversation and ensures the size of the conversation
+     * does not exceed the specified limit. If the limit is reached, the oldest message
+     * in the conversation is removed.
+     *
+     * @param message The message to be added to the conversation.
+     * @param limit The maximum number of messages allowed in the conversation. If this
+     *              limit is exceeded, the oldest message will be removed to maintain
+     *              the size constraint.
+     */
+    @Synchronized
+    fun addAndTrim(message: Message, limit: Int) {
+        conversation.add(message)
+        if (conversation.size >= limit) {
+            conversation.removeFirst()
+        }
+    }
+
+    /**
+     * Removes the oldest message from the conversation.
+     *
+     * This method removes the first message in the conversation queue, which represents
+     * the oldest message based on the order messages were added. It is used to manage
+     * memory and conversation size constraints by discarding old messages that are
+     * no longer needed.
+     *
+     * Note: If the conversation queue is empty, this method may throw an exception.
+     */
+    @Deprecated("Use addAndTrim instead, which handles trimming atomically.", ReplaceWith("addAndTrim(message, limit)"))
     fun removeOldest() {
         conversation.removeFirst()
     }
