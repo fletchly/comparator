@@ -55,16 +55,16 @@ class PaperChatService(
     ) = pluginRuntime.runTask {
         when (message) {
             is Message.User -> target.sendMessage(userMessage(message))
-            is Message.Assistant -> target.sendMessage(assistantMessage(message))
+            is Message.Assistant -> target.sendMessage(assistantMessage(message), true)
             is Message.Tool -> error("Tool messages should not be directly displayed in chat")
         }
     }
 
-    private fun User.sendMessage(message: Component) {
+    private fun User.sendMessage(message: Component, withSound: Boolean = false) {
         if (!this.isOnline) return
         when (this) {
             is BukkitPlayerUser -> {
-                this.player.playSound(RESPONSE_SOUND)
+                if (withSound) this.player.playSound(RESPONSE_SOUND)
                 this.player.sendMessage(message)
             }
 
