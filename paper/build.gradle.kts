@@ -36,6 +36,10 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.koin.test)
 }
 
 tasks {
@@ -65,6 +69,14 @@ tasks {
         filesMatching("paper-plugin.yml") {
             expand(props)
         }
+    }
+
+    test {
+        doFirst {
+            workingDir.mkdirs()
+        }
+        // Set test working dir to catch mock plugin log directory
+        workingDir = layout.buildDirectory.dir("tmp/test").get().asFile
     }
 }
 
