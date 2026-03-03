@@ -61,7 +61,7 @@ class PaperNotificationService(
             }
 
             is ConsoleUser -> server.consoleSender.sendMessage(message)
-            is PublicChatUser -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>>").append(message))
+            is PublicChatUser -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
         }
     }
 
