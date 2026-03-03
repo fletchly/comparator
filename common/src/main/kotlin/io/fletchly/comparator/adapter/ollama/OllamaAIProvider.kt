@@ -19,7 +19,7 @@
 package io.fletchly.comparator.adapter.ollama
 
 import io.fletchly.comparator.adapter.ollama.dto.*
-import io.fletchly.comparator.infra.http.HttpClient
+import io.fletchly.comparator.util.HttpClient
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult

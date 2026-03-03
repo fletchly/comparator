@@ -20,7 +20,7 @@ package io.fletchly.comparator.di
 
 import io.fletchly.comparator.adapter.ollama.OllamaAIProvider
 import io.fletchly.comparator.adapter.persistence.CaffeineContextStore
-import io.fletchly.comparator.infra.http.HttpClient
+import io.fletchly.comparator.util.HttpClient
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.ContextPort
 import org.koin.core.module.dsl.singleOf

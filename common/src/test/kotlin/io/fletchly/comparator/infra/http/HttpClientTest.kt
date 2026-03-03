@@ -18,6 +18,7 @@
 
 package io.fletchly.comparator.infra.http
 
+import io.fletchly.comparator.util.HttpClient
 import io.ktor.client.call.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*

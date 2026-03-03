@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.config
 
-import io.fletchly.comparator.infra.configurate.ConfigurateLoaders
+import io.fletchly.comparator.util.ConfigurateLoaders
 import org.spongepowered.configurate.ConfigurateException
 import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.transformation.ConfigurationTransformation

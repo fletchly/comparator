@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.ollama
 
-import io.fletchly.comparator.infra.http.HttpClient
+import io.fletchly.comparator.util.HttpClient
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall

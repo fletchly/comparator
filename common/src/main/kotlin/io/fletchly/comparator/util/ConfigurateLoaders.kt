@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.infra.configurate
+package io.fletchly.comparator.util
 
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader
 import org.spongepowered.configurate.kotlin.objectMapperFactory
@@ -29,14 +29,14 @@ import java.nio.file.Path
  */
 object ConfigurateLoaders {
     /**
-     * A lambda function for creating a preconfigured instance of [HoconConfigurationLoader].
+     * A lambda function for creating a preconfigured instance of [org.spongepowered.configurate.hocon.HoconConfigurationLoader].
      *
      * This loader is initialized with:
      * - Header preservation to retain comments from the configuration file.
      * - Pretty-printing enabled with an indent of 2 spaces.
      * - Comments emitted during save operations.
      * - A natural key ordering for maps.
-     * - Annotated object serializers registered via [objectMapperFactory].
+     * - Annotated object serializers registered via [org.spongepowered.configurate.kotlin.objectMapperFactory].
      *
      * The configuration file path is provided as the input parameter.
      */

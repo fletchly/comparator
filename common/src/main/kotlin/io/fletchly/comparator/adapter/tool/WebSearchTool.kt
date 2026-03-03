@@ -92,7 +92,7 @@ class WebSearchTool(
                 WebSearchTool(
                     get(),
                     get(),
-                    io.fletchly.comparator.infra.http.HttpClient.Ktor
+                    io.fletchly.comparator.util.HttpClient.Ktor
                 )
             } bind ToolDefinition::class
         }
