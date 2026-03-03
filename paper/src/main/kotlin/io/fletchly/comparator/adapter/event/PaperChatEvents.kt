@@ -20,7 +20,7 @@ package io.fletchly.comparator.adapter.event
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.options.BotPrefix
+import io.fletchly.comparator.model.options.PublicChatPrefixOptions
 import io.fletchly.comparator.model.user.BukkitChatPlayerUser
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -36,7 +36,7 @@ import org.bukkit.event.Listener
  * @constructor Initializes the `PaperChatEvents` listener with dependencies for
  * handling messages, managing command prefixes, and executing asynchronous tasks.
  *
- * @param botPrefix The bot prefix used to identify commands intended for the bot.
+ * @param prefixOptions The bot prefix used to identify commands intended for the bot.
  *                  Commands must start with this prefix to be recognized.
  * @param messageSender The component responsible for handling user-generated
  * messages by passing them to the system's messaging pipeline.
@@ -44,11 +44,11 @@ import org.bukkit.event.Listener
  * specific to the lifecycle of a Bukkit plugin.
  */
 class PaperChatEvents(
-    botPrefix: BotPrefix,
+    prefixOptions: PublicChatPrefixOptions,
     private val messageSender: MessageSender,
     private val pluginRuntime: BukkitPluginRuntime
 ) : Listener {
-    private val prefix = botPrefix.prefix
+    private val prefix = prefixOptions.prefix
 
     /**
      * Handles asynchronous chat events, processes user messages intended for the bot,

@@ -19,4 +19,4 @@
 package io.fletchly.comparator.model.options
 
 @JvmInline
-value class BotPrefix(val prefix: String)
+value class PublicChatPrefixOptions(val prefix: String)
