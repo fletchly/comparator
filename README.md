@@ -2,11 +2,12 @@
 
 > ### The AI agent built for Minecraft.
 
-[![Github](https://img.shields.io/badge/github-comparator-yellow?logo=github)](https://github.com/fletchly/genius)
+[![Github](https://img.shields.io/badge/github-comparator-FFBD59?logo=github)](https://github.com/fletchly/comparator)
+[![Modrinth](https://img.shields.io/badge/modrinth-comparator-00AF5C?logo=modrinth)](https://modrinth.com/project/MQoLAFN8)
 ![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
-[![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
 ![Release](https://img.shields.io/github/v/release/fletchly/comparator)
+[![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
 
 ## Features
 - **AI-Powered Agent:** Embed a fully conversational AI agent directly into your Minecraft server.
