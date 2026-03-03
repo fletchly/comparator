@@ -19,17 +19,16 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
-import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort
+import io.fletchly.comparator.util.miniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.Component.text
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -77,28 +76,18 @@ class PaperChatService(
         }
     }
 
-    private fun userMessage(message: Message.User) =
-        PLAYER_PREFIX
-            .append(text(message.sender.displayName))
-            .append(ARROW)
-            .append(text(message.content, NamedTextColor.GRAY))
+    private fun userMessage(message: Message.User) = miniMessage("<yellow>$PLAYER_ICON ${message.sender.displayName}</yellow> $ARROW ${message.content}")
 
     private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
         when (isPublic) {
-            true -> PUBLIC_AGENT_PREFIX
-                .append(text(message.content))
-            false -> PRIVATE_AGENT_PREFIX
-                .append(ARROW, text(message.content, NamedTextColor.WHITE))
+            true -> miniMessage("<<green>$AGENT_NAME</green>> ${message.content}")
+            false -> miniMessage("<green>$AGENT_ICON $AGENT_NAME</green> $ARROW ${message.content}")
         }
 
-    // TODO: Improve text rendering
     private companion object {
-        val ARROW = text(" → ", NamedTextColor.WHITE)
-        val AGENT_NAME = text("Comparator", NamedTextColor.GREEN)
-        val PLAYER_PREFIX = text(" \uD83D\uDC64 ", NamedTextColor.AQUA) // 👤
-        val PRIVATE_AGENT_PREFIX = text("\uD83D\uDCA1", NamedTextColor.GREEN).append(AGENT_NAME) // 💡
-        val PUBLIC_AGENT_PREFIX = text("<").append(AGENT_NAME, text("> "))
-
+        const val ARROW = "→"
+        const val PLAYER_ICON = "\uD83D\uDC64" // 👤
+        const val AGENT_ICON = "\uD83D\uDCA1" // 💡
 
         val RESPONSE_SOUND = Sound.sound(
             SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
