@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.user
 
-import java.util.UUID
+import java.util.*
 
 /**
  * A singleton implementation of the [User] interface that represents the console as a system user.
@@ -30,9 +30,8 @@ import java.util.UUID
  * This implementation ensures that the console is treated as a distinct user entity, enabling seamless interaction
  * with systems or contexts that require a `User` instance.
  */
-object ConsoleUser: User {
+object ConsoleUser : ExecutingUser {
     override val displayName: String = "Console"
-    override val uniqueId: UUID = UUID.fromString("00000000-0000-0000-0000-000000000000")
-    override val isOp = true
+    override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
     override val isOnline = true
 }

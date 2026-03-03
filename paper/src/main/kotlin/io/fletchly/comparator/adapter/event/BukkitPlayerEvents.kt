@@ -39,13 +39,13 @@ import org.bukkit.event.player.PlayerQuitEvent
 class BukkitPlayerEvents(
     private val context: ContextClearer,
     private val pluginRuntime: BukkitPluginRuntime
-): Listener {
+) : Listener {
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
         val target = BukkitPlayerUser(event.player)
 
         pluginRuntime.runCoroutine {
-            with (context) {
+            with(context) {
                 target.clearSelf()
             }
         }

@@ -18,19 +18,13 @@
 
 package io.fletchly.comparator.model.user
 
-import org.bukkit.entity.Player
-
 /**
- * A lightweight wrapper around the `Player` class that implements the `User` interface.
+ * Represents a user with the ability to execute commands within the system.
  *
- * This class allows a `Player` instance to seamlessly integrate with systems expecting a `User`.
- * It provides access to the player's display name, unique identifier, and operator status.
+ * This interface extends the `User` interface and is implemented by entities
+ * that are capable of issuing commands, such as a console user or a player in a game.
  *
- * @property player The underlying `Player` instance being wrapped.
+ * It provides a common contract for distinguishing users that have command-sending
+ * capabilities from those that do not.
  */
-@JvmInline
-value class BukkitPlayerUser(val player: Player) : ExecutingUser {
-    override val displayName get() = player.name
-    override val uniqueId get() = player.uniqueId
-    override val isOnline get() = player.isOnline
-}
+interface ExecutingUser : User

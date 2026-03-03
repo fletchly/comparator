@@ -21,11 +21,7 @@ package io.fletchly.comparator.infra
 import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.adapter.tool.GameVersionTool
 import io.fletchly.comparator.adapter.tool.WebSearchTool
-import io.fletchly.comparator.di.commonAdapterModule
-import io.fletchly.comparator.di.coreModule
-import io.fletchly.comparator.di.paperAdapterModule
-import io.fletchly.comparator.di.paperConfigModule
-import io.fletchly.comparator.di.paperInfraModule
+import io.fletchly.comparator.di.*
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
 import org.koin.core.context.loadKoinModules

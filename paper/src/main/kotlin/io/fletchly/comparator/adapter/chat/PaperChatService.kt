@@ -19,16 +19,16 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
-import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort
+import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.Component.text
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -53,9 +53,11 @@ class PaperChatService(
         target: User,
         message: Message
     ) = pluginRuntime.runTask {
+        val isPublic = target is PublicChatUser
+
         when (message) {
-            is Message.User -> target.sendMessage(userMessage(message))
-            is Message.Assistant -> target.sendMessage(assistantMessage(message), true)
+            is Message.User -> if (!isPublic) target.sendMessage(userMessage(message))
+            is Message.Assistant -> target.sendMessage(assistantMessage(message, isPublic), true)
             is Message.Tool -> error("Tool messages should not be directly displayed in chat")
         }
     }
@@ -68,27 +70,25 @@ class PaperChatService(
                 this.player.sendMessage(message)
             }
 
+            is PublicChatUser -> server.broadcast(message)
+
             is ConsoleUser -> server.consoleSender.sendMessage(message)
         }
     }
 
     private fun userMessage(message: Message.User) =
-        PLAYER_PREFIX
-            .append { text(message.sender.displayName, NamedTextColor.WHITE) }
-            .append { ARROW }
-            .append { text(message.content, NamedTextColor.GRAY) }
+        fromMiniMessage("<yellow>$PLAYER_ICON ${message.sender.displayName}</yellow> $ARROW ${message.content}")
 
-    private fun assistantMessage(message: Message.Assistant) =
-        AGENT_PREFIX
-            .append { AGENT_NAME }
-            .append { ARROW }
-            .append { text(message.content, NamedTextColor.WHITE) }
+    private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
+        when (isPublic) {
+            true -> fromMiniMessage("<<green>$AGENT_NAME</green>> ${message.content}")
+            false -> fromMiniMessage("<green>$AGENT_ICON $AGENT_NAME</green> $ARROW ${message.content}")
+        }
 
     private companion object {
-        val ARROW = text(" → ")
-        val PLAYER_PREFIX = text("\uD83D\uDCA1 ", NamedTextColor.AQUA) // 💡
-        val AGENT_PREFIX = text("\uD83D\uDC64 ", NamedTextColor.YELLOW) // 👤
-        val AGENT_NAME = text("Comparator", NamedTextColor.GREEN)
+        const val ARROW = "→"
+        const val PLAYER_ICON = "\uD83D\uDC64" // 👤
+        const val AGENT_ICON = "\uD83D\uDCA1" // 💡
 
         val RESPONSE_SOUND = Sound.sound(
             SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,

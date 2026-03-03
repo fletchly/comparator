@@ -18,6 +18,7 @@
 
 package io.fletchly.comparator.port.`in`
 
+import io.fletchly.comparator.model.user.ExecutingUser
 import io.fletchly.comparator.model.user.User
 
 /**
@@ -30,13 +31,13 @@ interface ContextClearer {
     /**
      * Clears the conversational context associated with a user.
      */
-    suspend fun User.clearSelf()
+    suspend fun ExecutingUser.clearSelf()
 
     /**
      * Clears the conversational context for a specified list of users.
      *
      */
-    suspend fun User.clearOther(targets: List<User>)
+    suspend fun ExecutingUser.clearOther(targets: List<User>)
 
     /**
      * Clears all conversational contexts within the system.

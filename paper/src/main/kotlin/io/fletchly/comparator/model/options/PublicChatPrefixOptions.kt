@@ -16,21 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
+package io.fletchly.comparator.model.options
 
-import org.bukkit.entity.Player
-
-/**
- * A lightweight wrapper around the `Player` class that implements the `User` interface.
- *
- * This class allows a `Player` instance to seamlessly integrate with systems expecting a `User`.
- * It provides access to the player's display name, unique identifier, and operator status.
- *
- * @property player The underlying `Player` instance being wrapped.
- */
 @JvmInline
-value class BukkitPlayerUser(val player: Player) : ExecutingUser {
-    override val displayName get() = player.name
-    override val uniqueId get() = player.uniqueId
-    override val isOnline get() = player.isOnline
-}
+value class PublicChatPrefixOptions(val prefix: String)

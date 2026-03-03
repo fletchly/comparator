@@ -16,21 +16,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
-
-import org.bukkit.entity.Player
+package io.fletchly.comparator.model.command
 
 /**
- * A lightweight wrapper around the `Player` class that implements the `User` interface.
+ * Defines a contract for a command's metadata and structure within the system.
  *
- * This class allows a `Player` instance to seamlessly integrate with systems expecting a `User`.
- * It provides access to the player's display name, unique identifier, and operator status.
+ * This interface acts as a wrapper for a command definition created using the Brigadier library.
+ * It provides access to the underlying BrigadierCommand instance, which contains details about the command's
+ * structure, permissions, and descriptive metadata.
  *
- * @property player The underlying `Player` instance being wrapped.
+ * @property definition The BrigadierCommand instance representing the command's structure and metadata.
  */
-@JvmInline
-value class BukkitPlayerUser(val player: Player) : ExecutingUser {
-    override val displayName get() = player.name
-    override val uniqueId get() = player.uniqueId
-    override val isOnline get() = player.isOnline
+interface CommandDefinition {
+    val definition: BrigadierCommand
 }

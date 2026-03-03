@@ -27,7 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin
  * @constructor Initializes the logger with the provided Bukkit plugin.
  * @param plugin The Bukkit plugin whose logger will be used for logging messages.
  */
-class BukkitPluginLogger(plugin: JavaPlugin): LogPort {
+class BukkitPluginLogger(plugin: JavaPlugin) : LogPort {
     private val logger = plugin.logger
 
     override fun info(message: String, source: String?) = logger.info { message.withSource(source) }

@@ -21,13 +21,13 @@ package io.fletchly.comparator.adapter.chat
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
+import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.NotificationPort
+import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.Component.text
-import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -59,13 +59,15 @@ class PaperNotificationService(
                 onPlayer?.invoke(this.player)
                 this.player.sendMessage(message)
             }
+
             is ConsoleUser -> server.consoleSender.sendMessage(message)
+            is PublicChatUser -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>>").append(message))
         }
     }
 
-    private fun infoMessage(message: String) = text(message).color(NamedTextColor.YELLOW)
+    private fun infoMessage(message: String) = fromMiniMessage("<yellow>$message</yellow>")
 
-    private fun errorMessage(message: String) = text(message).color(NamedTextColor.RED)
+    private fun errorMessage(message: String) = fromMiniMessage("<red>$message</red>")
 
     private companion object {
         val ERROR_SOUND = Sound.sound(

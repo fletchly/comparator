@@ -16,17 +16,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.command.model
+package io.fletchly.comparator.adapter.chat
 
-/**
- * Defines a contract for a command's metadata and structure within the system.
- *
- * This interface acts as a wrapper for a command definition created using the Brigadier library.
- * It provides access to the underlying BrigadierCommand instance, which contains details about the command's
- * structure, permissions, and descriptive metadata.
- *
- * @property definition The BrigadierCommand instance representing the command's structure and metadata.
- */
-interface CommandDefinition {
-    val definition: BrigadierCommand
-}
+const val AGENT_NAME = "Comparator"

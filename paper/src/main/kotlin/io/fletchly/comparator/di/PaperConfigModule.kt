@@ -22,6 +22,7 @@ import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.adapter.config.SystemPromptService
 import io.fletchly.comparator.model.options.ContextOptions
 import io.fletchly.comparator.model.options.OllamaOptions
+import io.fletchly.comparator.model.options.PublicChatPrefixOptions
 import io.fletchly.comparator.model.options.WebSearchOptions
 import io.fletchly.comparator.port.out.SystemConfigPort
 import org.koin.core.module.dsl.singleOf
@@ -52,6 +53,14 @@ val paperConfigModule = module {
         val config = get<PluginConfigService>().config
         WebSearchOptions(
             config.tool.webSearch.apiKey ?: config.aiProvider.ollama.apiKey
+        )
+    }
+
+    single {
+        val config = get<PluginConfigService>().config
+
+        PublicChatPrefixOptions(
+            config.publicChatPrefix
         )
     }
 }
