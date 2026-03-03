@@ -22,6 +22,7 @@ plugins {
     alias(libs.plugins.paperweightUserdev)
     alias(libs.plugins.shadowJar)
     alias(libs.plugins.runPaper)
+    alias(libs.plugins.minotaur)
 }
 
 dependencies {
@@ -40,6 +41,15 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.mockk)
     testImplementation(libs.koin.test)
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("MQoLAFN8")
+    versionNumber.set(rootProject.version.toString())
+    versionType.set("release")
+    uploadFile.set(tasks.shadowJar)
+    // minecraft version and loaders are detected based on gradle plugins
 }
 
 tasks {
