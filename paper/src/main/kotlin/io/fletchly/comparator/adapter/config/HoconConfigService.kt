@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.config
 
-import io.fletchly.comparator.infra.configurate.HoconConfigLoader
+import io.fletchly.comparator.model.config.HoconConfigLoader
 import io.fletchly.comparator.model.config.ConfigResult
 import io.fletchly.comparator.port.out.LogPort
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
