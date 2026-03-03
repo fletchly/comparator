@@ -11,9 +11,9 @@ import java.io.IOException
 
 
 /**
- * A singleton object for initializing and managing a configured HttpClient instance using Ktor.
+ * A singleton object for initializing and managing a configured HttpClients instance using Ktor.
  */
-object HttpClient {
+object HttpClients {
     private const val MAX_RETRIES = 4
     private const val REQUEST_TIMEOUT_MS = 30_000L   // 30 seconds
     private const val CONNECT_TIMEOUT_MS = 10_000L   // 10 seconds
@@ -68,5 +68,5 @@ object HttpClient {
         }
     }
 
-    val Ktor = HttpClient(CIO, defaultConfig)
+    val KtorCIO = HttpClient(CIO, defaultConfig)
 }

@@ -39,7 +39,7 @@ import kotlin.test.assertFailsWith
 
 class HttpClientTest {
     private fun createTestClient(handler: MockRequestHandler) =
-        KtorClient(MockEngine.Companion { handler(it) }, HttpClient.defaultConfig)
+        KtorClient(MockEngine.Companion { handler(it) }, HttpClients.defaultConfig)
 
     private suspend fun assertThrowsClientError(status: HttpStatusCode) {
         val client = createTestClient { respond("Error", status) }

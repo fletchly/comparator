@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.ollama
 
-import io.fletchly.comparator.util.HttpClient
+import io.fletchly.comparator.util.HttpClients
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
@@ -54,7 +54,7 @@ class OllamaAIProviderTest {
         ),
         log = log,
         toolRegistry = toolRegistry,
-        client = KtorClient(MockEngine { handler(it) }, HttpClient.defaultConfig)
+        client = KtorClient(MockEngine { handler(it) }, HttpClients.defaultConfig)
     )
 
     private fun conversation(vararg messages: Message) =
@@ -123,7 +123,7 @@ class OllamaAIProviderTest {
                     HttpStatusCode.OK,
                     headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 )
-            }, HttpClient.defaultConfig)
+            }, HttpClients.defaultConfig)
         )
 
         provider.generateResponse("prompt", conversation())
@@ -277,7 +277,7 @@ class OllamaAIProviderTest {
                     HttpStatusCode.OK,
                     headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 )
-            }, HttpClient.defaultConfig)
+            }, HttpClients.defaultConfig)
         )
 
         provider.generateResponse("prompt", conversation())
