@@ -1,22 +1,4 @@
-/*
- * This file is part of comparator, licensed under the Apache License 2.0
- *
- * Copyright (c) 2026 fletchly <https://github.com/fletchly>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package io.fletchly.comparator.infra.http
+package io.fletchly.comparator.util
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -24,14 +6,14 @@ import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
-import io.ktor.client.HttpClient as KtorClient
+import java.io.IOException
+
 
 /**
- * A singleton object for initializing and managing a configured HttpClient instance using Ktor.
+ * A singleton object for initializing and managing a configured HttpClients instance using Ktor.
  */
-object HttpClient {
+object HttpClients {
     private const val MAX_RETRIES = 4
     private const val REQUEST_TIMEOUT_MS = 30_000L   // 30 seconds
     private const val CONNECT_TIMEOUT_MS = 10_000L   // 10 seconds
@@ -56,9 +38,9 @@ object HttpClient {
         install(HttpRequestRetry) {
             maxRetries = MAX_RETRIES
             retryIf { _, response ->
-                response.status == HttpStatusCode.ServiceUnavailable ||
-                        response.status == HttpStatusCode.GatewayTimeout ||
-                        response.status == HttpStatusCode.TooManyRequests
+                response.status == HttpStatusCode.Companion.ServiceUnavailable ||
+                        response.status == HttpStatusCode.Companion.GatewayTimeout ||
+                        response.status == HttpStatusCode.Companion.TooManyRequests
             }
             retryOnExceptionIf { _, cause ->
                 cause is IOException
@@ -86,5 +68,5 @@ object HttpClient {
         }
     }
 
-    val Ktor = KtorClient(CIO, defaultConfig)
+    val KtorCIO = HttpClient(CIO, defaultConfig)
 }

@@ -25,5 +25,6 @@ package io.fletchly.comparator.model.options
  *                                    When the limit is reached, the oldest messages are removed to accommodate new ones.
  */
 data class ContextOptions(
-    val conversationMessageLimit: Int
+    val conversationMessageLimit: Int,
+    val expireAfterAccessMinutes: Long
 )

@@ -45,7 +45,8 @@ val paperConfigModule = module {
     single {
         val contextConfig = get<PluginConfigService>().config.context
         ContextOptions(
-            contextConfig.conversationMessageLimit
+            contextConfig.conversationMessageLimit,
+            contextConfig.expireAfterAccessMinutes
         )
     }
 

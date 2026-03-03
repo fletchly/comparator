@@ -27,6 +27,7 @@ import org.koin.core.Koin
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
+import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.getKoin
 
 /**
@@ -40,6 +41,16 @@ import org.koin.java.KoinJavaComponent.getKoin
  * @param plugin The JavaPlugin instance representing the Bukkit plugin.
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
+    private val commonModule = module { includes(commonAdapterModule) }
+    private val paperModule = module { includes(paperConfigModule, paperAdapterModule, paperInfraModule(plugin)) }
+
+    val rootModule = module {
+        includes(
+            coreModule,
+            commonModule,
+            paperModule
+        )
+    }
 
     /**
      * Starts the Koin dependency injection framework for the associated Bukkit plugin by
@@ -55,13 +66,7 @@ class KoinBootstrapper(private val plugin: JavaPlugin) {
      */
     fun start(): Koin {
         startKoin {
-            modules(
-                coreModule,
-                commonAdapterModule,
-                paperInfraModule(plugin),
-                paperAdapterModule,
-                paperConfigModule
-            )
+            modules(rootModule)
         }
 
         return getKoin()

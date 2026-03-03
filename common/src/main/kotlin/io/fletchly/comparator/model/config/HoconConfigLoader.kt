@@ -16,10 +16,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.infra.configurate
+package io.fletchly.comparator.model.config
 
-import io.fletchly.comparator.model.config.ConfigLoader
-import io.fletchly.comparator.model.config.ConfigResult
+import io.fletchly.comparator.util.ConfigurateLoaders
 import org.spongepowered.configurate.ConfigurateException
 import org.spongepowered.configurate.kotlin.extensions.get
 import org.spongepowered.configurate.transformation.ConfigurationTransformation

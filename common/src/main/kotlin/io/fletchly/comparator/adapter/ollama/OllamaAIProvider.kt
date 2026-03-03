@@ -19,7 +19,7 @@
 package io.fletchly.comparator.adapter.ollama
 
 import io.fletchly.comparator.adapter.ollama.dto.*
-import io.fletchly.comparator.infra.http.HttpClient
+import io.fletchly.comparator.util.HttpClients
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
@@ -34,11 +34,11 @@ import io.fletchly.comparator.util.JsonSchema
 import io.fletchly.comparator.model.options.OllamaOptions
 import io.fletchly.comparator.util.toJsonObject
 import io.fletchly.comparator.util.toMap
+import io.ktor.client.HttpClient
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import io.ktor.client.HttpClient as KtorClient
 import kotlinx.io.IOException
 
 /**
@@ -55,7 +55,7 @@ import kotlinx.io.IOException
  * @property config The configuration for the Ollama API, including the base URL, API key, and model identifier.
  * @property log A logging interface for recording information and warnings during API interactions.
  * @property toolRegistry A registry for managing tools that the system can use during message processing.
- * @property client The HTTP client used for making requests to the Ollama API. Defaults to [HttpClient.Ktor].
+ * @property client The HTTP client used for making requests to the Ollama API. Defaults to [HttpClients.KtorCIO].
  *
  * @see AIPort
  */
@@ -63,7 +63,7 @@ class OllamaAIProvider(
     private val config: OllamaOptions,
     private val log: LogPort,
     private val toolRegistry: ToolRegistry,
-    private val client: KtorClient
+    private val client: HttpClient = HttpClients.KtorCIO
 ) : AIPort {
     override suspend fun generateResponse(
         systemPrompt: String,

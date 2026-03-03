@@ -34,12 +34,12 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 
-class InMemoryContextStoreTest {
+class CaffeineContextStoreTest {
     private val user1 = mockk<User> { every { uniqueId } returns UUID.randomUUID() }
     private val user2 = mockk<User> { every { uniqueId } returns UUID.randomUUID() }
 
     private fun storeOf(limit: Int, expireAfterAccessMinutes: Long = 60) =
-        InMemoryContextStore(ContextOptions(limit, expireAfterAccessMinutes))
+        CaffeineContextStore(ContextOptions(limit, expireAfterAccessMinutes))
 
     @Test
     fun `returns empty conversation for unknown user`() = runTest {
