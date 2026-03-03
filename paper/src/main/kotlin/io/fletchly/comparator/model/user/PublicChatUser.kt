@@ -18,20 +18,19 @@
 
 package io.fletchly.comparator.model.user
 
-import java.util.UUID
+import java.util.*
 
 /**
- * A singleton implementation of the [User] interface that represents the console as a system user.
+ * A singleton implementation of the `User` interface that represents a public chat user within the system.
  *
- * This class is used to identify and interact with the console within the system, providing a unique identifier,
- * a display name, and operator privileges. The console is always considered an operator and has a fixed UUID
- * that serves as its unique identifier.
+ * This implementation is used specifically to model interactions with a shared or public chat system, providing
+ * a fixed display name, a unique identifier, and constant online status.
  *
- * This implementation ensures that the console is treated as a distinct user entity, enabling seamless interaction
- * with systems or contexts that require a `User` instance.
+ * The `PublicChatUser` instance facilitates seamless integration of the public chat as a recognizable `User`
+ * entity, ensuring compatibility with systems or contexts where `User` instances are required.
  */
-object ConsoleUser: CommandSendingUser {
-    override val displayName: String = "Console"
-    override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
+object PublicChatUser: User {
+    override val displayName = "Public Chat"
+    override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
     override val isOnline = true
 }

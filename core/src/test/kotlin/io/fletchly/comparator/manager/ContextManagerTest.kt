@@ -60,13 +60,13 @@ class ContextManagerTest {
     @Test
     fun `clearOther sends a singular notification for one target`() = runTest {
         with(manager) { sender.clearOther(listOf(mockk<User>())) }
-        coVerify { notification.info(sender, "Cleared chat context for 1 player") }
+        coVerify { notification.info(sender, "Cleared chat context for 1 target") }
     }
 
     @Test
     fun `clearOther sends a plural notification for multiple targets`() = runTest {
         with(manager) { sender.clearOther(listOf(mockk<User>(), mockk<User>(), mockk<User>())) }
-        coVerify { notification.info(sender, "Cleared chat context for 3 players") }
+        coVerify { notification.info(sender, "Cleared chat context for 3 targets") }
     }
 
     @Test

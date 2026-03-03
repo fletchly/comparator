@@ -22,6 +22,8 @@ import com.mojang.brigadier.Command
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.user.PublicChatUser
+import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toUser
 import io.papermc.paper.command.brigadier.Commands
@@ -97,6 +99,39 @@ class AdminCommand(
                                 Command.SINGLE_SUCCESS
                             }
                     )
+            ).then(Commands.literal("clearConsole")
+                .requires { source ->
+                    source.sender.hasPermission(clearOtherPermission.name)
+                }
+                .executes { ctx ->
+                    val feedbackUser = ctx.source.sender.toUser()
+
+                    pluginRuntime.runCoroutine {
+                        with(contextClearer) {
+                            when (feedbackUser) {
+                                is ConsoleUser -> ConsoleUser.clearSelf()
+                                else -> feedbackUser.clearOther(listOf(ConsoleUser))
+                            }
+                        }
+                    }
+
+                    Command.SINGLE_SUCCESS
+                }
+            ).then(Commands.literal("clearPublicChat")
+                .requires { source ->
+                    source.sender.hasPermission(clearOtherPermission.name)
+                }
+                .executes { ctx ->
+                    val feedbackUser = ctx.source.sender.toUser()
+
+                    pluginRuntime.runCoroutine {
+                        with(contextClearer) {
+                            feedbackUser.clearOther(listOf(PublicChatUser))
+                        }
+                    }
+
+                    Command.SINGLE_SUCCESS
+                }
             )
         }
     }

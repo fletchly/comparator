@@ -22,7 +22,7 @@ import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.user.BukkitChatPlayerUser
+import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort
 import io.papermc.paper.registry.keys.SoundEventKeys
@@ -54,7 +54,7 @@ class PaperChatService(
         target: User,
         message: Message
     ) = pluginRuntime.runTask {
-        val isPublic = target is BukkitChatPlayerUser
+        val isPublic = target is PublicChatUser
 
         when (message) {
             is Message.User -> if (!isPublic) target.sendMessage(userMessage(message))
@@ -71,7 +71,7 @@ class PaperChatService(
                 this.player.sendMessage(message)
             }
 
-            is BukkitChatPlayerUser -> server.broadcast(message)
+            is PublicChatUser -> server.broadcast(message)
 
             is ConsoleUser -> server.consoleSender.sendMessage(message)
         }

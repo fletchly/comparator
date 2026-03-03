@@ -21,7 +21,7 @@ package io.fletchly.comparator.adapter.event
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
-import io.fletchly.comparator.model.user.BukkitChatPlayerUser
+import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.papermc.paper.event.player.AsyncChatEvent
 import net.kyori.adventure.text.Component
@@ -62,12 +62,12 @@ class PaperChatEvents(
      */
     @EventHandler
     fun onAsyncChat(event: AsyncChatEvent) {
+        val playerName = event.player.name
         val plainText = PlainTextComponentSerializer.plainText().serialize(event.message())
         if (!plainText.startsWith("$prefix ")) return
 
         val prompt = plainText.substring(prefix.length).trim()
-        val user = BukkitChatPlayerUser(event.player)
-        val userMessage = Message.User(prompt, user)
+        val userMessage = Message.User("<$playerName> $prompt", PublicChatUser)
 
         pluginRuntime.runCoroutine {
             messageSender.fromUser(userMessage)
