@@ -17,6 +17,7 @@ paperweight = "2.0.0-beta.19"
 paper = "1.21.11-R0.1-SNAPSHOT"
 shadowJar = "8.3.0"
 runPaper = "2.3.1"
+minotaur = "2.+"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -48,3 +49,4 @@ kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", 
 paperweightUserdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
 shadowJar = { id = "com.gradleup.shadow", version.ref = "shadowJar"}
 runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }
