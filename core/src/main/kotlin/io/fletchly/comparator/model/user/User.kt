@@ -28,11 +28,9 @@ import java.util.*
  *
  * @property displayName The name to be displayed for the user.
  * @property uniqueId A universally unique identifier (UUID) representing the user.
- * @property isOp A flag indicating whether the user has operator (admin) privileges.
  */
 interface User {
     val displayName: String
     val uniqueId: UUID
-    val isOp: Boolean
     val isOnline: Boolean
 }
