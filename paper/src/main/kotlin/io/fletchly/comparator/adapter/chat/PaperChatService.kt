@@ -22,6 +22,7 @@ import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.user.BukkitPlayerUser
 import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.user.BukkitChatPlayerUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort
 import io.papermc.paper.registry.keys.SoundEventKeys
@@ -53,9 +54,11 @@ class PaperChatService(
         target: User,
         message: Message
     ) = pluginRuntime.runTask {
+        val isPublic = target is BukkitChatPlayerUser
+
         when (message) {
-            is Message.User -> target.sendMessage(userMessage(message))
-            is Message.Assistant -> target.sendMessage(assistantMessage(message), true)
+            is Message.User -> if (!isPublic) target.sendMessage(userMessage(message))
+            is Message.Assistant -> target.sendMessage(assistantMessage(message, isPublic), true)
             is Message.Tool -> error("Tool messages should not be directly displayed in chat")
         }
     }
@@ -68,27 +71,34 @@ class PaperChatService(
                 this.player.sendMessage(message)
             }
 
+            is BukkitChatPlayerUser -> server.broadcast(message)
+
             is ConsoleUser -> server.consoleSender.sendMessage(message)
         }
     }
 
     private fun userMessage(message: Message.User) =
         PLAYER_PREFIX
-            .append { text(message.sender.displayName, NamedTextColor.WHITE) }
-            .append { ARROW }
-            .append { text(message.content, NamedTextColor.GRAY) }
+            .append(text(message.sender.displayName))
+            .append(ARROW)
+            .append(text(message.content, NamedTextColor.GRAY))
 
-    private fun assistantMessage(message: Message.Assistant) =
-        AGENT_PREFIX
-            .append { AGENT_NAME }
-            .append { ARROW }
-            .append { text(message.content, NamedTextColor.WHITE) }
+    private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
+        when (isPublic) {
+            true -> PUBLIC_AGENT_PREFIX
+                .append(text(message.content))
+            false -> PRIVATE_AGENT_PREFIX
+                .append(ARROW, text(message.content, NamedTextColor.WHITE))
+        }
 
+    // TODO: Improve text rendering
     private companion object {
-        val ARROW = text(" → ")
-        val PLAYER_PREFIX = text("\uD83D\uDCA1 ", NamedTextColor.AQUA) // 💡
-        val AGENT_PREFIX = text("\uD83D\uDC64 ", NamedTextColor.YELLOW) // 👤
+        val ARROW = text(" → ", NamedTextColor.WHITE)
         val AGENT_NAME = text("Comparator", NamedTextColor.GREEN)
+        val PLAYER_PREFIX = text(" \uD83D\uDC64 ", NamedTextColor.AQUA) // 👤
+        val PRIVATE_AGENT_PREFIX = text("\uD83D\uDCA1", NamedTextColor.GREEN).append(AGENT_NAME) // 💡
+        val PUBLIC_AGENT_PREFIX = text("<").append(AGENT_NAME, text("> "))
+
 
         val RESPONSE_SOUND = Sound.sound(
             SoundEventKeys.ENTITY_EXPERIENCE_ORB_PICKUP,
