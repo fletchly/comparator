@@ -24,6 +24,7 @@ import io.fletchly.comparator.adapter.command.AdminCommand
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.adapter.command.model.CommandDefinition
 import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
+import io.fletchly.comparator.adapter.event.PaperChatEvents
 import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleScope
 import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
 import io.fletchly.comparator.port.out.ChatPort
@@ -42,6 +43,7 @@ private val commands = module {
 
 private val events = module {
     singleOf(::BukkitPlayerEvents) bind Listener::class
+    singleOf(::PaperChatEvents) bind Listener::class
 }
 
 val paperAdapterModule = module {
