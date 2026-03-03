@@ -15,12 +15,6 @@ changelog:
       labels:
         - chore
         - dependencies
-    - title: 📖 Documentation
-      labels:
-        - documentation
     - title: ⚠️ Breaking Changes
       labels:
         - breaking-change
-    - title: 🔖 Other Changes
-      labels:
-        - "*"

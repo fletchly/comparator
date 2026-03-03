@@ -49,9 +49,26 @@ modrinth {
     versionNumber.set(rootProject.version.toString())
     versionType.set("release")
     uploadFile.set(tasks.shadowJar)
+    gameVersions.set(
+        listOf(
+            "1.21",
+            "1.21.1",
+            "1.21.2",
+            "1.21.3",
+            "1.21.4",
+            "1.21.5",
+            "1.21.6",
+            "1.21.7",
+            "1.21.8",
+            "1.21.9",
+            "1.21.10",
+            "1.21.11"
+        )
+    )
+    changelog.set("Full changelog available on [GitHub](https://github.com/fletchly/comparator/releases/v${rootProject.version})")
     syncBodyFrom.set(rootProject.file("README.md").readText())
     // minecraft version and loaders are detected based on gradle plugins
-    // debugMode.set(true)
+    //    debugMode.set(true)
 }
 
 tasks {
