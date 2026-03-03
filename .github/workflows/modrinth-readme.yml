@@ -6,7 +6,7 @@ on:
     paths: [ README.md ]
 
 jobs:
-  build:
+  modrinth-body:
     runs-on: ubuntu-latest
     env:
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
