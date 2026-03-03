@@ -55,6 +55,12 @@ class PluginConfigService(
 ) {
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
+        val `1 to 2`: ConfigurationTransformation = ConfigurationTransformation.builder()
+            .addAction(path("context")) {_, value ->
+                value.node("expire-after-access-minutes").set(10L)
+                null
+            }.build()
+
         val `0 to 1`: ConfigurationTransformation = ConfigurationTransformation.builder()
             .addAction(path()) { _, value ->
                 value.node("public-chat-prefix").set("@bot")
@@ -63,6 +69,7 @@ class PluginConfigService(
 
         val migrations = ConfigurationTransformation.versionedBuilder()
             .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(2, `1 to 2`)
             .addVersion(1, `0 to 1`)
             .addVersion(0, ConfigurationTransformation.empty())
             .build()

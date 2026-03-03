@@ -51,7 +51,11 @@ data class PluginConfig(
 data class ContextConfig(
     @Setting("conversation-message-limit")
     @Comment("Maximum messages allowed in context per-player")
-    val conversationMessageLimit: Int = 25
+    val conversationMessageLimit: Int = 25,
+
+    @Setting("expire-after-access-minutes")
+    @Comment("Maximum time (in minutes) to keep context for after conversation goes inactive")
+    val expireAfterAccessMinutes: Long = 10
 )
 
 @ConfigSerializable
