@@ -19,6 +19,7 @@
 package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.manager.ContextManager
+import io.fletchly.comparator.model.user.ExecutingUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
@@ -35,7 +36,7 @@ class ContextManagerTest {
     private val notification = mockk<NotificationPort>(relaxed = true)
     private val log = mockk<LogPort>(relaxed = true)
     private val manager = ContextManager(context, notification, log)
-    private val sender = mockk<User>(relaxed = true) {
+    private val sender = mockk<ExecutingUser>(relaxed = true) {
         every { displayName } returns "Sender"
     }
 

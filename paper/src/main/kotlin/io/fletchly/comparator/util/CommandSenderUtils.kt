@@ -19,7 +19,7 @@
 package io.fletchly.comparator.util
 
 import io.fletchly.comparator.model.user.BukkitPlayerUser
-import io.fletchly.comparator.model.user.CommandSendingUser
+import io.fletchly.comparator.model.user.ExecutingUser
 import io.fletchly.comparator.model.user.ConsoleUser
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -29,7 +29,7 @@ import org.bukkit.entity.Player
  *
  * @return A `User` representation of the sender, either as `BukkitPlayerUser` or `ConsoleUser`.
  */
-fun CommandSender.toUser(): CommandSendingUser = when (this) {
+fun CommandSender.toUser(): ExecutingUser = when (this) {
     is Player -> BukkitPlayerUser(this)
     else -> ConsoleUser
 }

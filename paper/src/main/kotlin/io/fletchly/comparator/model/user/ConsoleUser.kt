@@ -30,7 +30,7 @@ import java.util.*
  * This implementation ensures that the console is treated as a distinct user entity, enabling seamless interaction
  * with systems or contexts that require a `User` instance.
  */
-object ConsoleUser : CommandSendingUser {
+object ConsoleUser : ExecutingUser {
     override val displayName: String = "Console"
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
     override val isOnline = true
