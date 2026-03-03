@@ -40,7 +40,7 @@ import kotlin.reflect.KClass
  * @param migrations The versioned transformation used to migrate the configuration schema.
  * @param log A logging interface for recording informational and warning messages during operations.
  */
-abstract class HoconConfigService<C: Any>(
+abstract class HoconConfigService<C : Any>(
     type: KClass<C>,
     dataFolderPath: Path,
     fileName: String,

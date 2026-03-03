@@ -26,7 +26,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting
 data class PluginConfig(
     @Setting("public-chat-prefix")
     @Comment("The prefix used to invoke the assistant in public chat")
-    val publicChatPrefix : String = "@bot",
+    val publicChatPrefix: String = "@bot",
 
     @Comment("Options for the context store")
     val context: ContextConfig = ContextConfig(),
@@ -36,7 +36,7 @@ data class PluginConfig(
     val aiProvider: AIProviderConfig = AIProviderConfig(),
 
     @Comment("Tool options")
-    val tool : ToolConfig = ToolConfig(),
+    val tool: ToolConfig = ToolConfig(),
 
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Don't change this. Doing so could overwrite existing config")
@@ -99,7 +99,7 @@ data class WebSearchConfig(
 data class GameVersionConfig(
     @Comment("Enable game version check")
     override val enabled: Boolean = true
-): ToolImplementationConfig
+) : ToolImplementationConfig
 
 interface ToolImplementationConfig {
     val enabled: Boolean

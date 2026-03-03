@@ -24,7 +24,7 @@ import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.NotificationPort
-import io.fletchly.comparator.util.miniMessage
+import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
@@ -59,14 +59,15 @@ class PaperNotificationService(
                 onPlayer?.invoke(this.player)
                 this.player.sendMessage(message)
             }
+
             is ConsoleUser -> server.consoleSender.sendMessage(message)
-            is PublicChatUser -> server.broadcast(miniMessage("<<green>$AGENT_NAME</green>>").append(message))
+            is PublicChatUser -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>>").append(message))
         }
     }
 
-    private fun infoMessage(message: String) = miniMessage("<yellow>$message</yellow>")
+    private fun infoMessage(message: String) = fromMiniMessage("<yellow>$message</yellow>")
 
-    private fun errorMessage(message: String) = miniMessage("<red>$message</red>")
+    private fun errorMessage(message: String) = fromMiniMessage("<red>$message</red>")
 
     private companion object {
         val ERROR_SOUND = Sound.sound(

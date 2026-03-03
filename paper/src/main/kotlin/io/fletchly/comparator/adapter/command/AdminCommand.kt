@@ -19,11 +19,11 @@
 package io.fletchly.comparator.adapter.command
 
 import com.mojang.brigadier.Command
+import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
-import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.ConsoleUser
+import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toUser
 import io.papermc.paper.command.brigadier.Commands
@@ -99,7 +99,8 @@ class AdminCommand(
                                 Command.SINGLE_SUCCESS
                             }
                     )
-            ).then(Commands.literal("clearConsole")
+            ).then(
+                Commands.literal("clearConsole")
                 .requires { source ->
                     source.sender.hasPermission(clearOtherPermission.name)
                 }
@@ -117,7 +118,8 @@ class AdminCommand(
 
                     Command.SINGLE_SUCCESS
                 }
-            ).then(Commands.literal("clearPublicChat")
+            ).then(
+                Commands.literal("clearPublicChat")
                 .requires { source ->
                     source.sender.hasPermission(clearOtherPermission.name)
                 }

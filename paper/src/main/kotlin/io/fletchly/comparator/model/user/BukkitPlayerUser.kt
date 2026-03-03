@@ -29,7 +29,7 @@ import org.bukkit.entity.Player
  * @property player The underlying `Player` instance being wrapped.
  */
 @JvmInline
-value class BukkitPlayerUser(val player: Player): CommandSendingUser {
+value class BukkitPlayerUser(val player: Player) : CommandSendingUser {
     override val displayName get() = player.name
     override val uniqueId get() = player.uniqueId
     override val isOnline get() = player.isOnline

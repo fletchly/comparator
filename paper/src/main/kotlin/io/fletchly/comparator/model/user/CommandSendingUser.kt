@@ -27,4 +27,4 @@ package io.fletchly.comparator.model.user
  * It provides a common contract for distinguishing users that have command-sending
  * capabilities from those that do not.
  */
-interface CommandSendingUser: User
+interface CommandSendingUser : User

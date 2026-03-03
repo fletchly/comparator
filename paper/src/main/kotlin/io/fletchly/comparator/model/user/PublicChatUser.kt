@@ -29,7 +29,7 @@ import java.util.*
  * The `PublicChatUser` instance facilitates seamless integration of the public chat as a recognizable `User`
  * entity, ensuring compatibility with systems or contexts where `User` instances are required.
  */
-object PublicChatUser: User {
+object PublicChatUser : User {
     override val displayName = "Public Chat"
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
     override val isOnline = true

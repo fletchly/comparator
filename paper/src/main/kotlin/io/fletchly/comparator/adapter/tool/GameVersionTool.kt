@@ -36,13 +36,14 @@ import java.time.LocalDate
 class GameVersionTool(
     private val plugin: JavaPlugin,
     private val pluginRuntime: BukkitPluginRuntime
-): ToolDefinition {
+) : ToolDefinition {
     suspend fun getGameVersion() = pluginRuntime.runTask {
         mapOf("version" to plugin.server.version, "date" to LocalDate.now().toString())
     }
 
     override val definition = tool("game_version") {
-        description = "Get the version of the current server and the current date. Used to ensure up-to-date information."
+        description =
+            "Get the version of the current server and the current date. Used to ensure up-to-date information."
         executes(this@GameVersionTool::getGameVersion)
     }
 

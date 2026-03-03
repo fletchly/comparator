@@ -20,4 +20,4 @@ package io.fletchly.comparator.util
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 
-fun miniMessage(input: String) = MiniMessage.miniMessage().deserialize(input)
+fun fromMiniMessage(miniMessage: String) = MiniMessage.miniMessage().deserialize(miniMessage)

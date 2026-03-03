@@ -56,7 +56,7 @@ class PluginConfigService(
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
         val `0 to 1`: ConfigurationTransformation = ConfigurationTransformation.builder()
-            .addAction(path()) {_, value ->
+            .addAction(path()) { _, value ->
                 value.node("public-chat-prefix").set("@bot")
                 null
             }.build()

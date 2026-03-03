@@ -23,9 +23,8 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
 import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.port.`in`.MessageSender
+import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -78,7 +77,5 @@ class PaperChatEvents(
         event.message(assistantMentionComponent(prompt))
     }
 
-    private fun assistantMentionComponent(prompt: String) = Component
-        .text(prefix, NamedTextColor.AQUA)
-        .append(Component.text(" $prompt", NamedTextColor.WHITE))
+    private fun assistantMentionComponent(prompt: String) = fromMiniMessage("<aqua>$prefix</aqua> $prompt")
 }

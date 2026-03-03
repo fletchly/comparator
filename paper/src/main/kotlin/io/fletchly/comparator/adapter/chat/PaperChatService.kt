@@ -25,7 +25,7 @@ import io.fletchly.comparator.model.user.ConsoleUser
 import io.fletchly.comparator.model.user.PublicChatUser
 import io.fletchly.comparator.model.user.User
 import io.fletchly.comparator.port.out.ChatPort
-import io.fletchly.comparator.util.miniMessage
+import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
@@ -76,12 +76,13 @@ class PaperChatService(
         }
     }
 
-    private fun userMessage(message: Message.User) = miniMessage("<yellow>$PLAYER_ICON ${message.sender.displayName}</yellow> $ARROW ${message.content}")
+    private fun userMessage(message: Message.User) =
+        fromMiniMessage("<yellow>$PLAYER_ICON ${message.sender.displayName}</yellow> $ARROW ${message.content}")
 
     private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
         when (isPublic) {
-            true -> miniMessage("<<green>$AGENT_NAME</green>> ${message.content}")
-            false -> miniMessage("<green>$AGENT_ICON $AGENT_NAME</green> $ARROW ${message.content}")
+            true -> fromMiniMessage("<<green>$AGENT_NAME</green>> ${message.content}")
+            false -> fromMiniMessage("<green>$AGENT_ICON $AGENT_NAME</green> $ARROW ${message.content}")
         }
 
     private companion object {

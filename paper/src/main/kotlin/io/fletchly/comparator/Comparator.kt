@@ -18,10 +18,10 @@
 
 package io.fletchly.comparator
 
-import io.fletchly.comparator.model.command.CommandDefinition
-import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
+import io.fletchly.comparator.model.command.CommandDefinition
+import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.port.`in`.ContextClearer

@@ -40,7 +40,7 @@ import java.nio.file.Path
 class SystemPromptService(
     log: LogPort,
     plugin: JavaPlugin,
-): HoconConfigService<SystemPromptConfig>(
+) : HoconConfigService<SystemPromptConfig>(
     SystemPromptConfig::class,
     Path.of(plugin.dataFolder.path),
     "system-prompt.conf",
