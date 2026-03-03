@@ -1,9 +1,8 @@
-name: Modrinth Readme
-
+name: Modrinth Release
 on:
   push:
-    branches: [ main ]
-    paths: [ README.md ]
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
@@ -22,5 +21,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Update Modrinth project body
-        run: './gradlew modrinthSyncBody'
+      - name: Create Paper Release for Modrinth
+        run: './gradlew :paper:modrinth'

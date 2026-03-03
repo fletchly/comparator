@@ -22,6 +22,7 @@ plugins {
     alias(libs.plugins.paperweightUserdev)
     alias(libs.plugins.shadowJar)
     alias(libs.plugins.runPaper)
+    alias(libs.plugins.minotaur)
 }
 
 dependencies {
@@ -42,6 +43,17 @@ dependencies {
     testImplementation(libs.koin.test)
 }
 
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("MQoLAFN8")
+    versionNumber.set(rootProject.version.toString())
+    versionType.set("release")
+    uploadFile.set(tasks.shadowJar)
+    syncBodyFrom.set(rootProject.file("README.md").readText())
+    // minecraft version and loaders are detected based on gradle plugins
+    // debugMode.set(true)
+}
+
 tasks {
     jar {
         enabled = false
@@ -60,6 +72,10 @@ tasks {
     runServer {
         notCompatibleWithConfigurationCache("Invocation of 'Task.project' at execution time is unsupported with the configuration cache.")
         minecraftVersion(libs.versions.minecraft.get())
+    }
+
+    modrinthSyncBody {
+        notCompatibleWithConfigurationCache("invocation of 'Task.project' at execution time is unsupported with the configuration cache.")
     }
 
     processResources {

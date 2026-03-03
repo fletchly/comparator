@@ -1,4 +1,4 @@
-name: Release
+name: Github Release
 
 on:
   push:
@@ -70,13 +70,3 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Modrinth Release
-        uses: cloudnode-pro/modrinth-publish@v2
-        with:
-          token: ${{ secrets.MODRITNTH_TOKEN }}
-          project: MQoLAFN8
-          version: ${{ github.ref_name }}
-          loaders: paper
-          game-versions: '1.21.x'
-          files: artifacts/comparator-*-paper.jar
