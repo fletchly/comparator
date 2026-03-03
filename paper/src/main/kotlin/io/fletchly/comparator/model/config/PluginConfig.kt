@@ -25,7 +25,7 @@ import org.spongepowered.configurate.objectmapping.meta.Setting
 @ConfigSerializable
 data class PluginConfig(
     @Setting("public-chat-prefix")
-    @Comment("The prefix used to invoke the assistant in global chat")
+    @Comment("The prefix used to invoke the assistant in public chat")
     val publicChatPrefix : String = "@bot",
 
     @Comment("Options for the context store")

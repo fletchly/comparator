@@ -24,7 +24,6 @@ import io.fletchly.comparator.port.out.LogPort
 import org.bukkit.plugin.java.JavaPlugin
 import org.spongepowered.configurate.NodePath.path
 import org.spongepowered.configurate.transformation.ConfigurationTransformation
-import org.spongepowered.configurate.transformation.TransformAction
 import java.nio.file.Path
 
 
@@ -57,8 +56,8 @@ class PluginConfigService(
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
         val `0 to 1`: ConfigurationTransformation = ConfigurationTransformation.builder()
-            .addAction(path("public-chat-prefix")) {_, value ->
-                value.set("@bot")
+            .addAction(path()) {_, value ->
+                value.node("public-chat-prefix").set("@bot")
                 null
             }.build()
 
