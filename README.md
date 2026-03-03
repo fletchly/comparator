@@ -21,7 +21,7 @@
 1. Download the plugin `jar` from [GitHub](https://github.com/fletchly/comparator/releases/latest)
 2. Place the `.jar` into your server's `plugins/` folder.
 3. Restart your server
-4. Follow the [quickstart guide]() to complete setup
+4. Follow the [quickstart guide](https://fletchly.gitbook.io/comparator-docs/getting-started/quickstart) to complete setup
 
 ## Support
 - [Documentation](https://fletchly.gitbook.io/comparator-docs/)
