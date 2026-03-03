@@ -27,6 +27,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val commonAdapterModule = module {
-    singleOf(::OllamaAIProvider)  bind AIPort::class
+    single { OllamaAIProvider(get(), get(), get()) }  bind AIPort::class
     singleOf(::CaffeineContextStore) bind ContextPort::class
 }

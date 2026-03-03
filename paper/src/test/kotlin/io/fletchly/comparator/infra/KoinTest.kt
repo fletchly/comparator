@@ -27,8 +27,10 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.context.loadKoinModules
+import org.koin.dsl.koinApplication
 import org.koin.dsl.module
 import org.koin.test.KoinTest
+import org.koin.test.check.checkModules
 import org.koin.test.verify.verify
 import kotlin.test.AfterTest
 import kotlin.test.Test
@@ -49,6 +51,16 @@ class KoinBootstrapperTest : KoinTest {
         bootstrapper.rootModule.verify(
             extraTypes = listOf(JavaPlugin::class)
         )
+    }
+
+    @Test
+    fun `module graph instantiates all bindings without errors`() {
+        koinApplication {
+            modules(bootstrapper.rootModule)
+            checkModules {
+                withInstance(mockPlugin)
+            }
+        }
     }
 
     @Test
