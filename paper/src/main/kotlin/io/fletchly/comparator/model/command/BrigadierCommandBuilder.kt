@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.command.model
+package io.fletchly.comparator.model.command
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import io.papermc.paper.command.brigadier.CommandSourceStack

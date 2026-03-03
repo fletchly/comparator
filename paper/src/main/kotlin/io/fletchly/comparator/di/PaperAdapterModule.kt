@@ -22,7 +22,7 @@ import io.fletchly.comparator.adapter.chat.PaperChatService
 import io.fletchly.comparator.adapter.chat.PaperNotificationService
 import io.fletchly.comparator.adapter.command.AdminCommand
 import io.fletchly.comparator.adapter.command.AskCommand
-import io.fletchly.comparator.adapter.command.model.CommandDefinition
+import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
 import io.fletchly.comparator.adapter.event.PaperChatEvents
 import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleScope

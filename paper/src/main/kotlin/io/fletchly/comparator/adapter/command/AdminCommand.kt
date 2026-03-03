@@ -19,8 +19,8 @@
 package io.fletchly.comparator.adapter.command
 
 import com.mojang.brigadier.Command
-import io.fletchly.comparator.adapter.command.model.CommandDefinition
-import io.fletchly.comparator.adapter.command.model.command
+import io.fletchly.comparator.model.command.CommandDefinition
+import io.fletchly.comparator.model.command.command
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toUser

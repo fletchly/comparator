@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.command.model
+package io.fletchly.comparator.model.command
 
 /**
  * Defines a contract for a command's metadata and structure within the system.
