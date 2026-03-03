@@ -25,6 +25,7 @@ import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.tool
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.util.HttpClients
+import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.request.bearerAuth
@@ -53,9 +54,9 @@ import org.koin.dsl.module
  */
 class WebSearchTool(
     private val config: WebSearchOptions,
-    private val log: LogPort
+    private val log: LogPort,
+    private val client: HttpClient = HttpClients.KtorCIO
 ): ToolDefinition {
-    val client = HttpClients.KtorCIO
     /**
      * Executes a web search based on the provided query string and returns the response as a JSON element.
      *
@@ -89,7 +90,12 @@ class WebSearchTool(
 
     companion object {
         val module = module {
-            singleOf(::WebSearchTool) bind ToolDefinition::class
+            single<ToolDefinition> {
+                WebSearchTool(
+                    config = get(),
+                    log = get()
+                )
+            }
         }
 
         private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"

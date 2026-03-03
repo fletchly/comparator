@@ -34,6 +34,7 @@ import io.fletchly.comparator.util.JsonSchema
 import io.fletchly.comparator.model.options.OllamaOptions
 import io.fletchly.comparator.util.toJsonObject
 import io.fletchly.comparator.util.toMap
+import io.ktor.client.HttpClient
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -62,9 +63,8 @@ class OllamaAIProvider(
     private val config: OllamaOptions,
     private val log: LogPort,
     private val toolRegistry: ToolRegistry,
+    private val client: HttpClient = HttpClients.KtorCIO
 ) : AIPort {
-    val client = HttpClients.KtorCIO
-
     override suspend fun generateResponse(
         systemPrompt: String,
         conversation: Conversation
