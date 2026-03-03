@@ -67,6 +67,8 @@ class PaperChatEvents(
         if (!plainText.startsWith("$prefix ")) return
 
         val prompt = plainText.substring(prefix.length).trim()
+        if (prompt.isEmpty()) return
+
         val userMessage = Message.User("<$playerName> $prompt", PublicChatUser)
 
         pluginRuntime.runCoroutine {
