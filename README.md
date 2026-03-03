@@ -4,6 +4,7 @@
 
 [![Github](https://img.shields.io/badge/github-comparator-FFBD59?logo=github)](https://github.com/fletchly/comparator)
 [![Modrinth](https://img.shields.io/badge/modrinth-comparator-00AF5C?logo=modrinth)](https://modrinth.com/project/MQoLAFN8)
+[![Documentation](https://img.shields.io/badge/read%20the%20docs-gray?logo=gitbook&logoColor=FFBD59)](https://fletchly.gitbook.io/comparator-docs/)
 ![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Release](https://img.shields.io/github/v/release/fletchly/comparator)
@@ -23,6 +24,17 @@
 2. Place the `.jar` into your server's `plugins/` folder.
 3. Restart your server
 4. Follow the [quickstart guide](https://fletchly.gitbook.io/comparator-docs/getting-started/quickstart) to complete setup
+
+## Usage
+**Ask a question:**
+```text
+/ask <prompt>
+```
+**Mention in public chat:**
+```text
+@bot <prompt>
+```
+For full usage, [see the docs](https://fletchly.gitbook.io/comparator-docs/).
 
 ## Support
 - [Documentation](https://fletchly.gitbook.io/comparator-docs/)
