@@ -18,7 +18,7 @@
 - *(Coming Soon)* **Extensible Tool System:** Register custom tools to expand what the agent can do in-game.
 
 ## Installation
-1. Download the plugin `jar` from [GitHub](https://github.com/fletchly/comparator/releases/latest)
+1. Download the plugin `jar` from [Modrinth](https://modrinth.com/project/MQoLAFN8) or [GitHub](https://github.com/fletchly/comparator/releases/latest)
 2. Place the `.jar` into your server's `plugins/` folder.
 3. Restart your server
 4. Follow the [quickstart guide](https://fletchly.gitbook.io/comparator-docs/getting-started/quickstart) to complete setup
