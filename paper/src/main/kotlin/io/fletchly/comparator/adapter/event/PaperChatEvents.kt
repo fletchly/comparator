@@ -18,6 +18,7 @@
 
 package io.fletchly.comparator.adapter.event
 
+import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
@@ -59,14 +60,15 @@ class PaperChatEvents(
      *              It contains details about the sender, message content, and other
      *              metadata related to the chat interaction.
      */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun onAsyncChat(event: AsyncChatEvent) {
-        val playerName = event.player.name
+        val player = event.player
+        val playerName = player.name
         val plainText = PlainTextComponentSerializer.plainText().serialize(event.message())
-        if (!plainText.startsWith("$prefix ")) return
-
         val prompt = plainText.substring(prefix.length).trim()
-        if (prompt.isEmpty()) return
+        if (!plainText.startsWith("$prefix ")
+            || !player.hasPermission(AskCommand.ASK_PERMISSION)
+            || prompt.isEmpty()) return
 
         val userMessage = Message.User("<$playerName> $prompt", PublicChatUser)
 
