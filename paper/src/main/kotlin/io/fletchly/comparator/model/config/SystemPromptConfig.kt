@@ -28,7 +28,7 @@ data class SystemPromptConfig(
     val prompt: String = DEFAULT_PROMPT.trimIndent(),
 
     @Setting(ConfigLoader.VERSION_KEY)
-    @Comment("Don't change this. Doing so could overwrite existing config")
+    @Comment("Config version - do not modify this value, as it may cause your config to be overwritten")
     val version: Int = 0
 ) {
     companion object {
