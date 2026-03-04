@@ -27,5 +27,5 @@ assignees: ''
 ## Priority / Impact
 <!-- How important is this to you? Who else might benefit? -->
 - [ ] Nice to have
-- [ ] Would significantly improve my workflow
+- [ ] Would significantly improve the experience
 - [ ] Blocking / critical
