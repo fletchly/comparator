@@ -1,20 +1,31 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
+name: Feature Request
+about: Suggest a new idea or improvement for this project
+title: "[FEATURE] "
+labels: feature
 assignees: ''
-
 ---
 
-**Is your feature request related to a problem? Please describe.**  
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## 🚀 Feature Summary
+<!-- A clear, one-sentence description of the feature you'd like. -->
 
-**Describe the solution you'd like**  
-A clear and concise description of what you want to happen.
 
-**Describe alternatives you've considered**  
-A clear and concise description of any alternative solutions or features you've considered.
+## Problem / Motivation
+<!-- What problem does this solve? Why is this needed? -->
+**Is this related to a problem?**
+<!-- e.g. "I'm frustrated when..." -->
 
-**Additional context**  
-Add any other context or screenshots about the feature request here.
+
+## Proposed Solution
+<!-- Describe the feature you'd like. How should it work? -->
+
+
+## Additional Context
+<!-- Add any mockups, screenshots, links, or examples that help illustrate the request. -->
+
+
+## Priority / Impact
+<!-- How important is this to you? Who else might benefit? -->
+- [ ] Nice to have
+- [ ] Would significantly improve my workflow
+- [ ] Blocking / critical
