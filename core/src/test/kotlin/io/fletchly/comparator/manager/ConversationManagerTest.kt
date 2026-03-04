@@ -22,7 +22,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.ConversationScope
 import io.fletchly.comparator.port.out.*
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -46,9 +46,9 @@ class ConversationManagerTest {
     private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
-    private val scope = mockk<ScopePort>()
+    private val scope = mockk<CoroutineScopePort>()
 
-    private val user = mockk<User>()
+    private val user = mockk<ConversationScope>()
 
     @BeforeTest
     fun setUp() {
@@ -225,26 +225,26 @@ class ConversationManagerTest {
         coVerify(exactly = 0) { chat.message(user, any<Message.Assistant>()) }
     }
 
-    // --- User isolation ---
+    // --- ConversationScope isolation ---
 
     @Test
     fun `two users receive independent conversations`() = runTest {
         val manager = buildManager()
-        val user2 = mockk<User>()
+        val scope2 = mockk<ConversationScope>()
         val msg1 = Message.User(content = "From user 1", sender = user)
-        val msg2 = Message.User(content = "From user 2", sender = user2)
+        val msg2 = Message.User(content = "From user 2", sender = scope2)
         val response = Message.Assistant(content = "OK")
 
         coEvery { context.get(user) } returns conversationOf(msg1)
-        coEvery { context.get(user2) } returns conversationOf(msg2)
+        coEvery { context.get(scope2) } returns conversationOf(msg2)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(response)
 
         manager.fromUser(msg1)
         manager.fromUser(msg2)
 
         coVerify { context.append(user, msg1) }
-        coVerify { context.append(user2, msg2) }
+        coVerify { context.append(scope2, msg2) }
         coVerify(exactly = 0) { context.append(user, msg2) }
-        coVerify(exactly = 0) { context.append(user2, msg1) }
+        coVerify(exactly = 0) { context.append(scope2, msg1) }
     }
 }

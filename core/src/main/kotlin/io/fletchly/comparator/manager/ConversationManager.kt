@@ -23,7 +23,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.ConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 import kotlinx.coroutines.channels.Channel
@@ -51,15 +51,15 @@ class ConversationManager(
     private val tool: ToolManager,
     private val chat: ChatPort,
     private val notification: NotificationPort,
-    private val scope: ScopePort
+    private val coroutineScope: CoroutineScopePort
 ) : MessageSender {
-    private val userChannels: Cache<User, Channel<Message.User>> = Caffeine.newBuilder()
+    private val scopeChannels: Cache<ConversationScope, Channel<Message.User>> = Caffeine.newBuilder()
         .expireAfterAccess(10, TimeUnit.MINUTES)
-        .removalListener<User, Channel<Message.User>> { _, channel, _ -> channel?.close() }
+        .removalListener<ConversationScope, Channel<Message.User>> { _, channel, _ -> channel?.close() }
         .build()
 
     override suspend fun fromUser(message: Message.User) {
-        val channel = userChannels.get(message.sender) { createChannelFor(message.sender) }
+        val channel = scopeChannels.get(message.sender) { createChannelFor(message.sender) }
 
         val sent = channel.trySend(message)
         if (sent.isFailure) {
@@ -67,13 +67,13 @@ class ConversationManager(
         }
     }
 
-    private fun createChannelFor(user: User): Channel<Message.User> {
+    private fun createChannelFor(scope: ConversationScope): Channel<Message.User> {
         val channel = Channel<Message.User>(capacity = MAX_QUEUED_MESSAGES)
 
-        scope.launch {
+        this@ConversationManager.coroutineScope.launch {
             for (message in channel) {
                 startConversation(message)
-                AssistantLoop(user).run()
+                AssistantLoop(scope).run()
             }
         }
 
@@ -85,7 +85,7 @@ class ConversationManager(
         chat.message(message.sender, message)
     }
 
-    private inner class AssistantLoop(private val target: User) {
+    private inner class AssistantLoop(private val target: ConversationScope) {
         tailrec suspend fun run() {
             val conversation = context.get(target)
 

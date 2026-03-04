@@ -21,7 +21,7 @@ package io.fletchly.comparator.adapter.event
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
-import io.fletchly.comparator.model.user.PublicChatUser
+import io.fletchly.comparator.model.user.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -68,7 +68,7 @@ class PaperChatEvents(
         val prompt = plainText.substring(prefix.length).trim()
         if (prompt.isEmpty()) return
 
-        val userMessage = Message.User("<$playerName> $prompt", PublicChatUser)
+        val userMessage = Message.User("<$playerName> $prompt", PublicChatConversationScope)
 
         pluginRuntime.runCoroutine {
             messageSender.fromUser(userMessage)

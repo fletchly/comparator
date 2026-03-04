@@ -18,31 +18,31 @@
 
 package io.fletchly.comparator.port.out
 
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.ConversationScope
 
 /**
  * Defines a port for sending notification messages to users.
  */
 interface NotificationPort {
     /**
-     * Sends an informational notification message to a specified user.
+     * Sends an informational notification message to a specified scope.
      *
      * This method is used to deliver non-critical, informational messages
-     * to a user, such as updates or confirmations of certain operations.
+     * to a scope, such as updates or confirmations of certain operations.
      *
-     * @param user The recipient of the notification message.
+     * @param scope The recipient of the notification message.
      * @param message The content of the informational message to be sent.
      */
-    suspend fun info(user: User, message: String)
+    suspend fun info(scope: ConversationScope, message: String)
 
     /**
-     * Sends an error notification message to a specified user.
+     * Sends an error notification message to a specified scope.
      *
-     * This method is used to deliver critical or error-related messages to a user,
+     * This method is used to deliver critical or error-related messages to a scope,
      * usually indicating that a system operation has failed or encountered an issue.
      *
-     * @param user The recipient of the error notification message.
+     * @param scope The recipient of the error notification message.
      * @param message A description of the error or issue being reported.
      */
-    suspend fun error(user: User, message: String)
+    suspend fun error(scope: ConversationScope, message: String)
 }

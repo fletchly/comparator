@@ -18,18 +18,18 @@
 
 package io.fletchly.comparator.util
 
-import io.fletchly.comparator.model.user.BukkitPlayerUser
-import io.fletchly.comparator.model.user.ExecutingUser
-import io.fletchly.comparator.model.user.ConsoleUser
+import io.fletchly.comparator.model.user.BukkitPlayerConversationScope
+import io.fletchly.comparator.model.user.RestrictedConversationScope
+import io.fletchly.comparator.model.user.ConsoleConversationScope
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 /**
- * Converts a `CommandSender` instance into a `User` implementation.
+ * Converts a `CommandSender` instance into a `ConversationScope` implementation.
  *
- * @return A `User` representation of the sender, either as `BukkitPlayerUser` or `ConsoleUser`.
+ * @return A `ConversationScope` representation of the sender, either as `BukkitPlayerConversationScope` or `ConsoleConversationScope`.
  */
-fun CommandSender.toUser(): ExecutingUser = when (this) {
-    is Player -> BukkitPlayerUser(this)
-    else -> ConsoleUser
+fun CommandSender.toScope(): RestrictedConversationScope = when (this) {
+    is Player -> BukkitPlayerConversationScope(this)
+    else -> ConsoleConversationScope
 }

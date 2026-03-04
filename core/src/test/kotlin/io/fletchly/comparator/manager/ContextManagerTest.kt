@@ -18,9 +18,8 @@
 
 package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.manager.ContextManager
-import io.fletchly.comparator.model.user.ExecutingUser
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.RestrictedConversationScope
+import io.fletchly.comparator.model.user.ConversationScope
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
@@ -36,7 +35,7 @@ class ContextManagerTest {
     private val notification = mockk<NotificationPort>(relaxed = true)
     private val log = mockk<LogPort>(relaxed = true)
     private val manager = ContextManager(context, notification, log)
-    private val sender = mockk<ExecutingUser>(relaxed = true) {
+    private val sender = mockk<RestrictedConversationScope>(relaxed = true) {
         every { displayName } returns "Sender"
     }
 
@@ -60,13 +59,13 @@ class ContextManagerTest {
 
     @Test
     fun `clearOther sends a singular notification for one target`() = runTest {
-        with(manager) { sender.clearOther(listOf(mockk<User>())) }
+        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>())) }
         coVerify { notification.info(sender, "Cleared chat context for 1 target") }
     }
 
     @Test
     fun `clearOther sends a plural notification for multiple targets`() = runTest {
-        with(manager) { sender.clearOther(listOf(mockk<User>(), mockk<User>(), mockk<User>())) }
+        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>(), mockk<ConversationScope>(), mockk<ConversationScope>())) }
         coVerify { notification.info(sender, "Cleared chat context for 3 targets") }
     }
 

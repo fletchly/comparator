@@ -20,7 +20,7 @@ package io.fletchly.comparator.adapter.persistence
 
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.ConversationScope
 import io.fletchly.comparator.model.options.ContextOptions
 import io.mockk.every
 import io.mockk.mockk
@@ -35,8 +35,8 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 
 class CaffeineContextStoreTest {
-    private val user1 = mockk<User> { every { uniqueId } returns UUID.randomUUID() }
-    private val user2 = mockk<User> { every { uniqueId } returns UUID.randomUUID() }
+    private val scope1 = mockk<ConversationScope> { every { uniqueId } returns UUID.randomUUID() }
+    private val scope2 = mockk<ConversationScope> { every { uniqueId } returns UUID.randomUUID() }
 
     private fun storeOf(limit: Int, expireAfterAccessMinutes: Long = 60) =
         CaffeineContextStore(ContextOptions(limit, expireAfterAccessMinutes))
@@ -45,7 +45,7 @@ class CaffeineContextStoreTest {
     fun `returns empty conversation for unknown user`() = runTest {
         val store = storeOf(10)
 
-        val result = store.get(user1)
+        val result = store.get(scope1)
 
         assertEquals(conversationOf(), result)
     }
@@ -53,10 +53,10 @@ class CaffeineContextStoreTest {
     @Test
     fun `returns correct conversation for user`() = runTest {
         val store = storeOf(10)
-        val message = Message.User("Hello", user1)
-        store.append(user1, message)
+        val message = Message.User("Hello", scope1)
+        store.append(scope1, message)
 
-        val result = store.get(user1)
+        val result = store.get(scope1)
 
         assertEquals(listOf(message), result.messages)
     }
@@ -64,11 +64,11 @@ class CaffeineContextStoreTest {
     @Test
     fun `returns independent conversations per user`() = runTest {
         val store = storeOf(10)
-        store.append(user1, Message.User("Hello from user1", user1))
-        store.append(user2, Message.User("Hello from user2", user1))
+        store.append(scope1, Message.User("Hello from scope1", scope1))
+        store.append(scope2, Message.User("Hello from scope2", scope1))
 
-        val result1 = store.get(user1)
-        val result2 = store.get(user2)
+        val result1 = store.get(scope1)
+        val result2 = store.get(scope2)
 
         assertEquals(1, result1.size)
         assertEquals(1, result2.size)
@@ -79,76 +79,76 @@ class CaffeineContextStoreTest {
     fun `appends multiple messages in order`() = runTest {
         val store = storeOf(10)
         val messages = listOf(
-            Message.User("First", user1),
+            Message.User("First", scope1),
             Message.Assistant("Second", null),
-            Message.User("Third", user1)
+            Message.User("Third", scope1)
         )
 
-        messages.forEach { store.append(user1, it) }
+        messages.forEach { store.append(scope1, it) }
 
-        assertEquals(messages, store.get(user1).messages)
+        assertEquals(messages, store.get(scope1).messages)
     }
 
     @Test
     fun `removes oldest message when limit is reached`() = runTest {
         val store = storeOf(3)
-        val first = Message.User("First", user1)
-        store.append(user1, first)
-        store.append(user1, Message.User("Second", user1))
-        store.append(user1, Message.User("Third", user1))
+        val first = Message.User("First", scope1)
+        store.append(scope1, first)
+        store.append(scope1, Message.User("Second", scope1))
+        store.append(scope1, Message.User("Third", scope1))
         // limit=3, third append triggers trim (size >= 3), so "First" is removed
-        assertFalse(store.get(user1).messages.contains(first))
-        assertEquals(2, store.get(user1).size)
+        assertFalse(store.get(scope1).messages.contains(first))
+        assertEquals(2, store.get(scope1).size)
     }
 
     @Test
     fun `does not remove messages when under limit`() = runTest {
         val store = storeOf(10)
-        store.append(user1, Message.User("First", user1))
-        store.append(user1, Message.User("Second", user1))
+        store.append(scope1, Message.User("First", scope1))
+        store.append(scope1, Message.User("Second", scope1))
 
-        assertEquals(2, store.get(user1).size)
+        assertEquals(2, store.get(scope1).size)
     }
 
     @Test
     fun `clear removes conversation for specified user`() = runTest {
         val store = storeOf(10)
-        store.append(user1, Message.User("Hello", user1))
+        store.append(scope1, Message.User("Hello", scope1))
 
-        store.clear(user1)
+        store.clear(scope1)
 
-        assertEquals(conversationOf(), store.get(user1))
+        assertEquals(conversationOf(), store.get(scope1))
     }
 
     @Test
     fun `clear does not affect other users`() = runTest {
         val store = storeOf(10)
-        store.append(user1, Message.User("Hello from user1", user1))
-        store.append(user2, Message.User("Hello from user2", user2))
+        store.append(scope1, Message.User("Hello from scope1", scope1))
+        store.append(scope2, Message.User("Hello from scope2", scope2))
 
-        store.clear(user1)
+        store.clear(scope1)
 
-        assertEquals(conversationOf(), store.get(user1))
-        assertEquals(1, store.get(user2).size)
+        assertEquals(conversationOf(), store.get(scope1))
+        assertEquals(1, store.get(scope2).size)
     }
 
     @Test
     fun `clear on unknown user does not throw`() = runTest {
         val store = storeOf(10)
 
-        store.clear(user1) // should be a no-op
+        store.clear(scope1) // should be a no-op
     }
 
     @Test
     fun `clearAll removes all conversations`() = runTest {
         val store = storeOf(10)
-        store.append(user1, Message.User("Hello from user1", user1))
-        store.append(user2, Message.User("Hello from user2", user2))
+        store.append(scope1, Message.User("Hello from scope1", scope1))
+        store.append(scope2, Message.User("Hello from scope2", scope2))
 
         store.clearAll()
 
-        assertEquals(conversationOf(), store.get(user1))
-        assertEquals(conversationOf(), store.get(user2))
+        assertEquals(conversationOf(), store.get(scope1))
+        assertEquals(conversationOf(), store.get(scope2))
     }
 
     @Test
@@ -157,10 +157,10 @@ class CaffeineContextStoreTest {
         val messageCount = 100
 
         (1..messageCount)
-            .map { i -> launch(Dispatchers.Default) { store.append(user1, Message.User("Message $i", user1)) } }
+            .map { i -> launch(Dispatchers.Default) { store.append(scope1, Message.User("Message $i", scope1)) } }
             .joinAll()
 
-        assertEquals(messageCount, store.get(user1).size)
+        assertEquals(messageCount, store.get(scope1).size)
     }
 
     @Test
@@ -168,11 +168,11 @@ class CaffeineContextStoreTest {
         val store = storeOf(1000)
 
         listOf(
-            launch(Dispatchers.Default) { repeat(50) { store.append(user1, Message.User("user1 message", user1)) } },
-            launch(Dispatchers.Default) { repeat(50) { store.append(user2, Message.User("user2 message", user2)) } }
+            launch(Dispatchers.Default) { repeat(50) { store.append(scope1, Message.User("scope1 message", scope1)) } },
+            launch(Dispatchers.Default) { repeat(50) { store.append(scope2, Message.User("scope2 message", scope2)) } }
         ).joinAll()
 
-        assertEquals(50, store.get(user1).size)
-        assertEquals(50, store.get(user2).size)
+        assertEquals(50, store.get(scope1).size)
+        assertEquals(50, store.get(scope2).size)
     }
 }

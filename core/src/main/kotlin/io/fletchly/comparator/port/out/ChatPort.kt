@@ -19,7 +19,7 @@
 package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.user.ConversationScope
 
 /**
  * Displays chat messages to users
@@ -29,8 +29,8 @@ interface ChatPort {
     /**
      * Sends a message to a specified user.
      *
-     * @param target The recipient of the message, represented as a [User].
+     * @param target The recipient of the message, represented as a [ConversationScope].
      * @param message The message content to be sent, represented as a [Message].
      */
-    suspend fun message(target: User, message: Message)
+    suspend fun message(target: ConversationScope, message: Message)
 }

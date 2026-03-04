@@ -18,19 +18,7 @@
 
 package io.fletchly.comparator.model.user
 
-import java.util.*
-
 /**
- * A singleton implementation of the `User` interface that represents a public chat user within the system.
- *
- * This implementation is used specifically to model interactions with a shared or public chat system, providing
- * a fixed display name, a unique identifier, and constant online status.
- *
- * The `PublicChatUser` instance facilitates seamless integration of the public chat as a recognizable `User`
- * entity, ensuring compatibility with systems or contexts where `User` instances are required.
+ * Represents a conversational scope limited to a specific user or group of users.
  */
-object PublicChatUser : User {
-    override val displayName = "Public Chat"
-    override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
-    override val isOnline = true
-}
+interface RestrictedConversationScope : ConversationScope

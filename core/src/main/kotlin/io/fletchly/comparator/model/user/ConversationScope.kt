@@ -18,19 +18,19 @@
 
 package io.fletchly.comparator.model.user
 
-import org.bukkit.entity.Player
+import java.util.*
 
 /**
- * A lightweight wrapper around the `Player` class that implements the `User` interface.
+ * Represents a conversational context for a user within the system.
  *
- * This class allows a `Player` instance to seamlessly integrate with systems expecting a `User`.
- * It provides access to the player's display name, unique identifier, and operator status.
+ * This interface defines the core attributes associated with a user
+ * participating in a conversation or other interactive exchanges.
  *
- * @property player The underlying `Player` instance being wrapped.
+ * It provides a foundation for identifying users and determining their
+ * availability within the system.
  */
-@JvmInline
-value class BukkitPlayerUser(val player: Player) : ExecutingUser {
-    override val displayName get() = player.name
-    override val uniqueId get() = player.uniqueId
-    override val isOnline get() = player.isOnline
+interface ConversationScope {
+    val displayName: String
+    val uniqueId: UUID
+    val isOnline: Boolean
 }

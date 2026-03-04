@@ -25,7 +25,7 @@ import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.port.`in`.MessageSender
-import io.fletchly.comparator.util.toUser
+import io.fletchly.comparator.util.toScope
 import io.papermc.paper.command.brigadier.Commands
 import org.bukkit.permissions.PermissionDefault
 
@@ -51,7 +51,7 @@ class AskCommand(
                 Commands.argument("prompt", StringArgumentType.greedyString())
                     .executes { ctx ->
                         val prompt = StringArgumentType.getString(ctx, "prompt")
-                        val user = ctx.source.sender.toUser()
+                        val user = ctx.source.sender.toScope()
                         val userMessage = Message.User(prompt, user)
 
                         pluginRuntime.runCoroutine {

@@ -24,7 +24,7 @@ import kotlinx.coroutines.Job
 /**
  * Represents a port responsible for managing coroutine scopes for launching asynchronous operations tied to a specific lifecycle.
  */
-interface ScopePort {
+interface CoroutineScopePort {
     /**
      * Launches a new coroutine in the scope tied to this implementation. The coroutine will execute the provided
      * suspending block of code. The lifecycle of the coroutine is bound to the scope in which it is launched.

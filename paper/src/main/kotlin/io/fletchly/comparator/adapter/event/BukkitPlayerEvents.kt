@@ -19,7 +19,7 @@
 package io.fletchly.comparator.adapter.event
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.model.user.BukkitPlayerUser
+import io.fletchly.comparator.model.user.BukkitPlayerConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -42,7 +42,7 @@ class BukkitPlayerEvents(
 ) : Listener {
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        val target = BukkitPlayerUser(event.player)
+        val target = BukkitPlayerConversationScope(event.player)
 
         pluginRuntime.runCoroutine {
             with(context) {

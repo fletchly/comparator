@@ -22,10 +22,10 @@ import com.mojang.brigadier.Command
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
-import io.fletchly.comparator.model.user.ConsoleUser
-import io.fletchly.comparator.model.user.PublicChatUser
+import io.fletchly.comparator.model.user.ConsoleConversationScope
+import io.fletchly.comparator.model.user.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
-import io.fletchly.comparator.util.toUser
+import io.fletchly.comparator.util.toScope
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
@@ -72,10 +72,10 @@ class AdminCommand(
                         source.sender.hasPermission(clearSelfPermission.name)
                     }
                     .executes { ctx ->
-                        val user = ctx.source.sender.toUser()
+                        val scope = ctx.source.sender.toScope()
 
                         pluginRuntime.runCoroutine {
-                            with(contextClearer) { user.clearSelf() }
+                            with(contextClearer) { scope.clearSelf() }
                         }
 
                         Command.SINGLE_SUCCESS
@@ -89,11 +89,11 @@ class AdminCommand(
                             .executes { ctx ->
                                 val targetResolver =
                                     ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-                                val targetUsers = targetResolver.resolve(ctx.source).map { it.toUser() }
-                                val feedbackUser = ctx.source.sender.toUser()
+                                val targetScopes = targetResolver.resolve(ctx.source).map { it.toScope() }
+                                val feedbackScope = ctx.source.sender.toScope()
 
                                 pluginRuntime.runCoroutine {
-                                    with(contextClearer) { feedbackUser.clearOther(targetUsers) }
+                                    with(contextClearer) { feedbackScope.clearOther(targetScopes) }
                                 }
 
                                 Command.SINGLE_SUCCESS
@@ -105,13 +105,13 @@ class AdminCommand(
                     source.sender.hasPermission(clearOtherPermission.name)
                 }
                 .executes { ctx ->
-                    val feedbackUser = ctx.source.sender.toUser()
+                    val scope = ctx.source.sender.toScope()
 
                     pluginRuntime.runCoroutine {
                         with(contextClearer) {
-                            when (feedbackUser) {
-                                is ConsoleUser -> ConsoleUser.clearSelf()
-                                else -> feedbackUser.clearOther(listOf(ConsoleUser))
+                            when (scope) {
+                                is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
+                                else -> scope.clearOther(listOf(ConsoleConversationScope))
                             }
                         }
                     }
@@ -124,11 +124,11 @@ class AdminCommand(
                     source.sender.hasPermission(clearOtherPermission.name)
                 }
                 .executes { ctx ->
-                    val feedbackUser = ctx.source.sender.toUser()
+                    val scope = ctx.source.sender.toScope()
 
                     pluginRuntime.runCoroutine {
                         with(contextClearer) {
-                            feedbackUser.clearOther(listOf(PublicChatUser))
+                            scope.clearOther(listOf(PublicChatConversationScope))
                         }
                     }
 
