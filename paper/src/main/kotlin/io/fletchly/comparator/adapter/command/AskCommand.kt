@@ -42,7 +42,7 @@ class AskCommand(
     override val definition = command("ask") {
         description = "Ask a question"
         aliases = listOf("c")
-        permission = "comparator.ask"
+        permission = ASK_PERMISSION
         permissionDescription = "Allows a player to ask questions"
         permissionDefault = PermissionDefault.TRUE
 
@@ -62,5 +62,9 @@ class AskCommand(
                     }
             )
         }
+    }
+
+    companion object {
+        const val ASK_PERMISSION = "comparator.ask"
     }
 }
