@@ -14,7 +14,6 @@ changelog:
     - title: 🧰 Maintenance
       labels:
         - chore
-        - dependencies
     - title: ⚠️ Breaking Changes
       labels:
-        - breaking-change
+        - breaking
