@@ -22,16 +22,16 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolResult
-import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.model.tool.ToolList
+import io.fletchly.comparator.tool.ToolRegistry
 
 /**
  * Manages the registration and execution of tools within a system.
  *
  * The `ToolManager` class provides functionality to manage a collection of tools,
  * enabling registration, retrieval, and execution of tools. It implements the
- * `ToolRegistry` interface and acts as the core component for handling tool-based
+ * `ToolExecutor` interface and acts as the core component for handling tool-based
  * operations.
  *
  * @property log An instance of `LogPort` used to capture logs related to tool
@@ -39,22 +39,13 @@ import io.fletchly.comparator.model.tool.ToolList
  */
 class ToolManager(
     val log: LogPort
-) : ToolRegistry {
-    private lateinit var toolRegistry: Map<String, Tool>
+) : ToolExecutor, ToolRegistry {
+    private val tools: MutableMap<String, Tool> = mutableMapOf()
 
-    override val tools: List<Tool>
-        get() = toolRegistry.values.toList()
+    override fun getToolNames(): List<String> = tools.values.map { it.name }
 
-    override fun register(toolList: ToolList) {
-        val duplicates = toolList.tools.groupBy { it.name }.filter { it.value.size > 1 }.keys
-        require(duplicates.isEmpty()) {
-            "Duplicate tool names: $duplicates"
-        }
-        this.toolRegistry = toolList.tools.associateBy { it.name }
-    }
-
-    suspend fun execute(toolCall: ToolCall): Message.Tool =
-        when (val result = toolRegistry[toolCall.name]?.execute(toolCall.arguments)) {
+    override suspend fun execute(toolCall: ToolCall): Message.Tool =
+        when (val result = tools[toolCall.name]?.execute(toolCall.arguments)) {
             is ToolResult -> {
                 log.info(
                     " executed (${
@@ -66,4 +57,17 @@ class ToolManager(
 
             null -> Message.Tool("tool not found: ${toolCall.name}")
         }
+
+    override fun register(vararg tools: Tool) {
+        tools.forEach { tool ->
+            if (!this.tools.contains(tool.name)) {
+                log.warn(
+                    "A tool with name '${tool.name}' is already registered, skipping",
+                    ToolManager::class.simpleName
+                )
+                return@forEach
+            }
+            this.tools[tool.name] = tool
+        }
+    }
 }
