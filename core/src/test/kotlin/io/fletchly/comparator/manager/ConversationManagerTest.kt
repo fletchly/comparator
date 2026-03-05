@@ -52,7 +52,7 @@ class ConversationManagerTest {
 
     @BeforeTest
     fun setUp() {
-        every { system.prompt } returns "You are a helpful assistant."
+        every { system.getPrompt() } returns "You are a helpful assistant."
     }
 
     private fun TestScope.buildManager(): ConversationManager {

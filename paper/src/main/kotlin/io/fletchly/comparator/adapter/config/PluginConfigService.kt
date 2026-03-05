@@ -49,7 +49,7 @@ class PluginConfigService(
     PluginConfig::class,
     Path.of(plugin.dataFolder.path),
     "comparator.conf",
-    PluginConfig.Default,
+    PluginConfig(),
     migrations,
     log
 ) {

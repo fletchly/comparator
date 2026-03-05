@@ -41,11 +41,7 @@ data class PluginConfig(
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Config version - do not modify this value, as it may cause your config to be overwritten")
     val version: Int = 3
-) {
-    companion object {
-        val Default = PluginConfig()
-    }
-}
+)
 
 @ConfigSerializable
 data class ContextConfig(
