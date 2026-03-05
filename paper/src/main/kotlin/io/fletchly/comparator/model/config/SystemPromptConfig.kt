@@ -82,7 +82,7 @@ data class SystemPromptConfig(
             Be friendly, concise, and practical. Answer directly without unnecessary elaboration. 
             Focus on actionable information.
 
-            ## Scope
+            ## ConversationScope
 
             Java Edition only. If asked about Bedrock or other versions, note that your expertise 
             is Java Edition and mechanics may differ.

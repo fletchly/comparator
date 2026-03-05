@@ -18,8 +18,8 @@
 
 package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.model.user.ExecutingUser
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
@@ -43,14 +43,14 @@ class ContextManager(
     private val notification: NotificationPort,
     private val log: LogPort
 ) : ContextClearer {
-    override suspend fun ExecutingUser.clearSelf() {
+    override suspend fun RestrictedConversationScope.clearSelf() {
         context.clear(this)
         log.info("Cleared chat context for ${this.displayName}", this@ContextManager::class.simpleName)
         notification.info(this,"Cleared chat context")
     }
 
-    override suspend fun ExecutingUser.clearOther(
-        targets: List<User>
+    override suspend fun RestrictedConversationScope.clearOther(
+        targets: List<ConversationScope>
     ) {
         targets.forEach {
             context.clear(it)

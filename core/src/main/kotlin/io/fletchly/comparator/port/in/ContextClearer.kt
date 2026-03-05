@@ -18,26 +18,41 @@
 
 package io.fletchly.comparator.port.`in`
 
-import io.fletchly.comparator.model.user.ExecutingUser
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
- * Provides an interface for clearing conversation context for one or more actors
+ * Provides an interface for clearing conversation context for one or more scopes
  * in a conversational system.
  */
 interface ContextClearer {
 
 
     /**
-     * Clears the conversational context associated with a user.
+     * Clears the conversational context for the current `RestrictedConversationScope` instance.
+     *
+     * This method removes any conversation-specific data or state tied to the specific user
+     * or group represented by the invoking `RestrictedConversationScope`. It ensures that
+     * any ongoing conversational context is reset, effectively providing a clean slate for
+     * future interactions.
+     *
+     * Designed for scenarios where the conversational context of a single actor is to be
+     * cleared, such as when a user leaves the system or resets their session.
      */
-    suspend fun ExecutingUser.clearSelf()
+    suspend fun RestrictedConversationScope.clearSelf()
+
 
     /**
-     * Clears the conversational context for a specified list of users.
+     * Clears the conversational context for the specified list of targets.
      *
+     * This method removes any conversation-specific data or state tied to the provided
+     * `ConversationScope` instances. It is used to reset the conversational context for
+     * specific users or groups, ensuring that they start with a clean slate in the system.
+     *
+     * @param targets A list of `ConversationScope` objects representing the users or groups
+     *                whose conversational context should be cleared.
      */
-    suspend fun ExecutingUser.clearOther(targets: List<User>)
+    suspend fun RestrictedConversationScope.clearOther(targets: List<ConversationScope>)
 
     /**
      * Clears all conversational contexts within the system.

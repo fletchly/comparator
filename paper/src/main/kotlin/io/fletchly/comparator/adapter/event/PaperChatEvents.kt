@@ -22,7 +22,7 @@ import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
-import io.fletchly.comparator.model.user.PublicChatUser
+import io.fletchly.comparator.model.scope.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -70,7 +70,7 @@ class PaperChatEvents(
             || !player.hasPermission(AskCommand.ASK_PERMISSION)
             || prompt.isEmpty()) return
 
-        val userMessage = Message.User("<$playerName> $prompt", PublicChatUser)
+        val userMessage = Message.User("<$playerName> $prompt", PublicChatConversationScope)
 
         pluginRuntime.runCoroutine {
             messageSender.fromUser(userMessage)

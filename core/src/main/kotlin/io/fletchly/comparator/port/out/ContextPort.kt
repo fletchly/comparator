@@ -20,34 +20,34 @@ package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
  * Defines a port for managing user-specific conversational contexts.
  */
 interface ContextPort {
     /**
-     * Retrieves the conversational context associated with a specific user.
+     * Retrieves the conversational context associated with a specific scope.
      *
-     * @param user The user whose conversation context is to be retrieved.
-     * @return The conversation associated with the specified user.
+     * @param scope The scope whose conversation context is to be retrieved.
+     * @return The conversation associated with the specified scope.
      */
-    suspend fun get(user: User): Conversation
+    suspend fun get(scope: ConversationScope): Conversation
 
     /**
-     * Appends a message to the conversational context associated with a user.
+     * Appends a message to the conversational context associated with a scope.
      *
-     * @param user The user whose conversation context is being updated.
-     * @param message The message to be appended to the user's conversation context.
+     * @param scope The scope whose conversation context is being updated.
+     * @param message The message to be appended to the scope's conversation context.
      */
-    suspend fun append(user: User, message: Message)
+    suspend fun append(scope: ConversationScope, message: Message)
 
     /**
-     * Clears the conversational context associated with the specified user.
+     * Clears the conversational context associated with the specified scope.
      *
-     * @param user The user whose conversational context is to be cleared.
+     * @param scope The scope whose conversational context is to be cleared.
      */
-    suspend fun clear(user: User)
+    suspend fun clear(scope: ConversationScope)
 
     /**
      * Clears all conversational contexts managed by the implementation.

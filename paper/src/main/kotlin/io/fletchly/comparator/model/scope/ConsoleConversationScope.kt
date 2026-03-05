@@ -16,21 +16,22 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
+package io.fletchly.comparator.model.scope
 
 import java.util.*
 
 /**
- * A singleton implementation of the [User] interface that represents the console as a system user.
+ * A singleton implementation of the [RestrictedConversationScope] interface representing a console-based
+ * conversational context.
  *
- * This class is used to identify and interact with the console within the system, providing a unique identifier,
- * a display name, and operator privileges. The console is always considered an operator and has a fixed UUID
- * that serves as its unique identifier.
+ * This class is used to identify and interact with the console as a distinct conversation scope in the system.
+ * It provides a fixed display name, a unique identifier based on the string "CONSOLE", and status information
+ * indicating that the console is always considered online.
  *
- * This implementation ensures that the console is treated as a distinct user entity, enabling seamless interaction
- * with systems or contexts that require a `User` instance.
+ * This scope is typically used for system-level communications with administrators or for actions initiated
+ * directly through server commands.
  */
-object ConsoleUser : ExecutingUser {
+object ConsoleConversationScope : RestrictedConversationScope {
     override val displayName: String = "Console"
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
     override val isOnline = true

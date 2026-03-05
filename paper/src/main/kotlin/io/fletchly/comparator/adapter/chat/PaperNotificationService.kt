@@ -19,10 +19,10 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.model.user.BukkitPlayerUser
-import io.fletchly.comparator.model.user.ConsoleUser
-import io.fletchly.comparator.model.user.PublicChatUser
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
+import io.fletchly.comparator.model.scope.ConsoleConversationScope
+import io.fletchly.comparator.model.scope.PublicChatConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
@@ -46,22 +46,22 @@ class PaperNotificationService(
 ) : NotificationPort {
     private val server = plugin.server
 
-    override suspend fun info(user: User, message: String) =
-        pluginRuntime.runTask { user.sendMessage(infoMessage(message)) }
+    override suspend fun info(scope: ConversationScope, message: String) =
+        pluginRuntime.runTask { scope.sendMessage(infoMessage(message)) }
 
-    override suspend fun error(user: User, message: String) =
-        pluginRuntime.runTask { user.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
+    override suspend fun error(scope: ConversationScope, message: String) =
+        pluginRuntime.runTask { scope.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
 
-    private fun User.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
+    private fun ConversationScope.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
         if (!this.isOnline) return
         when (this) {
-            is BukkitPlayerUser -> {
+            is BukkitPlayerConversationScope -> {
                 onPlayer?.invoke(this.player)
                 this.player.sendMessage(message)
             }
 
-            is ConsoleUser -> server.consoleSender.sendMessage(message)
-            is PublicChatUser -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
+            is ConsoleConversationScope -> server.consoleSender.sendMessage(message)
+            is PublicChatConversationScope -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
         }
     }
 

@@ -21,7 +21,7 @@ package io.fletchly.comparator.adapter.persistence
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.user.User
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.model.options.ContextOptions
 import kotlinx.coroutines.sync.Mutex
@@ -45,20 +45,20 @@ class InMemoryContextStore(private val config: ContextOptions) : ContextPort {
     private val mutex = Mutex()
     private val context = HashMap<UUID, Conversation>()
 
-    override suspend fun get(user: User): Conversation = mutex.withLock {
-        context[user.uniqueId] ?: conversationOf()
+    override suspend fun get(scope: ConversationScope): Conversation = mutex.withLock {
+        context[scope.uniqueId] ?: conversationOf()
     }
 
-    override suspend fun append(user: User, message: Message): Unit = mutex.withLock {
-        val conversation = context.getOrPut(user.uniqueId) { conversationOf() }
+    override suspend fun append(scope: ConversationScope, message: Message): Unit = mutex.withLock {
+        val conversation = context.getOrPut(scope.uniqueId) { conversationOf() }
         conversation.add(message)
         if (conversation.size >= config.conversationMessageLimit) {
             conversation.removeOldest()
         }
     }
 
-    override suspend fun clear(user: User): Unit = mutex.withLock {
-        context.remove(user.uniqueId)
+    override suspend fun clear(scope: ConversationScope): Unit = mutex.withLock {
+        context.remove(scope.uniqueId)
     }
 
     override suspend fun clearAll() = mutex.withLock {

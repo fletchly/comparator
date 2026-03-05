@@ -19,25 +19,25 @@
 package io.fletchly.comparator.adapter.lifecycle
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.port.out.ScopePort
+import io.fletchly.comparator.port.out.CoroutineScopePort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 /**
- * Adapts the lifecycle of a Bukkit plugin to conform to the [ScopePort] interface.
+ * Adapts the lifecycle of a Bukkit plugin to conform to the [CoroutineScopePort] interface.
  *
  * This adapter integrates the plugin's runtime context with coroutine-based task management.
  * It relies on [BukkitPluginRuntime] to provide coroutine lifecycle handling tied to
  * the plugin's lifecycle. This ensures that asynchronous operations are managed in the
  * proper context of the plugin.
  *
- * @constructor Creates an instance of [BukkitPluginLifecycleScope] using a provided
+ * @constructor Creates an instance of [BukkitPluginLifecycleCoroutineScope] using a provided
  * [BukkitPluginRuntime] for coroutine execution.
  * @param pluginRuntime The runtime context of the Bukkit plugin, enabling coroutine-based task management.
  */
-class BukkitPluginLifecycleScope(
+class BukkitPluginLifecycleCoroutineScope(
     private val pluginRuntime: BukkitPluginRuntime
-) : ScopePort {
+) : CoroutineScopePort {
     /**
      * Launches a coroutine in the context of the plugin's runtime schedule.
      *

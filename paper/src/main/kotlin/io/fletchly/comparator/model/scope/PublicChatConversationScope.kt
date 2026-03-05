@@ -16,20 +16,22 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
+package io.fletchly.comparator.model.scope
 
 import java.util.*
 
 /**
- * A singleton implementation of the `User` interface that represents a public chat user within the system.
+ * A singleton implementation of the [ConversationScope] interface that represents a public chat context.
  *
- * This implementation is used specifically to model interactions with a shared or public chat system, providing
- * a fixed display name, a unique identifier, and constant online status.
+ * This class is used to identify and interact with a public chat within the system, providing a fixed
+ * display name, a unique identifier, and an indication of its always-online status. The singleton nature
+ * of this implementation ensures that the public chat is treated as a shared conversational context
+ * for system-wide interactions.
  *
- * The `PublicChatUser` instance facilitates seamless integration of the public chat as a recognizable `User`
- * entity, ensuring compatibility with systems or contexts where `User` instances are required.
+ * This scope is commonly used when broadcasting messages or interacting with a general audience
+ * rather than individual users or specific groups.
  */
-object PublicChatUser : User {
+object PublicChatConversationScope : ConversationScope {
     override val displayName = "Public Chat"
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
     override val isOnline = true

@@ -24,13 +24,13 @@ import io.fletchly.comparator.adapter.command.AdminCommand
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
 import io.fletchly.comparator.adapter.event.PaperChatEvents
-import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleScope
+import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleCoroutineScope
 import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.port.out.ChatPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
-import io.fletchly.comparator.port.out.ScopePort
+import io.fletchly.comparator.port.out.CoroutineScopePort
 import org.bukkit.event.Listener
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -51,5 +51,5 @@ val paperAdapterModule = module {
     singleOf(::PaperNotificationService) bind NotificationPort::class
     singleOf(::PaperChatService) bind ChatPort::class
     singleOf(::BukkitPluginLogger) bind LogPort::class
-    singleOf(::BukkitPluginLifecycleScope) bind ScopePort::class
+    singleOf(::BukkitPluginLifecycleCoroutineScope) bind CoroutineScopePort::class
 }

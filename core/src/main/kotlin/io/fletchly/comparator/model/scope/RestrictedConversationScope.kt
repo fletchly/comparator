@@ -16,15 +16,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
+package io.fletchly.comparator.model.scope
 
 /**
- * Represents a user with the ability to execute commands within the system.
- *
- * This interface extends the `User` interface and is implemented by entities
- * that are capable of issuing commands, such as a console user or a player in a game.
- *
- * It provides a common contract for distinguishing users that have command-sending
- * capabilities from those that do not.
+ * Represents a conversational scope limited to a specific user or group of users.
  */
-interface ExecutingUser : User
+interface RestrictedConversationScope : ConversationScope
