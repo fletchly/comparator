@@ -37,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
+@Suppress("unused")
 class Comparator : JavaPlugin(), KoinComponent {
     private var koinBootstrapper = KoinBootstrapper(this)
 
