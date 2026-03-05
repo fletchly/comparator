@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.tool
 
-import io.fletchly.comparator.model.Tool
+import io.fletchly.comparator.model.tool.Tool
 
 /**
  * Defines a registry for managing tools that can be executed.

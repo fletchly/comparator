@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model
+package io.fletchly.comparator.model.tool
 
 /**
  * Represents an executable tool with a defined structure, parameters, and result handler.

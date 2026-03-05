@@ -22,8 +22,8 @@ import io.fletchly.comparator.annotation.AllowedValues
 import io.fletchly.comparator.annotation.ToolFunction
 import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
-import io.fletchly.comparator.model.Parameter
-import io.fletchly.comparator.model.ToolResult
+import io.fletchly.comparator.model.tool.Parameter
+import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.tool.tool
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable

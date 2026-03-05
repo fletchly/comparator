@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model
+package io.fletchly.comparator.model.tool
 
 import io.fletchly.comparator.exception.ToolException
 import kotlinx.serialization.KSerializer
