@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator
+package io.fletchly.comparator.tool
 
 import io.fletchly.comparator.annotation.AllowedValues
 import io.fletchly.comparator.annotation.ToolFunction
@@ -24,16 +24,9 @@ import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.tool.Parameter
 import io.fletchly.comparator.model.tool.ToolResult
-import io.fletchly.comparator.tool.tool
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertIs
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 @Suppress("RedundantSuspendModifier")
 class ToolBuilderTest {

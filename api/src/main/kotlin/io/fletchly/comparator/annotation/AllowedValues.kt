@@ -18,6 +18,13 @@
 
 package io.fletchly.comparator.annotation
 
+/**
+ * Annotation for specifying a fixed set of allowed string values for a parameter.
+ *
+ * This is typically used to enforce strict constraints on the values that a string [io.fletchly.comparator.model.tool.Parameter] can accept.
+ *
+ * @property values The set of valid string values that the annotated parameter can take.
+ */
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class AllowedValues(vararg val values: String)

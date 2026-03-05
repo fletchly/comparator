@@ -18,6 +18,16 @@
 
 package io.fletchly.comparator.annotation
 
+/**
+ * Annotation for defining metadata for a tool function parameter.
+ *
+ * This annotation is intended to provide descriptive information and constraints for a parameter
+ * of a function annotated with [ToolFunction]. It serves as a mechanism to define behavior
+ * and documentation for the parameter within a tool-based system.
+ *
+ * @property description A textual description of the parameter's purpose or role in the function.
+ * @property required Indicates whether this parameter is mandatory. Defaults to `true`.
+ */
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ToolParameter(

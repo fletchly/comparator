@@ -20,6 +20,21 @@ package io.fletchly.comparator.model.tool
 
 import kotlin.reflect.KType
 
+/**
+ * Represents a parameter for configuring tools or functions, including its name, type,
+ * description, and additional metadata such as whether it is required or accepts enumerated values.
+ *
+ * @property name The name of the parameter.
+ * @property type The data type of the parameter, defined by the [Type] enum.
+ * @property description A description of the parameter's purpose and usage.
+ * @property required Indicates whether the parameter is mandatory. Defaults to true.
+ * @property enum A list of allowable string values for the parameter, if applicable. Defaults to null.
+ * @property elementType The data type of the elements if the parameter is an array.
+ * It is required when the type is [Type.ARRAY]. Defaults to null.
+ *
+ * @throws IllegalArgumentException If the parameter type is [Type.ARRAY] and `elementType` is not provided.
+ * @throws IllegalArgumentException If nested arrays are attempted by setting `elementType` to [Type.ARRAY].
+ */
 data class Parameter(
     val name: String,
     val type: Type,

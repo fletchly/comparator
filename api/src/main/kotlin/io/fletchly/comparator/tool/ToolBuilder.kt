@@ -37,13 +37,12 @@ import kotlin.reflect.full.findAnnotation
  * Creates a `Tool` instance from a handler function by validating its structure, annotations, and parameters.
  *
  * The function ensures that the handler function meets the required conditions:
- * - It must be a suspend function.
  * - It must be annotated with [ToolFunction] to provide a name and description.
  * - Its parameters must be annotated with [ToolParameter] to define their metadata.
  * - If applicable, parameters can optionally use [AllowedValues] to constrain their valid input values.
  * - Its return type must be non-nullable and serializable.
  *
- *
+ * @sample io.fletchly.comparator.example.ToolBuilderExample.simpleToolDefinition
  *
  * @param fn The suspend function representing the tool's behavior. It must be annotated with `@ToolFunction` and its
  * parameters must be described using `@ToolParameter` annotations.

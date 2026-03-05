@@ -18,6 +18,17 @@
 
 package io.fletchly.comparator.annotation
 
+/**
+ * Annotation used to mark a function as a tool function.
+ *
+ * Tool functions serve as callable operations with defined names and descriptions, which can
+ * then be registered and executed within the context of a tool-based system. The annotation
+ * provides metadata to identify the function and document its purpose within the system.
+ *
+ * @property name The name of the tool function. Defaults to an empty string. If left empty,
+ * the system may use the annotated function's name as a fallback.
+ * @property description A detailed description of the tool function's purpose and functionality.
+ */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ToolFunction(

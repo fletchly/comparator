@@ -16,16 +16,22 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.exception
+package io.fletchly.comparator.example
 
-/**
- * Represents a recoverable, model-facing error encountered during the execution of a tool.
- *
- * This exception is used to signal to the model that an error occurred during tool execution,
- * so it should be descriptive in a way that is understandable to the model.
- *
- * @constructor Creates a [ToolException] with a specified error message and an optional cause.
- * @param message A message describing the error encountered.
- * @param cause The underlying cause of the error, if any.
- */
-class ToolException(override val message: String, override val cause: Throwable?) : Exception()
+import io.fletchly.comparator.annotation.ToolFunction
+import io.fletchly.comparator.annotation.ToolParameter
+import io.fletchly.comparator.tool.tool
+
+class ToolBuilderExample {
+    fun simpleToolDefinition() {
+        // Tool handler definition
+        @ToolFunction("adder", "Adds two numbers")
+        fun adderToolHandler(
+            @ToolParameter("First number to be added") num1: Int,
+            @ToolParameter("Second number to be added") num2: Int
+        ): Int = num1 + num2
+
+        // Tool object creation
+        val adderTool = tool(::adderToolHandler)
+    }
+}

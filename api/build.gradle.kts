@@ -31,3 +31,9 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
 }
+
+dokka {
+    dokkaSourceSets.main {
+        samples.from("src/test/kotlin/io/fletchly/comparator/example")
+    }
+}

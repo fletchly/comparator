@@ -23,7 +23,6 @@ import io.fletchly.comparator.exception.ToolException
 /**
  * Represents an executable tool with a defined structure, parameters, and result handler.
  *
- *
  * @property name The unique name of the tool.
  * @property description A brief description of what the tool does.
  * @property parameters A list of [Parameter] instances specifying the input parameters required by the tool.
