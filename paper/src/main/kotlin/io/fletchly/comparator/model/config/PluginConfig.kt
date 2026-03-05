@@ -71,7 +71,7 @@ data class OllamaConfig(
     val apiKey: String? = "",
 
     @Comment("The model to use for response generation")
-    val model: String = "deepseek-v3.1:671b"
+    val model: String = "qwen3.5:397b-cloud"
 )
 
 @ConfigSerializable
