@@ -19,6 +19,7 @@
 package io.fletchly.comparator.adapter.command
 
 import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
@@ -26,6 +27,7 @@ import io.fletchly.comparator.model.scope.ConsoleConversationScope
 import io.fletchly.comparator.model.scope.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toScope
+import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver
@@ -39,8 +41,8 @@ import org.bukkit.permissions.PermissionDefault
  * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
 class AdminCommand(
-    contextClearer: ContextClearer,
-    pluginRuntime: BukkitPluginRuntime
+    private val contextClearer: ContextClearer,
+    private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
         description = "Manage Comparator"
@@ -68,73 +70,76 @@ class AdminCommand(
         node {
             then(
                 Commands.literal("clear")
-                    .requires { source ->
-                        source.sender.hasPermission(clearSelfPermission.name)
-                    }
+                    .requires { it.sender.hasPermission(clearSelfPermission.name) }
                     .executes { ctx ->
-                        val scope = ctx.source.sender.toScope()
-
-                        pluginRuntime.runCoroutine {
-                            with(contextClearer) { scope.clearSelf() }
-                        }
-
+                        clearSelf(ctx)
                         Command.SINGLE_SUCCESS
                     }
                     .then(
                         Commands.argument("targets", ArgumentTypes.players())
-                            .requires { source ->
-                                source.sender.hasPermission(clearOtherPermission.name)
-                                        && source.sender.hasPermission("minecraft.command.selector")
-                            }
+                            .requires { it.sender.hasPermission(clearOtherPermission.name) && it.sender.hasPermission("minecraft.command.selector") }
                             .executes { ctx ->
-                                val targetResolver =
-                                    ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-                                val targetScopes = targetResolver.resolve(ctx.source).map { it.toScope() }
-                                val feedbackScope = ctx.source.sender.toScope()
-
-                                pluginRuntime.runCoroutine {
-                                    with(contextClearer) { feedbackScope.clearOther(targetScopes) }
-                                }
-
+                                clearOther(ctx)
                                 Command.SINGLE_SUCCESS
                             }
                     )
             ).then(
                 Commands.literal("clearConsole")
-                .requires { source ->
-                    source.sender.hasPermission(clearOtherPermission.name)
-                }
-                .executes { ctx ->
-                    val scope = ctx.source.sender.toScope()
-
-                    pluginRuntime.runCoroutine {
-                        with(contextClearer) {
-                            when (scope) {
-                                is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
-                                else -> scope.clearOther(listOf(ConsoleConversationScope))
-                            }
-                        }
+                    .requires { it.sender.hasPermission(clearOtherPermission.name) }
+                    .executes { ctx ->
+                        clearConsole(ctx)
+                        Command.SINGLE_SUCCESS
                     }
-
-                    Command.SINGLE_SUCCESS
-                }
             ).then(
                 Commands.literal("clearPublicChat")
-                .requires { source ->
-                    source.sender.hasPermission(clearOtherPermission.name)
-                }
-                .executes { ctx ->
-                    val scope = ctx.source.sender.toScope()
-
-                    pluginRuntime.runCoroutine {
-                        with(contextClearer) {
-                            scope.clearOther(listOf(PublicChatConversationScope))
-                        }
+                    .requires { it.sender.hasPermission(clearOtherPermission.name) }
+                    .executes { ctx ->
+                        clearPublicChat(ctx)
+                        Command.SINGLE_SUCCESS
                     }
-
-                    Command.SINGLE_SUCCESS
-                }
             )
+        }
+    }
+
+    private fun clearSelf(ctx: CommandContext<CommandSourceStack>) {
+        val scope = ctx.source.sender.toScope()
+
+        pluginRuntime.runCoroutine {
+            with(contextClearer) { scope.clearSelf() }
+        }
+    }
+
+    private fun clearOther(ctx: CommandContext<CommandSourceStack>) {
+        val targetResolver =
+            ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
+        val targetScopes = targetResolver.resolve(ctx.source).map { it.toScope() }
+        val feedbackScope = ctx.source.sender.toScope()
+
+        pluginRuntime.runCoroutine {
+            with(contextClearer) { feedbackScope.clearOther(targetScopes) }
+        }
+    }
+
+    private fun clearConsole(ctx: CommandContext<CommandSourceStack>) {
+        val scope = ctx.source.sender.toScope()
+
+        pluginRuntime.runCoroutine {
+            with(contextClearer) {
+                when (scope) {
+                    is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
+                    else -> scope.clearOther(listOf(ConsoleConversationScope))
+                }
+            }
+        }
+    }
+
+    private fun clearPublicChat(ctx: CommandContext<CommandSourceStack>) {
+        val scope = ctx.source.sender.toScope()
+
+        pluginRuntime.runCoroutine {
+            with(contextClearer) {
+                scope.clearOther(listOf(PublicChatConversationScope))
+            }
         }
     }
 }
