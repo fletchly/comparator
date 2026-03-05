@@ -65,7 +65,7 @@ class AdminCommand(
         val clearAllPermission = Permission(
             "$permission.clear.all",
             "Allow a player to clear context for all scopes",
-            PermissionDefault.NOT_OP
+            PermissionDefault.OP
         )
 
         childPermissions = listOf(
