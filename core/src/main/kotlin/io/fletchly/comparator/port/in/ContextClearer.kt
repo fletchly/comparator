@@ -18,8 +18,8 @@
 
 package io.fletchly.comparator.port.`in`
 
-import io.fletchly.comparator.model.scope.RestrictedConversationScope
 import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
 
 /**
  * Provides an interface for clearing conversation context for one or more scopes

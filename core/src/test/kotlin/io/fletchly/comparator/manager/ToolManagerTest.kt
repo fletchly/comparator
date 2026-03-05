@@ -74,8 +74,9 @@ class ToolManagerTest {
         manager.register(tool1)
         manager.register(tool2)
         // tool1 should still be the registered one
-        assertSame(tool1, manager.getToolNames()
-            .let { assertTrue(it.contains("my_tool")); tool1 })
+        assertSame(
+            tool1, manager.getToolNames()
+                .let { assertTrue(it.contains("my_tool")); tool1 })
     }
 
     @Test
