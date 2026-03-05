@@ -41,7 +41,7 @@ import io.ktor.client.HttpClient as KtorClient
 class OllamaAIProviderTest {
     private val log = mockk<LogPort>(relaxed = true)
     private val toolExecutor = mockk<ToolExecutor> {
-        every { tools } returns emptyList()
+        every { getTools() } returns emptyList()
     }
     private val baseUrl = "https://ollama.example.com"
     private val model = "llama3"
@@ -269,7 +269,7 @@ class OllamaAIProviderTest {
                 model = model
             ),
             log = log,
-            toolExecutor = mockk { every { tools } returns listOf(tool) },
+            toolExecutor = mockk { every { getTools() } returns listOf(tool) },
             client = KtorClient(MockEngine { request ->
                 capturedBody = request.body.toByteArray().decodeToString()
                 respond(
@@ -378,7 +378,7 @@ class OllamaAIProviderTest {
                     content = "",
                     toolCalls = listOf(ToolCall("get_weather", mapOf("location" to "London")))
                 ),
-                Message.Tool("The weather in London is 15°C")
+                Message.Tool("The weather in London is 15°C", "get_weather")
             )
         )
 

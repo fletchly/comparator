@@ -20,6 +20,7 @@ package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.tool.Tool
 
 /**
  * Defines a registry for managing a collection of tools within the system.
@@ -32,6 +33,6 @@ import io.fletchly.comparator.model.message.ToolCall
  *                 its definition and execution logic.
  */
 interface ToolExecutor {
-    fun getToolNames(): List<String>
+    fun getTools(): List<Tool>
     suspend fun execute(toolCall: ToolCall): Message.Tool
 }

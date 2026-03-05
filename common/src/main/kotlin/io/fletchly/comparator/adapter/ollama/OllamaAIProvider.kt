@@ -19,22 +19,18 @@
 package io.fletchly.comparator.adapter.ollama
 
 import io.fletchly.comparator.adapter.ollama.dto.*
-import io.fletchly.comparator.util.HttpClients
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.options.OllamaOptions
+import io.fletchly.comparator.model.tool.Parameter
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.tool.ToolParameter
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.util.JsonProperty
-import io.fletchly.comparator.util.JsonSchema
-import io.fletchly.comparator.model.options.OllamaOptions
-import io.fletchly.comparator.util.toJsonObject
-import io.fletchly.comparator.util.toMap
-import io.ktor.client.HttpClient
+import io.fletchly.comparator.util.*
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -106,7 +102,7 @@ class OllamaAIProvider(
             addAll(conversationMessages)
         }
 
-        val tools: List<ChatTool>? = toolExecutor.tools
+        val tools: List<ChatTool>? = toolExecutor.getTools()
             .map { it.toChatTool() }
             .ifEmpty { null }
 
@@ -162,7 +158,7 @@ class OllamaAIProvider(
         )
     )
 
-    private fun List<ToolParameter>.toJsonSchema(): JsonSchema {
+    private fun List<Parameter>.toJsonSchema(): JsonSchema {
         val properties = this.associate { param ->
             param.name to JsonProperty(
                 type = param.type.name.lowercase(),

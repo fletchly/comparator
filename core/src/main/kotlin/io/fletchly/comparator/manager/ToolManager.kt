@@ -36,7 +36,7 @@ class ToolManager(
 ) : ToolExecutor, ToolRegistry {
     private val tools: MutableMap<String, Tool> = mutableMapOf()
 
-    override fun getToolNames(): List<String> = tools.values.map { it.name }
+    override fun getTools(): List<Tool> = tools.values.toList()
 
     override suspend fun execute(toolCall: ToolCall): Message.Tool =
         when (val result = tools[toolCall.name]?.execute(toolCall.arguments)) {

@@ -46,7 +46,7 @@ class ToolManagerTest {
     fun `registers a tool successfully`() {
         val tool = mockTool("my_tool")
         manager.register(tool)
-        assertTrue(manager.getToolNames().contains("my_tool"))
+        assertTrue(manager.getTools().contains("my_tool"))
     }
 
     @Test
@@ -54,7 +54,7 @@ class ToolManagerTest {
         val tool1 = mockTool("tool_1")
         val tool2 = mockTool("tool_2")
         manager.register(tool1, tool2)
-        assertEquals(listOf("tool_1", "tool_2"), manager.getToolNames())
+        assertEquals(listOf("tool_1", "tool_2"), manager.getTools())
     }
 
     @Test
@@ -63,7 +63,7 @@ class ToolManagerTest {
         val tool2 = mockTool("my_tool")
         manager.register(tool1)
         manager.register(tool2)
-        assertEquals(1, manager.getToolNames().count { it == "my_tool" })
+        assertEquals(1, manager.getTools().count { it == "my_tool" })
         verify { log.warn(any(), any()) }
     }
 
@@ -75,7 +75,7 @@ class ToolManagerTest {
         manager.register(tool2)
         // tool1 should still be the registered one
         assertSame(
-            tool1, manager.getToolNames()
+            tool1, manager.getTools()
                 .let { assertTrue(it.contains("my_tool")); tool1 })
     }
 
@@ -88,13 +88,13 @@ class ToolManagerTest {
 
     @Test
     fun `returns empty list when no tools registered`() {
-        assertTrue(manager.getToolNames().isEmpty())
+        assertTrue(manager.getTools().isEmpty())
     }
 
     @Test
     fun `returns all registered tool names`() {
         manager.register(mockTool("tool_1"), mockTool("tool_2"), mockTool("tool_3"))
-        assertEquals(3, manager.getToolNames().size)
+        assertEquals(3, manager.getTools().size)
     }
 
     @Test
