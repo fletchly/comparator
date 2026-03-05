@@ -20,6 +20,7 @@ package io.fletchly.comparator.model.tool
 
 import io.fletchly.comparator.exception.ToolException
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.Json
 
 /**
  * Represents the result of executing a tool.
@@ -45,7 +46,10 @@ sealed interface ToolResult {
         override val toolName: String,
         val value: Any,
         val serializer: KSerializer<out Any>
-    ) : ToolResult
+    ) : ToolResult {
+        @Suppress("UNCHECKED_CAST") // safe to do because builder guarantees matching serializer
+        fun toJsonString(): String = Json.encodeToString(serializer as KSerializer<Any>, value)
+    }
 
     /**
      * Represents a failure that occurred during the execution of a tool.

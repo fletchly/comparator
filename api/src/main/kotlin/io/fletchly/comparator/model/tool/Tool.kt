@@ -18,6 +18,8 @@
 
 package io.fletchly.comparator.model.tool
 
+import io.fletchly.comparator.exception.ToolException
+
 /**
  * Represents an executable tool with a defined structure, parameters, and result handler.
  *
@@ -33,5 +35,36 @@ class Tool(
     val parameters: List<Parameter>,
     private val handler: suspend (Map<String, Any>) -> ToolResult
 ) {
-    suspend fun execute(args: Map<String, Any>): ToolResult = handler(args)
+    /**
+     * Executes the tool using the provided arguments and validates input parameters.
+     */
+    suspend fun execute(args: Map<String, Any>): ToolResult {
+        parameters.forEach { param ->
+            if (param.required && !args.containsKey(param.name)) {
+                return ToolResult.Failure(name, ToolException("Missing required parameter '${param.name}'", IllegalArgumentException()))
+            }
+            args[param.name]?.let { value ->
+                if (!value.isCompatibleWith(param.type)) {
+                    return ToolResult.Failure(name, ToolException("Parameter '${param.name}' expected ${param.type} but got ${value::class.simpleName}", IllegalArgumentException()))
+                }
+                if (param.type == Parameter.Type.ARRAY) {
+                    val elementType = param.elementType ?: return@let
+                    (value as List<*>).forEachIndexed { index, element ->
+                        if (element == null || !element.isCompatibleWith(elementType)) {
+                            return ToolResult.Failure(name, ToolException("Parameter '${param.name}[$index]' expected $elementType but got ${element?.let { it::class.simpleName } ?: "null"}", IllegalArgumentException()))
+                        }
+                    }
+                }
+            }
+        }
+        return handler(args)
+    }
+
+    private fun Any.isCompatibleWith(type: Parameter.Type): Boolean = when (type) {
+        Parameter.Type.STRING -> this is String
+        Parameter.Type.INTEGER -> this is Int || this is Long
+        Parameter.Type.NUMBER -> this is Float || this is Double
+        Parameter.Type.BOOLEAN -> this is Boolean
+        Parameter.Type.ARRAY -> this is List<*>
+    }
 }
