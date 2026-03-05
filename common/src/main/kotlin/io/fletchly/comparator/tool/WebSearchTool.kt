@@ -30,6 +30,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.json.JsonElement
+import org.koin.java.KoinJavaComponent.getKoin
 
 private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"
 
@@ -59,4 +60,5 @@ class WebSearchTool(
     }
 }
 
-val webSearchTool = tool(WebSearchTool::handleWebSearch)
+private val instance = getKoin().get<WebSearchTool>()
+val webSearchTool = tool(instance::handleWebSearch)

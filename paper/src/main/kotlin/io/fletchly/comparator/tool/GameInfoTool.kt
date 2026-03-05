@@ -21,6 +21,7 @@ package io.fletchly.comparator.tool
 import io.fletchly.comparator.annotation.ToolFunction
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.java.KoinJavaComponent.getKoin
 import java.time.LocalDate
 
 class GameInfoTool(
@@ -33,4 +34,5 @@ class GameInfoTool(
     }
 }
 
-val gameInfoTool = tool(GameInfoTool::getGameInfo)
+private val instance = getKoin().get<GameInfoTool>()
+val gameInfoTool = tool(instance::getGameInfo)
