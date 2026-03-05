@@ -49,23 +49,19 @@ class KoinBootstrapper(private val plugin: JavaPlugin) {
     }
 
     /**
-     * Starts the Koin dependency injection framework for the associated Bukkit plugin by
-     * initializing the necessary modules required for the plugin's runtime, infrastructure,
-     * adapters, and configuration.
+     * Starts the Koin dependency injection framework for this plugin.
      *
-     * This method invokes the `startKoin` function with a collection of predefined modules.
-     * These modules are responsible for configuring the dependency graph and binding the
-     * necessary services and components to be used within the plugin.
+     * This method initializes the Koin application context with the modules required for
+     * the plugin to function correctly. It utilizes the `rootModule`, which aggregates
+     * all necessary dependencies, to configure the dependency injection setup.
      *
-     * @return The [Koin] instance representing the initialized Koin application context
-     *         for dependency injection within the plugin.
+     * Typically, this method is invoked during the plugin's startup phase to prepare
+     * the underlying infrastructure and dependencies for runtime execution.
      */
-    fun start(): Koin {
+    fun start() {
         startKoin {
             modules(rootModule)
         }
-
-        return getKoin()
     }
 
     /**
