@@ -22,10 +22,11 @@ import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.registerCommand
-import io.fletchly.comparator.model.tool.ToolDefinition
-import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolExecutor
+import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.tool.gameInfoTool
+import io.fletchly.comparator.tool.webSearchTool
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
@@ -83,12 +84,7 @@ class Comparator : JavaPlugin() {
     }
 
     private fun registerTools() {
-        koinBootstrapper.loadToolModules(koin)
-        val toolExecutor = koin.get<ToolExecutor>()
-        val tools = koin.getAll<ToolDefinition>()
-
-        toolExecutor.register(ToolList(tools.map { it.definition }))
-
-        logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
+        val registry = koin.get<ToolRegistry>()
+        registry.register(webSearchTool, gameInfoTool)
     }
 }
