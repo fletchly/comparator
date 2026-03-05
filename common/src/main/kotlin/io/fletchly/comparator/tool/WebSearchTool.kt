@@ -60,5 +60,5 @@ class WebSearchTool(
     }
 }
 
-private val instance = getKoin().get<WebSearchTool>()
+private val instance: WebSearchTool = getKoin().get()
 val webSearchTool = tool(instance::handleWebSearch)
