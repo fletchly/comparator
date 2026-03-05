@@ -33,6 +33,5 @@ import io.fletchly.comparator.model.tool.Tool
  *                 its definition and execution logic.
  */
 interface ToolExecutor {
-    fun getTools(): List<Tool>
     suspend fun execute(toolCall: ToolCall): Message.Tool
 }

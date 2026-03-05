@@ -29,6 +29,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
+import io.fletchly.comparator.tool.ToolRegistry
 import io.fletchly.comparator.util.*
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -50,7 +51,7 @@ import kotlinx.io.IOException
  *
  * @property config The configuration for the Ollama API, including the base URL, API key, and model identifier.
  * @property log A logging interface for recording information and warnings during API interactions.
- * @property toolExecutor A registry for managing tools that the system can use during message processing.
+ * @property toolRegistry A registry for managing tools that the system can use during message processing.
  * @property client The HTTP client used for making requests to the Ollama API. Defaults to [HttpClients.KtorCIO].
  *
  * @see AIPort
@@ -58,7 +59,7 @@ import kotlinx.io.IOException
 class OllamaAIProvider(
     private val config: OllamaOptions,
     private val log: LogPort,
-    private val toolExecutor: ToolExecutor,
+    private val toolRegistry: ToolRegistry,
     private val client: HttpClient = HttpClients.KtorCIO
 ) : AIPort {
     override suspend fun generateResponse(
@@ -103,7 +104,7 @@ class OllamaAIProvider(
             addAll(conversationMessages)
         }
 
-        val tools: List<ChatTool>? = toolExecutor.getTools()
+        val tools: List<ChatTool>? = toolRegistry.getTools()
             .map { it.toChatTool() }
             .ifEmpty { null }
 

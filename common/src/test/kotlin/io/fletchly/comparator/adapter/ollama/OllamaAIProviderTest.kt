@@ -27,6 +27,7 @@ import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.LogPort
+import io.fletchly.comparator.tool.ToolRegistry
 import io.fletchly.comparator.util.HttpClients
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
@@ -40,7 +41,7 @@ import io.ktor.client.HttpClient as KtorClient
 
 class OllamaAIProviderTest {
     private val log = mockk<LogPort>(relaxed = true)
-    private val toolExecutor = mockk<ToolExecutor> {
+    private val toolRegistry = mockk<ToolRegistry> {
         every { getTools() } returns emptyList()
     }
     private val baseUrl = "https://ollama.example.com"
@@ -53,7 +54,7 @@ class OllamaAIProviderTest {
             model = model
         ),
         log = log,
-        toolExecutor = toolExecutor,
+        toolRegistry = toolRegistry,
         client = KtorClient(MockEngine { handler(it) }, HttpClients.defaultConfig)
     )
 
@@ -115,7 +116,7 @@ class OllamaAIProviderTest {
                 model = model
             ),
             log = log,
-            toolExecutor = toolExecutor,
+            toolRegistry = toolRegistry,
             client = KtorClient(MockEngine { request ->
                 capturedAuth = request.headers[HttpHeaders.Authorization]
                 respond(
@@ -269,7 +270,7 @@ class OllamaAIProviderTest {
                 model = model
             ),
             log = log,
-            toolExecutor = mockk { every { getTools() } returns listOf(tool) },
+            toolRegistry = mockk { every { getTools() } returns listOf(tool) },
             client = KtorClient(MockEngine { request ->
                 capturedBody = request.body.toByteArray().decodeToString()
                 respond(
