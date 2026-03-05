@@ -23,8 +23,10 @@ import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.`in`.ToolExecutor
+import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.util.pluralize
 
 /**
  * Manages the registration and execution of tools within a system.
@@ -33,8 +35,9 @@ import io.fletchly.comparator.tool.ToolRegistry
  */
 class ToolManager(
     val log: LogPort
-) : ToolExecutor, ToolRegistry {
-    private val tools: MutableMap<String, Tool> = mutableMapOf()
+) : ToolExecutor, ToolRegistryLifecycle, ToolRegistry {
+    private var tools: Map<String, Tool> = mutableMapOf()
+    private var frozen = false
 
     override fun getTools(): List<Tool> = tools.values.toList()
 
@@ -63,6 +66,9 @@ class ToolManager(
         }
 
     override fun register(vararg tools: Tool) {
+        if (frozen) {
+            log.warn("Tool registry has been frozen, skipping registration of the following ${"tool".pluralize(tools.size)}: ${tools.map { it.name }}")
+        }
         tools.forEach { tool ->
             if (this.tools.contains(tool.name)) {
                 log.warn(
@@ -70,8 +76,13 @@ class ToolManager(
                 )
                 return@forEach
             }
-            this.tools[tool.name] = tool
+            (this.tools as MutableMap) [tool.name] = tool // safe to do here when the registry is unfrozen
         }
+    }
+
+    override fun freeze() {
+        tools = tools.toMap()
+        frozen = true
     }
 
     private companion object {
