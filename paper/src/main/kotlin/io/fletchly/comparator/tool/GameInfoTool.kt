@@ -22,17 +22,16 @@ import io.fletchly.comparator.annotation.ToolFunction
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.java.KoinJavaComponent.getKoin
-import java.time.LocalDate
 
 class GameInfoTool(
     private val plugin: JavaPlugin,
     private val pluginRuntime: BukkitPluginRuntime
 ) {
-    @ToolFunction(name = "game_info", description = "Get the current game version and current system date. Useful for ensuring up-to-date, version-relevant information.")
+    @ToolFunction(name = "game_info", description = "Get the Minecraft version the player is currently running on their client/server **NOT THE MOST RECENT GAME VERSION**. Useful for ensuring version-relevant information.")
     suspend fun getGameInfo(): Map<String, String> = pluginRuntime.runTask {
-        mapOf("version" to plugin.server.version, "current_date" to LocalDate.now().toString())
+        mapOf("version" to plugin.server.version)
     }
 }
 
-private val instance = getKoin().get<GameInfoTool>()
+private val instance: GameInfoTool = getKoin().get()
 val gameInfoTool = tool(instance::getGameInfo)
