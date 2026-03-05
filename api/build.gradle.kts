@@ -19,8 +19,10 @@
 plugins {
     id("buildsrc.convention.kotlin-jvm")
     id("buildsrc.convention.dokka-convention")
+    alias(libs.plugins.kotlinPluginSerialization)
 }
 
 dependencies {
-    implementation(project(":core"))
+    implementation(kotlin("reflect"))
+    implementation(libs.kotlinx.serialization)
 }
