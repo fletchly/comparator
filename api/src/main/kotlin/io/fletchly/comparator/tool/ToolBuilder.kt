@@ -39,19 +39,17 @@ import kotlin.reflect.full.findAnnotation
  * The function ensures that the handler function meets the required conditions:
  * - It must be a suspend function.
  * - It must be annotated with [ToolFunction] to provide a name and description.
- * - Its parameters must be annotated with [io.fletchly.comparator.model.ToolParameter] to define their metadata.
+ * - Its parameters must be annotated with [ToolParameter] to define their metadata.
  * - If applicable, parameters can optionally use [AllowedValues] to constrain their valid input values.
  * - Its return type must be non-nullable and serializable.
  *
+ *
+ *
  * @param fn The suspend function representing the tool's behavior. It must be annotated with `@ToolFunction` and its
  * parameters must be described using `@ToolParameter` annotations.
- * @return A `Tool` instance representing the validated and structured tool, ready for execution.
+ * @return A [Tool] instance representing the validated and structured tool, ready for execution.
  */
 fun tool(fn: KFunction<*>): Tool {
-    require(fn.isSuspend) {
-        "Handler function '${fn.name}' must be a suspend function"
-    }
-
     require(fn.parameters.none { it.kind == KParameter.Kind.INSTANCE }) {
         "Handler function '${fn.name}' must be a bound reference. Use 'instance::method' instead of 'ClassName::method'"
     }
