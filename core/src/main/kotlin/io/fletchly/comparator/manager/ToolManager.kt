@@ -29,13 +29,7 @@ import io.fletchly.comparator.tool.ToolRegistry
 /**
  * Manages the registration and execution of tools within a system.
  *
- * The `ToolManager` class provides functionality to manage a collection of tools,
- * enabling registration, retrieval, and execution of tools. It implements the
- * `ToolExecutor` interface and acts as the core component for handling tool-based
- * operations.
- *
- * @property log An instance of `LogPort` used to capture logs related to tool
- *               executions and registrations.
+ * @param log The logging interface used for recording informational and warning messages.
  */
 class ToolManager(
     val log: LogPort
@@ -60,7 +54,7 @@ class ToolManager(
 
     override fun register(vararg tools: Tool) {
         tools.forEach { tool ->
-            if (!this.tools.contains(tool.name)) {
+            if (this.tools.contains(tool.name)) {
                 log.warn(
                     "A tool with name '${tool.name}' is already registered, skipping",
                     ToolManager::class.simpleName

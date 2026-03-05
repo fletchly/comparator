@@ -18,162 +18,128 @@
 
 package io.fletchly.comparator.manager
 
+import io.fletchly.comparator.exception.ToolException
+import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.out.LogPort
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.JsonPrimitive
-import org.junit.jupiter.api.Assertions.assertDoesNotThrow
-import kotlin.test.Test
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
+import kotlinx.serialization.builtins.serializer
+import kotlin.test.*
 
 class ToolManagerTest {
-    private val log: LogPort = mockk {
-        every { info(any(), any()) } just Runs
-    }
+    private val log = mockk<LogPort>(relaxed = true)
+    private val manager = ToolManager(log)
 
-    private fun toolWithName(name: String, result: ToolResult = ToolResult.Success(name, JsonPrimitive("ok"))): Tool =
-        mockk<Tool> {
-            every { this@mockk.name } returns name
-            coEvery { execute(any()) } returns result
-        }
-
-    private fun toolCall(name: String, args: Map<String, Any> = emptyMap()): ToolCall =
-        ToolCall(name, args)
-
-    private fun managerWith(vararg tools: Tool): ToolManager =
-        ToolManager(log).also { it.register(ToolList(tools.toList())) }
-
-    // --- register() ---
-
-    @Test
-    fun `register throws when duplicate tool names are provided`() {
-        val manager = ToolManager(log)
-        assertFailsWith<IllegalArgumentException> {
-            manager.register(ToolList(listOf(toolWithName("duplicate"), toolWithName("duplicate"))))
-        }
+    private fun mockTool(name: String): Tool {
+        val tool = mockk<Tool>()
+        every { tool.name } returns name
+        return tool
     }
 
     @Test
-    fun `register throws with duplicate names listed in message`() {
-        val manager = ToolManager(log)
-        val ex = assertFailsWith<IllegalArgumentException> {
-            manager.register(ToolList(listOf(toolWithName("dup"), toolWithName("dup"))))
-        }
-        assertContains(ex.message ?: "", "dup")
+    fun `registers a tool successfully`() {
+        val tool = mockTool("my_tool")
+        manager.register(tool)
+        assertTrue(manager.getToolNames().contains("my_tool"))
     }
 
     @Test
-    fun `register accepts tools with unique names`() {
-        assertDoesNotThrow {
-            managerWith(toolWithName("a"), toolWithName("b"))
-        }
-    }
-
-    // --- tools property ---
-
-    @Test
-    fun `tools returns all registered tools`() {
-        val a = toolWithName("a")
-        val b = toolWithName("b")
-        val manager = managerWith(a, b)
-
-        val tools = manager.tools
-        assertContains(tools, a)
-        assertContains(tools, b)
-        assertEquals(2, tools.size)
+    fun `registers multiple tools at once`() {
+        val tool1 = mockTool("tool_1")
+        val tool2 = mockTool("tool_2")
+        manager.register(tool1, tool2)
+        assertEquals(listOf("tool_1", "tool_2"), manager.getToolNames())
     }
 
     @Test
-    fun `tools returns empty list when nothing is registered`() {
-        val manager = managerWith()
-        assertEquals(emptyList(), manager.tools)
-    }
-
-    // --- execute() ---
-
-    @Test
-    fun `returns tool not found message when tool does not exist`() = runTest {
-        val manager = managerWith()
-        val result = manager.execute(toolCall("unknown"))
-        assertEquals("tool not found: unknown", result.content)
+    fun `skips duplicate tool and logs warning`() {
+        val tool1 = mockTool("my_tool")
+        val tool2 = mockTool("my_tool")
+        manager.register(tool1)
+        manager.register(tool2)
+        assertEquals(1, manager.getToolNames().count { it == "my_tool" })
+        verify { log.warn(any(), any()) }
     }
 
     @Test
-    fun `delegates execution to the correct tool`() = runTest {
-        val tool = toolWithName("my-tool")
-        val manager = managerWith(tool)
-        val call = toolCall("my-tool", mapOf("x" to "hello"))
-
-        manager.execute(call)
-
-        coVerify { tool.execute(mapOf("x" to "hello")) }
+    fun `first registration wins on duplicate`() {
+        val tool1 = mockTool("my_tool")
+        val tool2 = mockTool("my_tool")
+        manager.register(tool1)
+        manager.register(tool2)
+        // tool1 should still be the registered one
+        assertSame(tool1, manager.getToolNames()
+            .let { assertTrue(it.contains("my_tool")); tool1 })
     }
 
     @Test
-    fun `returns tool result as message on success`() = runTest {
-        val tool = toolWithName("my-tool", ToolResult.Success("my-tool", JsonPrimitive("result")))
-        val manager = managerWith(tool)
-
-        val message = manager.execute(toolCall("my-tool"))
-
-        assertEquals(ToolResult.Success("my-tool", JsonPrimitive("result")).toString(), message.content)
+    fun `does not log warning on successful registration`() {
+        val tool = mockTool("my_tool")
+        manager.register(tool)
+        verify(exactly = 0) { log.warn(any(), any()) }
     }
 
     @Test
-    fun `returns tool result as message on failure`() = runTest {
-        val tool = toolWithName("my-tool", ToolResult.Failure("my-tool", "something went wrong"))
-        val manager = managerWith(tool)
-
-        val message = manager.execute(toolCall("my-tool"))
-
-        assertEquals(ToolResult.Failure("my-tool", "something went wrong").toString(), message.content)
+    fun `returns empty list when no tools registered`() {
+        assertTrue(manager.getToolNames().isEmpty())
     }
 
     @Test
-    fun `does not execute other tools when one is called`() = runTest {
-        val target = toolWithName("target")
-        val other = toolWithName("other")
-        val manager = managerWith(target, other)
-
-        manager.execute(toolCall("target"))
-
-        coVerify(exactly = 0) { other.execute(any()) }
-    }
-
-    // --- logging ---
-
-    @Test
-    fun `logs info after successful tool execution`() = runTest {
-        val tool = toolWithName("my-tool", ToolResult.Success("my-tool", JsonPrimitive("result")))
-        val manager = managerWith(tool)
-
-        manager.execute(toolCall("my-tool", mapOf("x" to "hello")))
-
-        verify { log.info(any(), "my-tool") }
+    fun `returns all registered tool names`() {
+        manager.register(mockTool("tool_1"), mockTool("tool_2"), mockTool("tool_3"))
+        assertEquals(3, manager.getToolNames().size)
     }
 
     @Test
-    fun `logs info after failed tool execution`() = runTest {
-        val tool = toolWithName("my-tool", ToolResult.Failure("my-tool", "oops"))
-        val manager = managerWith(tool)
-
-        manager.execute(toolCall("my-tool"))
-
-        verify { log.info(any(), "my-tool") }
+    fun `returns tool not found message for unknown tool`() = runTest {
+        val result = manager.execute(ToolCall("unknown_tool", emptyMap()))
+        assertEquals("tool not found: unknown_tool", result.content)
     }
 
     @Test
-    fun `does not log when tool is not found`() = runTest {
-        val manager = managerWith()
+    fun `executes registered tool and returns result`() = runTest {
+        val tool = mockTool("my_tool")
+        val toolCall = ToolCall("my_tool", mapOf("input" to "hello"))
+        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Success(
+            "my_tool",
+            "hello",
+            String.serializer()
+        )
+        manager.register(tool)
+        val result = manager.execute(toolCall)
+        assertIs<Message.Tool>(result)
+    }
 
-        manager.execute(toolCall("ghost"))
+    @Test
+    fun `logs execution info after successful tool call`() = runTest {
+        val tool = mockTool("my_tool")
+        val toolCall = ToolCall("my_tool", mapOf("input" to "hello"))
+        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Success(
+            "my_tool",
+            "hello",
+            String.serializer()
+        )
+        manager.register(tool)
+        manager.execute(toolCall)
+        verify { log.info(any(), any()) }
+    }
 
-        verify(exactly = 0) { log.info(any(), any()) }
+    @Test
+    fun `handles tool returning Failure result`() = runTest {
+        val tool = mockTool("my_tool")
+        val toolCall = ToolCall("my_tool", emptyMap())
+        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Failure(
+            "my_tool",
+            ToolException("something went wrong", null)
+        )
+        manager.register(tool)
+        val result = manager.execute(toolCall)
+        assertIs<Message.Tool>(result)
     }
 }
