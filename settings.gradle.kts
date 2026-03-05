@@ -36,6 +36,7 @@ plugins {
 }
 
 include(":core")
+include(":api")
 include(":common")
 include(":paper")
 
