@@ -41,7 +41,7 @@ import org.koin.java.KoinJavaComponent.getKoin
  * @param plugin The JavaPlugin instance representing the Bukkit plugin.
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
-    private val commonModule = module { includes(commonAdapterModule) }
+    private val commonModule = module { includes(commonAdapterModule, commonToolModule) }
     private val paperModule = module { includes(paperConfigModule, paperAdapterModule, paperInfraModule(plugin)) }
 
     val rootModule = module {
