@@ -21,9 +21,9 @@ package io.fletchly.comparator.adapter.persistence
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
+import io.fletchly.comparator.model.options.ContextOptions
 import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ContextPort
-import io.fletchly.comparator.model.options.ContextOptions
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*

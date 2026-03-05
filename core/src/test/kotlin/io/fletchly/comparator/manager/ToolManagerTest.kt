@@ -46,7 +46,7 @@ class ToolManagerTest {
     fun `registers a tool successfully`() {
         val tool = mockTool("my_tool")
         manager.register(tool)
-        assertTrue(manager.getTools().contains("my_tool"))
+        assertTrue(manager.getTools().map { it.name }.contains("my_tool"))
     }
 
     @Test
@@ -54,7 +54,7 @@ class ToolManagerTest {
         val tool1 = mockTool("tool_1")
         val tool2 = mockTool("tool_2")
         manager.register(tool1, tool2)
-        assertEquals(listOf("tool_1", "tool_2"), manager.getTools())
+        assertEquals(listOf("tool_1", "tool_2"), manager.getTools().map { it.name })
     }
 
     @Test
@@ -63,7 +63,7 @@ class ToolManagerTest {
         val tool2 = mockTool("my_tool")
         manager.register(tool1)
         manager.register(tool2)
-        assertEquals(1, manager.getTools().count { it == "my_tool" })
+        assertEquals(1, manager.getTools().map { it.name }.count { it == "my_tool" })
         verify { log.warn(any(), any()) }
     }
 
@@ -76,7 +76,7 @@ class ToolManagerTest {
         // tool1 should still be the registered one
         assertSame(
             tool1, manager.getTools()
-                .let { assertTrue(it.contains("my_tool")); tool1 })
+                .let { tools -> assertTrue(tools.map { it.name }.contains("my_tool")); tool1 })
     }
 
     @Test

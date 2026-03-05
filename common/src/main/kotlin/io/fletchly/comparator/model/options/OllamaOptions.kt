@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.options
 
-import io.ktor.http.Url
+import io.ktor.http.*
 
 /**
  * Configuration settings required for integrating with the Ollama API.

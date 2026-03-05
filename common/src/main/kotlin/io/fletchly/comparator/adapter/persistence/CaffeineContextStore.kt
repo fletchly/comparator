@@ -25,7 +25,7 @@ import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.options.ContextOptions
 import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ContextPort
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**

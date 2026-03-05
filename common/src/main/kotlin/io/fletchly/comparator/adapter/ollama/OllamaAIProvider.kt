@@ -82,6 +82,7 @@ class OllamaAIProvider(
                         log.warn("Got 'unauthorized' response from Ollama server! Is your API key set?")
                     MessageResult.Failure("Client error")
                 }
+
                 is ServerResponseException -> MessageResult.Failure("Server error")
                 is HttpRequestTimeoutException -> MessageResult.Failure("Request timed out")
                 is IOException -> MessageResult.Failure("Network error")

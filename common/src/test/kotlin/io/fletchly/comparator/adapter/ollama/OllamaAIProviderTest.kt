@@ -18,16 +18,16 @@
 
 package io.fletchly.comparator.adapter.ollama
 
-import io.fletchly.comparator.util.HttpClients
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.options.OllamaOptions
 import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.model.options.OllamaOptions
+import io.fletchly.comparator.util.HttpClients
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*
 import io.ktor.http.*
