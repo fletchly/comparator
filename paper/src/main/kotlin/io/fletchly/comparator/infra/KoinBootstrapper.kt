@@ -18,13 +18,9 @@
 
 package io.fletchly.comparator.infra
 
-import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.adapter.tool.GameVersionTool
-import io.fletchly.comparator.adapter.tool.WebSearchTool
 import io.fletchly.comparator.di.*
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
-import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
@@ -42,7 +38,7 @@ import org.koin.java.KoinJavaComponent.getKoin
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
     private val commonModule = module { includes(commonAdapterModule, commonToolModule) }
-    private val paperModule = module { includes(paperConfigModule, paperAdapterModule, paperInfraModule(plugin)) }
+    private val paperModule = module { includes(paperInfraModule(plugin), paperConfigModule, paperAdapterModule, paperToolModule) }
 
     val rootModule = module {
         includes(
@@ -70,26 +66,6 @@ class KoinBootstrapper(private val plugin: JavaPlugin) {
         }
 
         return getKoin()
-    }
-
-    /**
-     * Loads and registers additional Koin modules based on the enabled tool configurations.
-     *
-     * This method retrieves the tool configuration from the `PluginConfigService` and conditionally loads
-     * Koin modules for specific tools if they are marked as enabled in the configuration. The tools supported
-     * include game version information and web search functionality.
-     *
-     * @param koin The Koin instance used for retrieving services and loading modules.
-     */
-    fun loadToolModules(koin: Koin) {
-        val toolConfig = koin.get<PluginConfigService>().config.tool
-
-        loadKoinModules(
-            buildList {
-                if (toolConfig.gameVersion.enabled) add(GameVersionTool.module)
-                if (toolConfig.webSearch.enabled) add(WebSearchTool.module)
-            }
-        )
     }
 
     /**
