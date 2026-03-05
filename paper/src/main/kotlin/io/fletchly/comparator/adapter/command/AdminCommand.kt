@@ -62,9 +62,16 @@ class AdminCommand(
             PermissionDefault.OP
         )
 
+        val clearAllPermission = Permission(
+            "$permission.clear.all",
+            "Allow a player to clear context for all scopes",
+            PermissionDefault.NOT_OP
+        )
+
         childPermissions = listOf(
             clearSelfPermission,
-            clearOtherPermission
+            clearOtherPermission,
+            clearAllPermission
         )
 
         node {
@@ -97,6 +104,12 @@ class AdminCommand(
                         clearPublicChat(ctx)
                         Command.SINGLE_SUCCESS
                     }
+            ).then(Commands.literal("clearAll")
+                .requires { it.sender.hasPermission(clearAllPermission.name) }
+                .executes { ctx ->
+                    clearAll(ctx)
+                    Command.SINGLE_SUCCESS
+                }
             )
         }
     }
@@ -139,6 +152,16 @@ class AdminCommand(
         pluginRuntime.runCoroutine {
             with(contextClearer) {
                 scope.clearOther(listOf(PublicChatConversationScope))
+            }
+        }
+    }
+
+    private fun clearAll(ctx: CommandContext<CommandSourceStack>) {
+        val scope = ctx.source.sender.toScope()
+
+        pluginRuntime.runCoroutine {
+            with(contextClearer) {
+                scope.clearAll()
             }
         }
     }
