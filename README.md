@@ -53,4 +53,4 @@ Please follow the existing code style and include tests where applicable.
 For more info, see [contributing](https://github.com/fletchly/comparator/blob/main/CONTRIBUTING.md)
 
 ## Credits
-- Banner icon: 'circuit' by Skena Grafis from [The Noun Project](https://thenounproject.com/icon/circuit-8187377/) (CC BY 3.0)
+- Main icon: 'circuit' by Skena Grafis from [The Noun Project](https://thenounproject.com/icon/circuit-8187377/) (CC BY 3.0)
