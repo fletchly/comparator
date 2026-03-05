@@ -64,9 +64,39 @@ class ContextManagerTest {
     }
 
     @Test
+    fun `clearOther sends a singular log message for one target`() = runTest {
+        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>())) }
+        coVerify { log.info(match { it.contains("Cleared chat context for 1 target") }, any()) }
+    }
+
+    @Test
     fun `clearOther sends a plural notification for multiple targets`() = runTest {
         with(manager) { sender.clearOther(listOf(mockk<ConversationScope>(), mockk<ConversationScope>(), mockk<ConversationScope>())) }
         coVerify { notification.info(sender, "Cleared chat context for 3 targets") }
+    }
+
+    @Test
+    fun `clearOther sends a plural log message for multiple targets`() = runTest {
+        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>(), mockk<ConversationScope>(), mockk<ConversationScope>())) }
+        coVerify { log.info(match { it.contains("Cleared chat context for 3 targets") }, any()) }
+    }
+
+    @Test
+    fun `extension clearAll delegates to context`() = runTest {
+        with(manager) { sender.clearAll() }
+        coVerify { context.clearAll() }
+    }
+
+    @Test
+    fun `extension clearAll sends notification`() = runTest {
+        with (manager) { sender.clearAll() }
+        coVerify { notification.info(sender, any()) }
+    }
+
+    @Test
+    fun `extension clearAll sends log message`() = runTest {
+        with (manager) { sender.clearAll() }
+        coVerify { log.info(any(), any()) }
     }
 
     @Test

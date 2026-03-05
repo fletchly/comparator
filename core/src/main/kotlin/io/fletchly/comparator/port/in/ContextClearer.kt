@@ -55,6 +55,13 @@ interface ContextClearer {
     suspend fun RestrictedConversationScope.clearOther(targets: List<ConversationScope>)
 
     /**
+     * Clears the conversational context for all users and groups within the system.
+     *
+     * Executed from a conversation scope
+     */
+    suspend fun RestrictedConversationScope.clearAll()
+
+    /**
      * Clears all conversational contexts within the system.
      */
     suspend fun clearAll()

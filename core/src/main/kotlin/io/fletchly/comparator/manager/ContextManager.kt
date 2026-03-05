@@ -45,7 +45,7 @@ class ContextManager(
 ) : ContextClearer {
     override suspend fun RestrictedConversationScope.clearSelf() {
         context.clear(this)
-        log.info("Cleared chat context for ${this.displayName}", this@ContextManager::class.simpleName)
+        log.info("Cleared chat context for ${this.displayName}", ContextManager::class.simpleName)
         notification.info(this,"Cleared chat context")
     }
 
@@ -57,7 +57,14 @@ class ContextManager(
         }
 
         val message = "Cleared chat context for ${targets.size} ${"target".pluralize(targets.size)}"
-        log.info(message, this@ContextManager::class.simpleName)
+        log.info(message, ContextManager::class.simpleName)
+        notification.info(this, message)
+    }
+
+    override suspend fun RestrictedConversationScope.clearAll() {
+        context.clearAll()
+        val message = "Cleared chat context for all scopes"
+        log.info(message, ContextManager::class.simpleName)
         notification.info(this, message)
     }
 
