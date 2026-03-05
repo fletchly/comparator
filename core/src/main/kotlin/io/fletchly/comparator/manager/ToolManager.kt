@@ -40,28 +40,41 @@ class ToolManager(
 
     override suspend fun execute(toolCall: ToolCall): Message.Tool =
         when (val result = tools[toolCall.name]?.execute(toolCall.arguments)) {
-            is ToolResult -> {
-                log.info(
-                    " executed (${
-                        toolCall.arguments.map { "${it.key}: ${it.value}" }.joinToString(", ")
-                    }): ${result.toString().take(100)}...", result.toolName
-                )
-                Message.Tool(result.toString())
+            is ToolResult.Success -> {
+                val resultJson = result.toJsonString()
+                val argumentsString = toolCall.arguments.map { "${it.key}: ${it.value}" }.joinToString(", ")
+                val resultLogMessage = if (resultJson.length > TRUNCATE_LOGS) {
+                    "${resultJson.take(TRUNCATE_LOGS)}... (${resultJson.length - TRUNCATE_LOGS} more characters)"
+                } else {
+                    resultJson
+                }
+
+                log.info("($argumentsString) : $resultLogMessage", result.toolName)
+                Message.Tool(resultJson, result.toolName)
             }
 
-            null -> Message.Tool("tool not found: ${toolCall.name}")
+            is ToolResult.Failure -> {
+                val errorMessage = "encountered an error: ${result.error.message}"
+                log.warn(errorMessage, result.toolName)
+                Message.Tool(errorMessage, result.toolName)
+            }
+
+            null -> Message.Tool("tool not found", toolCall.name)
         }
 
     override fun register(vararg tools: Tool) {
         tools.forEach { tool ->
             if (this.tools.contains(tool.name)) {
                 log.warn(
-                    "A tool with name '${tool.name}' is already registered, skipping",
-                    ToolManager::class.simpleName
+                    "A tool with name '${tool.name}' is already registered, skipping", ToolManager::class.simpleName
                 )
                 return@forEach
             }
             this.tools[tool.name] = tool
         }
+    }
+
+    private companion object {
+        const val TRUNCATE_LOGS = 100
     }
 }
