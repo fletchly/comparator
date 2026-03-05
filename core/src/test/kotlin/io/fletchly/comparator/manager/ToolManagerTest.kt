@@ -100,7 +100,7 @@ class ToolManagerTest {
     @Test
     fun `returns tool not found message for unknown tool`() = runTest {
         val result = manager.execute(ToolCall("unknown_tool", emptyMap()))
-        assertEquals("tool not found: unknown_tool", result.content)
+        assertEquals("tool not found", result.content)
     }
 
     @Test

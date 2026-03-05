@@ -139,7 +139,7 @@ class ConversationManagerTest {
         val manager = buildManager()
         val userMessage = Message.User(content = "Search something", sender = user)
         val toolCall = mockk<ToolCall>()
-        val toolResult = Message.Tool(content = "tool output")
+        val toolResult = Message.Tool(content = "tool output", name = "tool_name")
         val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
         val finalAssistant = Message.Assistant(content = "Done!")
 
@@ -166,8 +166,8 @@ class ConversationManagerTest {
         val userMessage = Message.User(content = "Do many things", sender = user)
         val toolCall1 = mockk<ToolCall>()
         val toolCall2 = mockk<ToolCall>()
-        val toolResult1 = Message.Tool(content = "result 1")
-        val toolResult2 = Message.Tool(content = "result 2")
+        val toolResult1 = Message.Tool(content = "result 1", name = "tool1")
+        val toolResult2 = Message.Tool(content = "result 2", name = "tool2")
         val assistantWithTools = Message.Assistant(
             content = "Calling tools",
             toolCalls = listOf(toolCall1, toolCall2)
