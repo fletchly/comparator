@@ -52,6 +52,10 @@ fun tool(fn: KFunction<*>): Tool {
         "Handler function '${fn.name}' must be a suspend function"
     }
 
+    require(fn.parameters.none { it.kind == KParameter.Kind.INSTANCE }) {
+        "Handler function '${fn.name}' must be a bound reference. Use 'instance::method' instead of 'ClassName::method'"
+    }
+
     val toolFunctionAnnotation = fn.findAnnotation<ToolFunction>()
         ?: error("Handler function '${fn.name}' must be annotated with @ToolFunction")
 
