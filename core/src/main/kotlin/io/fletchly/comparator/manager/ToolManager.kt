@@ -22,48 +22,70 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolResult
-import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolExecutor
+import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.model.tool.ToolList
+import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.util.pluralize
 
 /**
  * Manages the registration and execution of tools within a system.
  *
- * The `ToolManager` class provides functionality to manage a collection of tools,
- * enabling registration, retrieval, and execution of tools. It implements the
- * `ToolRegistry` interface and acts as the core component for handling tool-based
- * operations.
- *
- * @property log An instance of `LogPort` used to capture logs related to tool
- *               executions and registrations.
+ * @param log The logging interface used for recording informational and warning messages.
  */
 class ToolManager(
     val log: LogPort
-) : ToolRegistry {
-    private lateinit var toolRegistry: Map<String, Tool>
+) : ToolExecutor, ToolRegistryLifecycle, ToolRegistry {
+    private var tools: Map<String, Tool> = mutableMapOf()
+    private var frozen = false
 
-    override val tools: List<Tool>
-        get() = toolRegistry.values.toList()
+    override fun getTools(): List<Tool> = tools.values.toList()
 
-    override fun register(toolList: ToolList) {
-        val duplicates = toolList.tools.groupBy { it.name }.filter { it.value.size > 1 }.keys
-        require(duplicates.isEmpty()) {
-            "Duplicate tool names: $duplicates"
-        }
-        this.toolRegistry = toolList.tools.associateBy { it.name }
-    }
+    override suspend fun execute(toolCall: ToolCall): Message.Tool =
+        when (val result = tools[toolCall.name]?.execute(toolCall.arguments)) {
+            is ToolResult.Success -> {
+                val resultJson = result.toJsonString()
+                val argumentsString = toolCall.arguments.map { "${it.key}: ${it.value}" }.joinToString(", ")
+                val resultLogMessage = if (resultJson.length > TRUNCATE_LOGS) {
+                    "${resultJson.take(TRUNCATE_LOGS)}... (${resultJson.length - TRUNCATE_LOGS} more characters)"
+                } else {
+                    resultJson
+                }
 
-    suspend fun execute(toolCall: ToolCall): Message.Tool =
-        when (val result = toolRegistry[toolCall.name]?.execute(toolCall.arguments)) {
-            is ToolResult -> {
-                log.info(
-                    " executed (${
-                        toolCall.arguments.map { "${it.key}: ${it.value}" }.joinToString(", ")
-                    }): ${result.toString().take(100)}...", result.toolName
-                )
-                Message.Tool(result.toString())
+                log.info("($argumentsString) : $resultLogMessage", result.toolName)
+                Message.Tool(resultJson, result.toolName)
             }
 
-            null -> Message.Tool("tool not found: ${toolCall.name}")
+            is ToolResult.Failure -> {
+                val errorMessage = "encountered an error: ${result.error.message}"
+                log.warn(errorMessage, result.toolName)
+                Message.Tool(errorMessage, result.toolName)
+            }
+
+            null -> Message.Tool("tool not found", toolCall.name)
         }
+
+    override fun register(vararg tools: Tool) {
+        if (frozen) {
+            log.warn("Tool registry has been frozen, skipping registration of the following ${"tool".pluralize(tools.size)}: ${tools.map { it.name }}")
+        }
+        tools.forEach { tool ->
+            if (this.tools.contains(tool.name)) {
+                log.warn(
+                    "A tool with name '${tool.name}' is already registered, skipping", ToolManager::class.simpleName
+                )
+                return@forEach
+            }
+            (this.tools as MutableMap) [tool.name] = tool // safe to do here when the registry is unfrozen
+        }
+    }
+
+    override fun freeze() {
+        tools = tools.toMap()
+        frozen = true
+    }
+
+    private companion object {
+        const val TRUNCATE_LOGS = 100
+    }
 }

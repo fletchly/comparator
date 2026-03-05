@@ -18,26 +18,32 @@
 
 package io.fletchly.comparator
 
+import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.registerCommand
-import io.fletchly.comparator.model.tool.ToolDefinition
-import io.fletchly.comparator.model.tool.ToolList
+import io.fletchly.comparator.model.event.ToolRegistrationEvent
 import io.fletchly.comparator.port.`in`.ContextClearer
-import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
+import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.tool.currentDateTool
+import io.fletchly.comparator.tool.gameVersionTool
+import io.fletchly.comparator.tool.webSearchTool
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.context.stopKoin
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-class Comparator : JavaPlugin() {
+@Suppress("unused")
+class Comparator : JavaPlugin(), KoinComponent {
     private var koinBootstrapper = KoinBootstrapper(this)
-    private val koin = koinBootstrapper.start()
 
     override fun onEnable() {
+        koinBootstrapper.start()
         registerCommands()
         registerEventListeners()
         registerTools()
@@ -46,8 +52,8 @@ class Comparator : JavaPlugin() {
     }
 
     override fun onDisable() {
-        val context = koin.get<ContextClearer>()
-        val scheduler = koin.get<BukkitPluginRuntime>()
+        val context: ContextClearer = get()
+        val scheduler: BukkitPluginRuntime = get()
 
         logger.info { "Clearing context for all users" }
         runBlocking { context.clearAll() }
@@ -55,11 +61,11 @@ class Comparator : JavaPlugin() {
         logger.info { "Shutting down plugin scheduler" }
         scheduler.cancel()
 
-        stopKoin()
+        koinBootstrapper.stop()
     }
 
     private fun registerCommands() {
-        val commands = koin.getAll<CommandDefinition>()
+        val commands: List<CommandDefinition> = getKoin().getAll()
         var registered = 0
 
         commands.forEach {
@@ -71,7 +77,7 @@ class Comparator : JavaPlugin() {
     }
 
     private fun registerEventListeners() {
-        val eventListeners = koin.getAll<Listener>()
+        val eventListeners: List<Listener> = getKoin().getAll()
         var registered = 0
 
         eventListeners.forEach {
@@ -83,12 +89,20 @@ class Comparator : JavaPlugin() {
     }
 
     private fun registerTools() {
-        koinBootstrapper.loadToolModules(koin)
-        val toolRegistry = koin.get<ToolRegistry>()
-        val tools = koin.getAll<ToolDefinition>()
+        val registry: ToolRegistry = get()
+        val registryLifecycle: ToolRegistryLifecycle = get()
+        val config = get<PluginConfigService>().config.tool
 
-        toolRegistry.register(ToolList(tools.map { it.definition }))
+        if (config.webSearch.enabled) registry.register(webSearchTool)
+        if (config.gameVersion.enabled) registry.register(gameVersionTool)
+        if (config.currentDate.enabled) registry.register(currentDateTool)
 
-        logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
+        server.pluginManager.callEvent(ToolRegistrationEvent(registry))
+
+        registryLifecycle.freeze()
+
+        val registeredNames = registry.getTools().map { it.name }
+
+        logger.info { "Registered ${registeredNames.size} ${"tool".pluralize(registeredNames.size)}: $registeredNames" }
     }
 }

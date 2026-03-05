@@ -49,12 +49,18 @@ class PluginConfigService(
     PluginConfig::class,
     Path.of(plugin.dataFolder.path),
     "comparator.conf",
-    PluginConfig.Default,
+    PluginConfig(),
     migrations,
     log
 ) {
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
+        val `2 to 3`: ConfigurationTransformation = ConfigurationTransformation.builder()
+            .addAction(path("tool")) {_, value ->
+                value.node("current-date", "enabled").set(true)
+                null
+            }.build()
+
         val `1 to 2`: ConfigurationTransformation = ConfigurationTransformation.builder()
             .addAction(path("context")) {_, value ->
                 value.node("expire-after-access-minutes").set(10L)
@@ -69,6 +75,7 @@ class PluginConfigService(
 
         val migrations = ConfigurationTransformation.versionedBuilder()
             .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(3, `2 to 3`)
             .addVersion(2, `1 to 2`)
             .addVersion(1, `0 to 1`)
             .addVersion(0, ConfigurationTransformation.empty())

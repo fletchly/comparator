@@ -28,6 +28,6 @@ package io.fletchly.comparator.model.config
  * @param T The type of the configuration data wrapped in a successful result.
  */
 sealed interface ConfigResult<T> {
-    class Success<T>(val config: T): ConfigResult<T>
-    class Failure(val error: String): ConfigResult<Nothing>
+    class Success<T>(val config: T) : ConfigResult<T>
+    class Failure(val error: String) : ConfigResult<Nothing>
 }

@@ -89,7 +89,7 @@ class ConversationManager(
         tailrec suspend fun run() {
             val conversation = context.get(target)
 
-            when (val result = ai.generateResponse(system.prompt, conversation)) {
+            when (val result = ai.generateResponse(system.getPrompt(), conversation)) {
                 is MessageResult.Failure -> {
                     notification.error(target, result.error)
                 }

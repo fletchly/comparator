@@ -18,17 +18,11 @@
 
 package io.fletchly.comparator.infra
 
-import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.model.tool.ToolDefinition
 import io.mockk.every
 import io.mockk.mockk
 import org.bukkit.plugin.java.JavaPlugin
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.context.loadKoinModules
 import org.koin.dsl.koinApplication
-import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.check.checkModules
 import org.koin.test.verify.verify
@@ -61,38 +55,5 @@ class KoinBootstrapperTest : KoinTest {
                 withInstance(mockPlugin)
             }
         }
-    }
-
-    @Test
-    fun `loadToolModules() loads both tools when both enabled`() {
-        val koin = bootstrapper.start()
-
-        val mockConfig = mockk<PluginConfigService> {
-            every { config.tool.gameVersion.enabled } returns true
-            every { config.tool.webSearch.enabled } returns true
-            every { config.tool.webSearch.apiKey } returns "test-api-key"
-        }
-
-        loadKoinModules(module { single<PluginConfigService> { mockConfig } })
-
-        bootstrapper.loadToolModules(koin)
-
-        assertEquals(2, koin.getAll<ToolDefinition>().size)
-    }
-
-    @Test
-    fun `loadToolModules() loads no tools when both disabled`() {
-        val koin = bootstrapper.start()
-
-        val mockConfig = mockk<PluginConfigService> {
-            every { config.tool.gameVersion.enabled } returns false
-            every { config.tool.webSearch.enabled } returns false
-        }
-
-        loadKoinModules(module { single<PluginConfigService> { mockConfig } })
-
-        bootstrapper.loadToolModules(koin)
-
-        assertTrue(koin.getAll<ToolDefinition>().isEmpty())
     }
 }

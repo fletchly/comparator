@@ -18,20 +18,21 @@
 
 package io.fletchly.comparator.port.`in`
 
-import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.tool.ToolList
-
 /**
- * Defines a registry for managing a collection of tools within the system.
+ * Provides lifecycle management for the tool registry within the system.
  *
- * This interface provides access to a list of tools that can be executed within
- * the system. The tools encapsulate specific functionality and are designed to
- * handle various tasks as part of the system's operations.
- *
- * @property tools A list of tools available in the registry. Each tool contains
- *                 its definition and execution logic.
+ * This interface is primarily responsible for transitioning the tool registry
+ * into a frozen state where no further modifications or registrations are allowed.
+ * Freezing the registry ensures that all tools are finalized and ready for execution.
  */
-interface ToolRegistry {
-    val tools: List<Tool>
-    fun register(toolList: ToolList)
+interface ToolRegistryLifecycle {
+    /**
+     * Transitions the tool registry into a frozen state, preventing further modifications
+     * or registrations of tools.
+     *
+     * This operation finalizes the registry, ensuring that all tools are prepared
+     * for execution within the system. Once the registry is frozen, no new tools
+     * can be added, and the existing tools cannot be altered.
+     */
+    fun freeze()
 }

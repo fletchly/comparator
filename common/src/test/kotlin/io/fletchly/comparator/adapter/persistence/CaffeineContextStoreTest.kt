@@ -20,15 +20,15 @@ package io.fletchly.comparator.adapter.persistence
 
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.model.options.ContextOptions
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import java.util.UUID
+import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

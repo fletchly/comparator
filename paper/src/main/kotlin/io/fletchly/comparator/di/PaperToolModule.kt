@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.tool
+package io.fletchly.comparator.di
 
-/**
- * Represents a collection of tools, encapsulating a list of [Tool] instances.
- *
- * @property tools The list of [Tool] objects contained within this collection.
- */
-@JvmInline
-value class ToolList(val tools: List<Tool>)
+import io.fletchly.comparator.tool.GameVersionTool
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
+
+val paperToolModule = module {
+    singleOf(::GameVersionTool)
+}

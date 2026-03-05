@@ -18,13 +18,9 @@
 
 package io.fletchly.comparator.infra
 
-import io.fletchly.comparator.adapter.config.PluginConfigService
-import io.fletchly.comparator.adapter.tool.GameVersionTool
-import io.fletchly.comparator.adapter.tool.WebSearchTool
 import io.fletchly.comparator.di.*
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.Koin
-import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
@@ -41,8 +37,8 @@ import org.koin.java.KoinJavaComponent.getKoin
  * @param plugin The JavaPlugin instance representing the Bukkit plugin.
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
-    private val commonModule = module { includes(commonAdapterModule) }
-    private val paperModule = module { includes(paperConfigModule, paperAdapterModule, paperInfraModule(plugin)) }
+    private val commonModule = module { includes(commonAdapterModule, commonToolModule) }
+    private val paperModule = module { includes(paperInfraModule(plugin), paperConfigModule, paperAdapterModule, paperToolModule) }
 
     val rootModule = module {
         includes(
@@ -53,43 +49,19 @@ class KoinBootstrapper(private val plugin: JavaPlugin) {
     }
 
     /**
-     * Starts the Koin dependency injection framework for the associated Bukkit plugin by
-     * initializing the necessary modules required for the plugin's runtime, infrastructure,
-     * adapters, and configuration.
+     * Starts the Koin dependency injection framework for this plugin.
      *
-     * This method invokes the `startKoin` function with a collection of predefined modules.
-     * These modules are responsible for configuring the dependency graph and binding the
-     * necessary services and components to be used within the plugin.
+     * This method initializes the Koin application context with the modules required for
+     * the plugin to function correctly. It utilizes the `rootModule`, which aggregates
+     * all necessary dependencies, to configure the dependency injection setup.
      *
-     * @return The [Koin] instance representing the initialized Koin application context
-     *         for dependency injection within the plugin.
+     * Typically, this method is invoked during the plugin's startup phase to prepare
+     * the underlying infrastructure and dependencies for runtime execution.
      */
-    fun start(): Koin {
+    fun start() {
         startKoin {
             modules(rootModule)
         }
-
-        return getKoin()
-    }
-
-    /**
-     * Loads and registers additional Koin modules based on the enabled tool configurations.
-     *
-     * This method retrieves the tool configuration from the `PluginConfigService` and conditionally loads
-     * Koin modules for specific tools if they are marked as enabled in the configuration. The tools supported
-     * include game version information and web search functionality.
-     *
-     * @param koin The Koin instance used for retrieving services and loading modules.
-     */
-    fun loadToolModules(koin: Koin) {
-        val toolConfig = koin.get<PluginConfigService>().config.tool
-
-        loadKoinModules(
-            buildList {
-                if (toolConfig.gameVersion.enabled) add(GameVersionTool.module)
-                if (toolConfig.webSearch.enabled) add(WebSearchTool.module)
-            }
-        )
     }
 
     /**

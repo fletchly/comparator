@@ -16,16 +16,11 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.tool
+package io.fletchly.comparator.di
 
-/**
- * Defines a contract for an entity that represents a tool definition.
- *
- * The `ToolDefinition` interface is designed to encapsulate metadata and behavior associated
- * with a specific tool. It mandates the implementation of a single property, [definition],
- * which holds a reference to a [Tool] instance. The [Tool] represents the executable entity
- * with its name, description, input parameters, and execution logic.
- */
-interface ToolDefinition {
-    val definition: Tool
+import io.fletchly.comparator.tool.WebSearchTool
+import org.koin.dsl.module
+
+val commonToolModule = module {
+    single { WebSearchTool(get(), get()) }
 }

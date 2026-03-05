@@ -18,24 +18,18 @@
 
 package io.fletchly.comparator.util
 
-import io.ktor.client.HttpClient as KtorClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.mock.MockEngine
-import io.ktor.client.engine.mock.MockRequestHandler
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.ServerResponseException
-import io.ktor.client.request.get
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import io.ktor.client.call.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.plugins.*
+import io.ktor.client.request.*
+import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import java.io.IOException
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import io.ktor.client.HttpClient as KtorClient
 
 class HttpClientTest {
     private fun createTestClient(handler: MockRequestHandler) =

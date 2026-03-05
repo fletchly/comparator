@@ -16,22 +16,13 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.tool
+package io.fletchly.comparator.exception
 
 /**
- * Represents an executable tool with a defined structure, parameters, and result handler.
+ * Represents a recoverable, user-facing error encountered during the execution of a tool.
  *
- *
- * @property name The unique name of the tool.
- * @property description A brief description of what the tool does.
- * @property parameters A list of [ToolParameter] instances specifying the input parameters required by the tool.
- * @property handler A suspendable function that defines the execution logic of the tool.
+ * @constructor Creates a [ToolException] with a specified error message and an optional cause.
+ * @param message A message describing the error encountered.
+ * @param cause The underlying cause of the error, if any.
  */
-class Tool(
-    val name: String,
-    val description: String,
-    val parameters: List<ToolParameter>,
-    private val handler: suspend (Map<String, Any>) -> ToolResult
-) {
-    suspend fun execute(args: Map<String, Any>): ToolResult = handler(args)
-}
+class ToolException(override val message: String, override val cause: Throwable?) : Exception()

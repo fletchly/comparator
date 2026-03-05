@@ -64,5 +64,5 @@ sealed interface Message {
      *
      * @property content The textual content of the tool's response or output.
      */
-    data class Tool(override val content: String) : Message
+    data class Tool(override val content: String, val name: String) : Message
 }

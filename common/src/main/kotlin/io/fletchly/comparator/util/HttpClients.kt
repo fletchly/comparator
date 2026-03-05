@@ -38,9 +38,9 @@ object HttpClients {
         install(HttpRequestRetry) {
             maxRetries = MAX_RETRIES
             retryIf { _, response ->
-                response.status == HttpStatusCode.Companion.ServiceUnavailable ||
-                        response.status == HttpStatusCode.Companion.GatewayTimeout ||
-                        response.status == HttpStatusCode.Companion.TooManyRequests
+                response.status == HttpStatusCode.ServiceUnavailable ||
+                        response.status == HttpStatusCode.GatewayTimeout ||
+                        response.status == HttpStatusCode.TooManyRequests
             }
             retryOnExceptionIf { _, cause ->
                 cause is IOException

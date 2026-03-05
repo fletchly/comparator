@@ -44,11 +44,11 @@ class SystemPromptService(
     SystemPromptConfig::class,
     Path.of(plugin.dataFolder.path),
     "system-prompt.conf",
-    SystemPromptConfig.Default,
+    SystemPromptConfig(),
     migrations,
     log
 ), SystemConfigPort {
-    override val prompt = config.prompt
+    override fun getPrompt() = config.prompt
 
     private companion object {
         val migrations = ConfigurationTransformation.versionedBuilder()

@@ -16,16 +16,18 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.exception
+version = "1.0.0"
 
-/**
- * Represents an exception that occurs during tool processing or execution.
- *
- * This exception is used to signify errors that happen when a tool is interacting
- * with its inputs, outputs, or defined behavior. It serves as a general exception
- * for tool-related runtime issues.
- *
- * @constructor Creates a [ToolException] with a specific error message.
- * @param message A detailed message describing the reason for the exception.
- */
-class ToolException(override val message: String) : Exception(message)
+plugins {
+    id("buildsrc.convention.kotlin-jvm")
+    id("buildsrc.convention.dokka-convention")
+    alias(libs.plugins.kotlinPluginSerialization)
+}
+
+dependencies {
+    implementation(kotlin("reflect"))
+    implementation(libs.kotlinx.serialization)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.kotlinx.coroutines.test)
+}

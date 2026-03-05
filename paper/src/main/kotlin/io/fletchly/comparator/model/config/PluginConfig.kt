@@ -40,12 +40,8 @@ data class PluginConfig(
 
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Config version - do not modify this value, as it may cause your config to be overwritten")
-    val version: Int = 2
-) {
-    companion object {
-        val Default = PluginConfig()
-    }
-}
+    val version: Int = 3
+)
 
 @ConfigSerializable
 data class ContextConfig(
@@ -86,7 +82,11 @@ data class ToolConfig(
 
     @Setting("game-version")
     @Comment("Options for the game version tool")
-    val gameVersion: GameVersionConfig = GameVersionConfig()
+    val gameVersion: GameVersionConfig = GameVersionConfig(),
+
+    @Setting("current-date")
+    @Comment("Options for the current date tool")
+    val currentDate: CurrentDateConfig = CurrentDateConfig()
 )
 
 @ConfigSerializable
@@ -104,6 +104,12 @@ data class GameVersionConfig(
     @Comment("Whether the game version tool is enabled")
     override val enabled: Boolean = true
 ) : ToolImplementationConfig
+
+@ConfigSerializable
+data class CurrentDateConfig(
+    @Comment("Whether the current date tool is enabled")
+    override val enabled: Boolean = true
+): ToolImplementationConfig
 
 interface ToolImplementationConfig {
     val enabled: Boolean

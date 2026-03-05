@@ -18,8 +18,8 @@
 
 package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.model.scope.RestrictedConversationScope
 import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
@@ -47,13 +47,13 @@ class ContextManagerTest {
 
     @Test
     fun `clearSelf sends notification`() = runTest {
-        with (manager) { sender.clearSelf() }
+        with(manager) { sender.clearSelf() }
         coVerify { notification.info(sender, any()) }
     }
 
     @Test
     fun `clearSelf sends log message with correct display name`() = runTest {
-        with (manager) { sender.clearSelf() }
+        with(manager) { sender.clearSelf() }
         verify { log.info(match { it.contains("Sender") }, any()) }
     }
 
@@ -71,13 +71,29 @@ class ContextManagerTest {
 
     @Test
     fun `clearOther sends a plural notification for multiple targets`() = runTest {
-        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>(), mockk<ConversationScope>(), mockk<ConversationScope>())) }
+        with(manager) {
+            sender.clearOther(
+                listOf(
+                    mockk<ConversationScope>(),
+                    mockk<ConversationScope>(),
+                    mockk<ConversationScope>()
+                )
+            )
+        }
         coVerify { notification.info(sender, "Cleared chat context for 3 targets") }
     }
 
     @Test
     fun `clearOther sends a plural log message for multiple targets`() = runTest {
-        with(manager) { sender.clearOther(listOf(mockk<ConversationScope>(), mockk<ConversationScope>(), mockk<ConversationScope>())) }
+        with(manager) {
+            sender.clearOther(
+                listOf(
+                    mockk<ConversationScope>(),
+                    mockk<ConversationScope>(),
+                    mockk<ConversationScope>()
+                )
+            )
+        }
         coVerify { log.info(match { it.contains("Cleared chat context for 3 targets") }, any()) }
     }
 
@@ -89,13 +105,13 @@ class ContextManagerTest {
 
     @Test
     fun `extension clearAll sends notification`() = runTest {
-        with (manager) { sender.clearAll() }
+        with(manager) { sender.clearAll() }
         coVerify { notification.info(sender, any()) }
     }
 
     @Test
     fun `extension clearAll sends log message`() = runTest {
-        with (manager) { sender.clearAll() }
+        with(manager) { sender.clearAll() }
         coVerify { log.info(any(), any()) }
     }
 
