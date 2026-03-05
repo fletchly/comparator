@@ -20,10 +20,10 @@ package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.user.BukkitPlayerConversationScope
-import io.fletchly.comparator.model.user.ConsoleConversationScope
-import io.fletchly.comparator.model.user.PublicChatConversationScope
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
+import io.fletchly.comparator.model.scope.ConsoleConversationScope
+import io.fletchly.comparator.model.scope.PublicChatConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ChatPort
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys

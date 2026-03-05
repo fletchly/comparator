@@ -19,7 +19,7 @@
 package io.fletchly.comparator.adapter.event
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.model.user.BukkitPlayerConversationScope
+import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

@@ -22,7 +22,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.*
 import io.mockk.coEvery
 import io.mockk.coVerify

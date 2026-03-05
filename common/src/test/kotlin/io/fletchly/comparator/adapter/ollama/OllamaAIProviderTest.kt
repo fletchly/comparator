@@ -24,7 +24,7 @@ import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.model.options.OllamaOptions

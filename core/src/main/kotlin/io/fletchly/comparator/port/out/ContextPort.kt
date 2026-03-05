@@ -20,7 +20,7 @@ package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
  * Defines a port for managing user-specific conversational contexts.

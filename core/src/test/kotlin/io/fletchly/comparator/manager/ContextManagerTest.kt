@@ -18,8 +18,8 @@
 
 package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.model.user.RestrictedConversationScope
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort

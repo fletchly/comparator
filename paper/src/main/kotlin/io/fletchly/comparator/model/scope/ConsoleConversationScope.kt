@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.user
+package io.fletchly.comparator.model.scope
 
 import java.util.*
 

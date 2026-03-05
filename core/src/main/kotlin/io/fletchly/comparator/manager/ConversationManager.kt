@@ -23,7 +23,7 @@ import com.github.benmanes.caffeine.cache.Caffeine
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
-import io.fletchly.comparator.model.user.ConversationScope
+import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 import kotlinx.coroutines.channels.Channel

@@ -22,8 +22,8 @@ import com.mojang.brigadier.Command
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
-import io.fletchly.comparator.model.user.ConsoleConversationScope
-import io.fletchly.comparator.model.user.PublicChatConversationScope
+import io.fletchly.comparator.model.scope.ConsoleConversationScope
+import io.fletchly.comparator.model.scope.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.util.toScope
 import io.papermc.paper.command.brigadier.Commands

@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.message
 
-import io.fletchly.comparator.model.user.ConversationScope as UserModel
+import io.fletchly.comparator.model.scope.ConversationScope as UserModel
 
 /**
  * Represents a message exchanged in a system, which can be sent by a user,

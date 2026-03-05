@@ -21,7 +21,7 @@ package io.fletchly.comparator.adapter.event
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
-import io.fletchly.comparator.model.user.PublicChatConversationScope
+import io.fletchly.comparator.model.scope.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent

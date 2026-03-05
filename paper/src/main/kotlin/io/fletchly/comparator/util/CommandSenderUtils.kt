@@ -18,9 +18,9 @@
 
 package io.fletchly.comparator.util
 
-import io.fletchly.comparator.model.user.BukkitPlayerConversationScope
-import io.fletchly.comparator.model.user.RestrictedConversationScope
-import io.fletchly.comparator.model.user.ConsoleConversationScope
+import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
+import io.fletchly.comparator.model.scope.RestrictedConversationScope
+import io.fletchly.comparator.model.scope.ConsoleConversationScope
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
