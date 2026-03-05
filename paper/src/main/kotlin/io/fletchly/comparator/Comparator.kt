@@ -18,12 +18,12 @@
 
 package io.fletchly.comparator
 
+import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.port.`in`.ContextClearer
-import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.tool.ToolRegistry
 import io.fletchly.comparator.tool.gameInfoTool
 import io.fletchly.comparator.tool.webSearchTool
@@ -85,6 +85,20 @@ class Comparator : JavaPlugin() {
 
     private fun registerTools() {
         val registry = koin.get<ToolRegistry>()
-        registry.register(webSearchTool, gameInfoTool)
+        val config = koin.get<PluginConfigService>().config.tool
+
+        val registeredNames = mutableListOf<String>()
+
+        if (config.webSearch.enabled) {
+            registry.register(webSearchTool)
+            registeredNames.add(webSearchTool.name)
+        }
+
+        if (config.gameVersion.enabled) {
+            registry.register(gameInfoTool)
+            registeredNames.add(gameInfoTool.name)
+        }
+
+        logger.info { "Registered ${registeredNames.size} built-in tools: $registeredNames" }
     }
 }
