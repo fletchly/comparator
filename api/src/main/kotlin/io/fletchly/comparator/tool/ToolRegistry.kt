@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator
+package io.fletchly.comparator.tool
 
 import io.fletchly.comparator.model.Tool
 

@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 
+version = "1.0.0"
+
 plugins {
     id("buildsrc.convention.kotlin-jvm")
     id("buildsrc.convention.dokka-convention")

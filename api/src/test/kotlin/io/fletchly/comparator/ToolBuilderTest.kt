@@ -24,6 +24,7 @@ import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.Parameter
 import io.fletchly.comparator.model.ToolResult
+import io.fletchly.comparator.tool.tool
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
@@ -72,6 +73,7 @@ class ToolBuilderTest {
         @ToolParameter("List of tags") tags: List<String>
     ): SimpleResult = SimpleResult(tags.joinToString())
 
+    @Suppress("unused")
     @ToolFunction(name = "throwing_tool", description = "Throws a ToolException")
     suspend fun throwingHandler(
         @ToolParameter("Input") input: String
@@ -101,21 +103,25 @@ class ToolBuilderTest {
         @ToolParameter("Input") input: String
     ): Any = input
 
+    @Suppress("RedundantNullableReturnType")
     @ToolFunction(name = "nullable_return", description = "Returns nullable type")
     suspend fun nullableReturnType(
         @ToolParameter("Input") input: String
     ): SimpleResult? = SimpleResult(input)
 
+    @Suppress("unused")
     @ToolFunction(name = "unsupported_param", description = "Has unsupported parameter type")
     suspend fun unsupportedParamType(
         @ToolParameter("Input") input: Map<String, String>
     ): SimpleResult = SimpleResult("x")
 
+    @Suppress("unused")
     @ToolFunction(name = "bad_allowed_values", description = "AllowedValues on non-string")
     suspend fun allowedValuesOnNonString(
         @ToolParameter("Input") @AllowedValues("1", "2") input: Int
     ): SimpleResult = SimpleResult("x")
 
+    @Suppress("unused")
     @ToolFunction(name = "empty_allowed_values", description = "Empty AllowedValues")
     suspend fun emptyAllowedValues(
         @ToolParameter("Input") @AllowedValues input: String

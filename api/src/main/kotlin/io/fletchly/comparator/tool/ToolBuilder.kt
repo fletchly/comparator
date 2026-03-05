@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator
+package io.fletchly.comparator.tool
 
 import io.fletchly.comparator.annotation.AllowedValues
 import io.fletchly.comparator.annotation.ToolFunction
@@ -30,6 +30,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.serializer
 import java.lang.reflect.InvocationTargetException
+import kotlin.collections.get
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.callSuspendBy
