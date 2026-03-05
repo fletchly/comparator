@@ -27,7 +27,7 @@ import io.fletchly.comparator.model.event.ToolRegistrationEvent
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.tool.ToolRegistry
-import io.fletchly.comparator.tool.gameInfoTool
+import io.fletchly.comparator.tool.gameVersionTool
 import io.fletchly.comparator.tool.webSearchTool
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
@@ -93,7 +93,7 @@ class Comparator : JavaPlugin(), KoinComponent {
         val config = get<PluginConfigService>().config.tool
 
         if (config.webSearch.enabled) registry.register(webSearchTool)
-        if (config.gameVersion.enabled) registry.register(gameInfoTool)
+        if (config.gameVersion.enabled) registry.register(gameVersionTool)
 
         server.pluginManager.callEvent(ToolRegistrationEvent(registry))
 
