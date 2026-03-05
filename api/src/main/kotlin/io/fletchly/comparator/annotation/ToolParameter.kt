@@ -21,7 +21,6 @@ package io.fletchly.comparator.annotation
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ToolParameter(
-    val name: String,
     val description: String,
     val required: Boolean = true
 )
