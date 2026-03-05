@@ -24,12 +24,14 @@ import io.fletchly.comparator.manager.ToolManager
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.`in`.ToolExecutor
+import io.fletchly.comparator.tool.ToolRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 val coreModule = module {
-    singleOf(::ToolManager) bind ToolExecutor::class
+    singleOf(::ToolManager) binds arrayOf(ToolExecutor::class, ToolRegistry::class)
     singleOf(::ContextManager) bind ContextClearer::class
     singleOf(::ConversationManager) bind MessageSender::class
 }
