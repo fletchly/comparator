@@ -26,7 +26,7 @@ import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.tool.ToolParameter
-import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.util.JsonProperty
@@ -47,14 +47,14 @@ import kotlinx.io.IOException
  *
  * This class handles communication with the Ollama REST API for chat functionalities, including sending
  * chat requests, handling errors, and processing responses. It supports configuration through [OllamaOptions]
- * and utilizes tools managed by a [ToolRegistry].
+ * and utilizes tools managed by a [ToolExecutor].
  *
  * @constructor Creates an instance of the [OllamaAIProvider] with the specified configuration, logging,
  * tool registry, and HTTP client.
  *
  * @property config The configuration for the Ollama API, including the base URL, API key, and model identifier.
  * @property log A logging interface for recording information and warnings during API interactions.
- * @property toolRegistry A registry for managing tools that the system can use during message processing.
+ * @property toolExecutor A registry for managing tools that the system can use during message processing.
  * @property client The HTTP client used for making requests to the Ollama API. Defaults to [HttpClients.KtorCIO].
  *
  * @see AIPort
@@ -62,7 +62,7 @@ import kotlinx.io.IOException
 class OllamaAIProvider(
     private val config: OllamaOptions,
     private val log: LogPort,
-    private val toolRegistry: ToolRegistry,
+    private val toolExecutor: ToolExecutor,
     private val client: HttpClient = HttpClients.KtorCIO
 ) : AIPort {
     override suspend fun generateResponse(
@@ -106,7 +106,7 @@ class OllamaAIProvider(
             addAll(conversationMessages)
         }
 
-        val tools: List<ChatTool>? = toolRegistry.tools
+        val tools: List<ChatTool>? = toolExecutor.tools
             .map { it.toChatTool() }
             .ifEmpty { null }
 

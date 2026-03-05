@@ -25,7 +25,7 @@ import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.model.tool.ToolDefinition
 import io.fletchly.comparator.model.tool.ToolList
 import io.fletchly.comparator.port.`in`.ContextClearer
-import io.fletchly.comparator.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
@@ -84,10 +84,10 @@ class Comparator : JavaPlugin() {
 
     private fun registerTools() {
         koinBootstrapper.loadToolModules(koin)
-        val toolRegistry = koin.get<ToolRegistry>()
+        val toolExecutor = koin.get<ToolExecutor>()
         val tools = koin.getAll<ToolDefinition>()
 
-        toolRegistry.register(ToolList(tools.map { it.definition }))
+        toolExecutor.register(ToolList(tools.map { it.definition }))
 
         logger.info { "Registered ${tools.size} ${"tool".pluralize(tools.size)} [${tools.joinToString(", ") { it.definition.name }}]" }
     }

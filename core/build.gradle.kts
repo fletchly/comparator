@@ -29,6 +29,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.caffeine)
+    api(project(":api"))
 
     testImplementation(kotlin("test"))
     testImplementation(libs.mockk)
