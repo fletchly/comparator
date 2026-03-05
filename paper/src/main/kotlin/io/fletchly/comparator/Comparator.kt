@@ -27,6 +27,7 @@ import io.fletchly.comparator.model.event.ToolRegistrationEvent
 import io.fletchly.comparator.port.`in`.ContextClearer
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.tool.currentDateTool
 import io.fletchly.comparator.tool.gameVersionTool
 import io.fletchly.comparator.tool.webSearchTool
 import io.fletchly.comparator.util.pluralize
@@ -94,6 +95,7 @@ class Comparator : JavaPlugin(), KoinComponent {
 
         if (config.webSearch.enabled) registry.register(webSearchTool)
         if (config.gameVersion.enabled) registry.register(gameVersionTool)
+        if (config.currentDate.enabled) registry.register(currentDateTool)
 
         server.pluginManager.callEvent(ToolRegistrationEvent(registry))
 
