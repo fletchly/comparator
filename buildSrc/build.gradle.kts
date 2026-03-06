@@ -7,14 +7,10 @@ plugins {
 
 kotlin {
     jvmToolchain(21)
-
-    compilerOptions {
-        javaParameters = true
-    }
 }
 
 dependencies {
     // Add a dependency on the Kotlin Gradle plugin, so that convention plugins can apply it.
-    implementation(libs.kotlinGradlePlugin)
-    implementation(libs.dokkaGradlePlugin)
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.dokka.gradle.plugin)
 }

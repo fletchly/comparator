@@ -224,13 +224,6 @@ class ToolBuilderTest {
     }
 
     @Test
-    fun `fails when handler is not suspend`() {
-        assertFailsWith<IllegalArgumentException> {
-            tool(::nonSuspendHandler)
-        }
-    }
-
-    @Test
     fun `fails when tool description is blank`() {
         assertFailsWith<IllegalArgumentException> {
             tool(::blankDescriptionHandler)

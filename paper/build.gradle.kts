@@ -18,10 +18,9 @@
 
 plugins {
     id("buildsrc.convention.kotlin-jvm")
-    id("buildsrc.convention.dokka-convention")
-    alias(libs.plugins.paperweightUserdev)
-    alias(libs.plugins.shadowJar)
-    alias(libs.plugins.runPaper)
+    alias(libs.plugins.paperweight.userdev)
+    alias(libs.plugins.shadow.jar)
+    alias(libs.plugins.run.paper)
     alias(libs.plugins.minotaur)
 }
 
@@ -73,7 +72,9 @@ modrinth {
 
 tasks {
     jar {
-        enabled = false
+        archiveBaseName = rootProject.name
+        archiveVersion = rootProject.version.toString()
+        archiveClassifier = "paper-slim"
     }
 
     shadowJar {
@@ -96,7 +97,7 @@ tasks {
     }
 
     processResources {
-        val props = mapOf("version" to version)
+        val props = mapOf("version" to rootProject.version)
         inputs.properties(props)
         filteringCharset = "UTF-8"
         filesMatching("paper-plugin.yml") {

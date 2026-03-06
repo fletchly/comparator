@@ -16,23 +16,27 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.event
+package io.fletchly.comparator.event
 
 import io.fletchly.comparator.tool.ToolRegistry
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 /**
- * A Bukkit event fired during plugin startup to allow other plugins to register their tools.
+ * Event triggered to allow the registration of custom tools into the tool registry.
  *
- * This event is called by the host plugin during [org.bukkit.plugin.java.JavaPlugin.onEnable],
- * after the [ToolRegistry] has been initialized but before it is frozen. Listeners should
- * register their tools via the provided [registry] and must not retain a reference to it
- * beyond the scope of their event handler, as the registry will be frozen immediately after
- * the event returns.
+ * This event provides access to the [ToolRegistry], enabling plugins or other components
+ * to register their custom tools during the server's initialization phase. Tools added
+ * to the registry are then available for execution throughout the system.
  *
- * @property registry The [ToolRegistry] to register tools into.
- * @see ToolRegistry
+ * The [ToolRegistrationEvent] is typically fired during the server's startup sequence
+ * or during specific plugin initialization routines. Once the event is dispatched,
+ * listeners can interact with the provided [registry] to add tools by invoking
+ * the `register` method with instances of [io.fletchly.comparator.model.tool.Tool]
+ *
+ * @sample io.fletchly.comparator.example.ToolRegistrationExample.simpleToolRegistration
+ *
+ * @property registry The registry instance used to manage and register tools.
  */
 class ToolRegistrationEvent(
     val registry: ToolRegistry

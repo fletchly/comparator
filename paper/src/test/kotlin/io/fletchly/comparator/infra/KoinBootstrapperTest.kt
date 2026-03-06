@@ -47,6 +47,7 @@ class KoinBootstrapperTest : KoinTest {
         )
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `module graph instantiates all bindings without errors`() {
         koinApplication {

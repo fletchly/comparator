@@ -16,30 +16,26 @@
  * limitations under the License.
  */
 
-version = "1.0.0"
+package io.fletchly.comparator.example
 
-plugins {
-    id("buildsrc.convention.kotlin-jvm")
-    id("buildsrc.convention.dokka")
-    alias(libs.plugins.kotlin.serialization)
-}
+import io.fletchly.comparator.annotation.ToolFunction
+import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.tool.tool
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
 
-dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
-    compileOnly(libs.paper.api)
+class ToolRegistrationExample {
+    fun simpleToolRegistration() {
+        @ToolFunction("some_tool", "handles something")
+        fun someHandler() = "handled"
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.kotlinx.coroutines.test)
-    testCompileOnly(libs.paper.api)
-}
+        val someTool = tool(::someHandler)
 
-dokka {
-    dokkaSourceSets.main {
-        samples.from("src/test/kotlin/io/fletchly/comparator/example")
+        class SomeListener: Listener {
+            @EventHandler
+            fun onToolRegistration(event: ToolRegistrationEvent) {
+                event.registry.register(someTool)
+            }
+        }
     }
-}
-
-tasks.test {
-    exclude("**/example/**")
 }
