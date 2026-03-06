@@ -27,6 +27,7 @@ plugins {
 dependencies {
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.serialization)
+    compileOnly(libs.paper.api)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
