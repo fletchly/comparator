@@ -21,7 +21,7 @@ version = "1.0.0"
 plugins {
     id("buildsrc.convention.kotlin-jvm")
     id("buildsrc.convention.dokka")
-    alias(libs.plugins.kotlinPluginSerialization)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {

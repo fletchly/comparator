@@ -18,9 +18,9 @@
 
 plugins {
     id("buildsrc.convention.kotlin-jvm")
-    alias(libs.plugins.paperweightUserdev)
-    alias(libs.plugins.shadowJar)
-    alias(libs.plugins.runPaper)
+    alias(libs.plugins.paperweight.userdev)
+    alias(libs.plugins.shadow.jar)
+    alias(libs.plugins.run.paper)
     alias(libs.plugins.minotaur)
 }
 

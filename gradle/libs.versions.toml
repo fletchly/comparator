@@ -1,52 +1,87 @@
-# Version catalog is a central place for you to declare and version dependencies
-# https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
-# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
-
 [versions]
+# Kotlin
 kotlin = "2.3.0"
-kotlinx-serialization-json = "1.10.0"
 kotlinx-coroutines = "1.10.2"
-koin-bom = "4.1.1"
-dokka = "2.1.0"
+kotlinx-serialization = "1.10.0"
+
+# Testing
 mockk = "1.14.9"
+
+# Networking
 ktor = "3.4.0"
+
+# DI
+koin = "4.1.1"
+
+# Persistence
 caffeine = "3.2.3"
+
+# Config
 configurate = "4.2.0"
+
+# Documentation
+dokka = "2.1.0"
+
+# Minecraft
 minecraft = "1.21.11"
-paperweight = "2.0.0-beta.19"
 paper = "1.21.11-R0.1-SNAPSHOT"
-shadowJar = "8.3.0"
-runPaper = "2.3.1"
+paperweight = "2.0.0-beta.19"
+
+# Build
+shadow-jar = "8.3.0"
+run-paper = "2.3.1"
 minotaur = "2.+"
 
 [libraries]
-kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-dokkaGradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+# Build plugins (referenced in buildSrc)
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+dokka-gradle-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+# Kotlin
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+# Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
-ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
-koin-core = { module = "io.insert-koin:koin-core" }
-caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
-koin-test = { module = "io.insert-koin:koin-test" }
-configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
-configurate-extra-kotlin = {module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate"}
-
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-kotlinx-coroutines-test =  { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+# Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-test = { module = "io.insert-koin:koin-test" }
+
+# Persistence
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
+
+# Config
+configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
+configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotlin", version.ref = "configurate" }
+
+# Minecraft
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+
+# Testing
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 
 [bundles]
-ktor-client = [ "ktor-client-core", "ktor-client-cio", "ktor-client-contentNegotiation", "ktor-client-serialization-json" ]
-configurate = [ "configurate-hocon", "configurate-extra-kotlin" ]
+ktor-client = [
+    "ktor-client-core",
+    "ktor-client-cio",
+    "ktor-client-content-negotiation",
+    "ktor-serialization-kotlinx-json"
+]
+configurate = [
+    "configurate-hocon",
+    "configurate-extra-kotlin"
+]
 
 [plugins]
-kotlinPluginSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-paperweightUserdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
-shadowJar = { id = "com.gradleup.shadow", version.ref = "shadowJar"}
-runPaper = { id = "xyz.jpenilla.run-paper", version.ref = "runPaper" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
+shadow-jar = { id = "com.gradleup.shadow", version.ref = "shadow-jar" }
+run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }
 minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

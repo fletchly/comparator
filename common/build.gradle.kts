@@ -18,7 +18,7 @@
 
 plugins {
     id("buildsrc.convention.kotlin-jvm")
-    alias(libs.plugins.kotlinPluginSerialization)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
