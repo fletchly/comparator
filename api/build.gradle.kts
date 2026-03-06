@@ -50,8 +50,8 @@ java {
     withJavadocJar()
 }
 
-tasks.named("generateMetadataFileForMavenPublication") {
-    dependsOn(tasks.named("dokkaJavadocJar"))
+tasks.matching { it.name == "generateMetadataFileForMavenPublication" }.configureEach {
+    dependsOn(tasks.matching { it.name == "dokkaJavadocJar" })
 }
 
 mavenPublishing {
