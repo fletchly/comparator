@@ -16,13 +16,15 @@
  * limitations under the License.
  */
 
-version = "1.0.0"
-
 plugins {
     id("buildsrc.convention.kotlin-jvm")
     id("buildsrc.convention.dokka")
     alias(libs.plugins.kotlin.serialization)
+    `maven-publish`
+    signing
 }
+
+version = "1.0.0"
 
 dependencies {
     implementation(kotlin("reflect"))
@@ -42,4 +44,63 @@ dokka {
 
 tasks.test {
     exclude("**/example/**")
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "comparator-api"
+            from(components["java"])
+
+            pom {
+                name.set("Comparator API")
+                description.set("Tool API for the Comparator Minecraft plugin")
+                url.set("https://github.com/fletchly/comparator")
+
+                licenses {
+                    license {
+                        name.set("Apache License 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("fletchly")
+                        name.set("Owen Mount")
+                        email.set("fletchly@travisland.net")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/fletchly/comparator.git")
+                    developerConnection.set("scm:git:ssh://github.com/fletchly/comparator.git")
+                    url.set("https://github.com/fletchly/comparator")
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "sonatype"
+            url = uri("https://central.sonatype.com/api/v1/publisher/upload") // new portal
+            credentials {
+                username = project.findProperty("sonatypeUsername") as String?
+                password = project.findProperty("sonatypePassword") as String?
+            }
+        }
+    }
+}
+
+signing {
+    val signingKey = project.findProperty("signingKey") as String?
+    val signingPassword = project.findProperty("signingPassword") as String?
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
 }

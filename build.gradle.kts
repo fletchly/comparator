@@ -16,5 +16,5 @@
  * limitations under the License.
  */
 
-group = "io.fletchly"
+group = "io.github.fletchly"
 version = "1.2.0"
