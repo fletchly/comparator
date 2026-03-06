@@ -56,7 +56,7 @@ tasks.matching { it.name == "generateMetadataFileForMavenPublication" }.configur
 mavenPublishing {
     publishToMavenCentral()
 
-    coordinates(rootProject.group.toString(), "comparator.api", version.toString())
+    coordinates(rootProject.group.toString(), "comparator-api", version.toString())
 
     pom {
         name.set("Comparator API")
