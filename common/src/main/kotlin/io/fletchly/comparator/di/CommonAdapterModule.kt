@@ -22,11 +22,12 @@ import io.fletchly.comparator.adapter.ollama.OllamaAIProvider
 import io.fletchly.comparator.adapter.persistence.CaffeineContextStore
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.util.HttpClients
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val commonAdapterModule = module {
-    single { OllamaAIProvider(get(), get(), get()) } bind AIPort::class
+    single { OllamaAIProvider(get(), get(), get(), HttpClients.KtorCIO) } bind AIPort::class
     singleOf(::CaffeineContextStore) bind ContextPort::class
 }
