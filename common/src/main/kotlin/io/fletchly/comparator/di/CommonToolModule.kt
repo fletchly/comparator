@@ -19,8 +19,9 @@
 package io.fletchly.comparator.di
 
 import io.fletchly.comparator.tool.WebSearchTool
+import io.fletchly.comparator.util.HttpClients
 import org.koin.dsl.module
 
 val commonToolModule = module {
-    single { WebSearchTool(get(), get()) }
+    single { WebSearchTool(get(), get(), HttpClients.KtorCIO) }
 }

@@ -40,6 +40,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation(libs.mockk)
     testImplementation(libs.koin.test)
+    testImplementation(libs.ktor.client.core)
 }
 
 modrinth {

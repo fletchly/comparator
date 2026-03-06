@@ -37,7 +37,7 @@ private const val WEB_SEARCH_URL = "https://ollama.com/api/web_search"
 class WebSearchTool(
     private val config: WebSearchOptions,
     private val log: LogPort,
-    private val client: HttpClient = HttpClients.KtorCIO
+    private val client: HttpClient
 ) {
     @ToolFunction(name = "web_search", description = "search the web for answers")
     suspend fun handleWebSearch(

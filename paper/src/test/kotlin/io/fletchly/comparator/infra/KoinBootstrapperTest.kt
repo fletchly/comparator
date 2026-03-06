@@ -18,6 +18,8 @@
 
 package io.fletchly.comparator.infra
 
+import io.fletchly.comparator.util.HttpClients
+import io.ktor.client.HttpClient
 import io.mockk.every
 import io.mockk.mockk
 import org.bukkit.plugin.java.JavaPlugin
@@ -43,7 +45,7 @@ class KoinBootstrapperTest : KoinTest {
     @Test
     fun `start() resolves module graph without errors`() {
         bootstrapper.rootModule.verify(
-            extraTypes = listOf(JavaPlugin::class)
+            extraTypes = listOf(JavaPlugin::class, HttpClient::class, Boolean::class)
         )
     }
 

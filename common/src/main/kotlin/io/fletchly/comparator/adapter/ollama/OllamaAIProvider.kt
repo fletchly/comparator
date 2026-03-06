@@ -60,7 +60,7 @@ class OllamaAIProvider(
     private val config: OllamaOptions,
     private val log: LogPort,
     private val toolRegistry: ToolRegistry,
-    private val client: HttpClient = HttpClients.KtorCIO
+    private val client: HttpClient
 ) : AIPort {
     override suspend fun generateResponse(
         systemPrompt: String,

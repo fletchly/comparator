@@ -91,11 +91,6 @@ class Comparator : JavaPlugin(), KoinComponent {
     private fun registerTools() {
         val registry: ToolRegistry = get()
         val registryLifecycle: ToolRegistryLifecycle = get()
-        val config = get<PluginConfigService>().config.tool
-
-        if (config.webSearch.enabled) registry.register(webSearchTool)
-        if (config.gameVersion.enabled) registry.register(gameVersionTool)
-        if (config.currentDate.enabled) registry.register(currentDateTool)
 
         server.pluginManager.callEvent(ToolRegistrationEvent(registry))
 

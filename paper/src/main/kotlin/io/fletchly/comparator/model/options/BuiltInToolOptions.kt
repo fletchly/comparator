@@ -16,18 +16,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.di
+package io.fletchly.comparator.model.options
 
-import io.fletchly.comparator.adapter.ollama.OllamaAIProvider
-import io.fletchly.comparator.adapter.persistence.CaffeineContextStore
-import io.fletchly.comparator.port.out.AIPort
-import io.fletchly.comparator.port.out.ContextPort
-import io.fletchly.comparator.util.HttpClients
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
-
-val commonAdapterModule = module {
-    single { OllamaAIProvider(get(), get(), get(), HttpClients.KtorCIO) } bind AIPort::class
-    singleOf(::CaffeineContextStore) bind ContextPort::class
-}
+/**
+ * Represents configuration options for enabling built-in tools in the application.
+ *
+ * @property webSearch Indicates if the web search tool is enabled.
+ * @property gameVersion Indicates if the game version tool is enabled.
+ * @property currentDate Indicates if the current date tool is enabled.
+ */
+data class BuiltInToolOptions(
+    val webSearch: Boolean,
+    val gameVersion: Boolean,
+    val currentDate: Boolean
+)
