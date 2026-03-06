@@ -72,7 +72,9 @@ modrinth {
 
 tasks {
     jar {
-        enabled = false
+        archiveBaseName = rootProject.name
+        archiveVersion = rootProject.version.toString()
+        archiveClassifier = "paper-slim"
     }
 
     shadowJar {
@@ -95,7 +97,7 @@ tasks {
     }
 
     processResources {
-        val props = mapOf("version" to version)
+        val props = mapOf("version" to rootProject.version)
         inputs.properties(props)
         filteringCharset = "UTF-8"
         filesMatching("paper-plugin.yml") {
