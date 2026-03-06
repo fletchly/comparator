@@ -39,3 +39,7 @@ dokka {
         samples.from("src/test/kotlin/io/fletchly/comparator/example")
     }
 }
+
+tasks.test {
+    exclude("**/example/**")
+}
