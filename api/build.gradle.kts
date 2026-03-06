@@ -50,6 +50,10 @@ java {
     withJavadocJar()
 }
 
+tasks.named("generateMetadataFileForMavenPublication") {
+    dependsOn(tasks.named("dokkaJavadocJar"))
+}
+
 mavenPublishing {
     publishToMavenCentral()
 
