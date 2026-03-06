@@ -47,7 +47,6 @@ tasks.test {
 
 java {
     withSourcesJar()
-    withJavadocJar()
 }
 
 tasks.matching { it.name == "generateMetadataFileForMavenPublication" }.configureEach {
@@ -88,30 +87,3 @@ mavenPublishing {
 
     signAllPublications()
 }
-
-//publishing {
-//    publications {
-//        create<MavenPublication>("mavenJava") {
-//            artifactId = "comparator-api"
-//            from(components["java"])
-//        }
-//    }
-//
-//    repositories {
-//        maven {
-//            name = "sonatype"
-//            url = uri("https://central.sonatype.com/api/v1/publisher/upload") // new portal
-//            credentials {
-//                username = project.findProperty("sonatypeUsername") as String?
-//                password = project.findProperty("sonatypePassword") as String?
-//            }
-//        }
-//    }
-//}
-//
-//signing {
-//    val signingKey = project.findProperty("signingKey") as String?
-//    val signingPassword = project.findProperty("signingPassword") as String?
-//    useInMemoryPgpKeys(signingKey, signingPassword)
-//    sign(publishing.publications["mavenJava"])
-//}
