@@ -18,7 +18,6 @@
 
 plugins {
     id("buildsrc.convention.kotlin-jvm")
-    id("buildsrc.convention.dokka-convention")
     alias(libs.plugins.paperweightUserdev)
     alias(libs.plugins.shadowJar)
     alias(libs.plugins.runPaper)

@@ -7,10 +7,6 @@ plugins {
 
 kotlin {
     jvmToolchain(21)
-
-    compilerOptions {
-        javaParameters = true
-    }
 }
 
 dependencies {
