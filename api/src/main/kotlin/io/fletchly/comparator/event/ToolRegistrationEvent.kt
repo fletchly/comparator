@@ -34,6 +34,8 @@ import org.bukkit.event.HandlerList
  * listeners can interact with the provided [registry] to add tools by invoking
  * the `register` method with instances of [io.fletchly.comparator.model.tool.Tool]
  *
+ * @sample io.fletchly.comparator.example.ToolRegistrationExample.simpleToolRegistration
+ *
  * @property registry The registry instance used to manage and register tools.
  */
 class ToolRegistrationEvent(
