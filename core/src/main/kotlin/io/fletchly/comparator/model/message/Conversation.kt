@@ -60,21 +60,6 @@ data class Conversation(private val conversation: ArrayDeque<Message>) {
             conversation.removeFirst()
         }
     }
-
-    /**
-     * Removes the oldest message from the conversation.
-     *
-     * This method removes the first message in the conversation queue, which represents
-     * the oldest message based on the order messages were added. It is used to manage
-     * memory and conversation size constraints by discarding old messages that are
-     * no longer needed.
-     *
-     * Note: If the conversation queue is empty, this method may throw an exception.
-     */
-    @Deprecated("Use addAndTrim instead, which handles trimming atomically.", ReplaceWith("addAndTrim(message, limit)"))
-    fun removeOldest() {
-        conversation.removeFirst()
-    }
 }
 
 /**
