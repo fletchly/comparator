@@ -29,14 +29,16 @@ sealed interface Message {
 
 
     /**
-     * Represents a message sent by a user in the system.
+     * Represents a user message within a conversational system.
      *
      * This class implements the `Message` interface and is used to encapsulate
-     * information about user-generated messages in a conversation. Each user
-     * message is associated with its content and the `Actor` who sent it.
+     * messages sent by a user participating in a conversation. Each user message
+     * includes a textual content and is associated with a specific conversation scope,
+     * which provides contextual information about the user and their participation.
      *
-     * @property content The content of the message.
-     * @property scope The actor who sent the message.
+     * @property content The textual content of the user's message.
+     * @property scope The conversation scope of the user, providing additional metadata
+     *                 such as user identification and online status.
      */
     data class User(override val content: String, val scope: ConversationScope) : Message
 
