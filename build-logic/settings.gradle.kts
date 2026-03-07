@@ -16,21 +16,16 @@
  * limitations under the License.
  */
 
-plugins {
-    id("kotlin-jvm")
-    alias(libs.plugins.kotlin.serialization)
+dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
+    repositories {
+        mavenCentral()
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
 }
 
-dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.kotlinx.coroutines)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.caffeine)
-    api(project(":api"))
-
-    testImplementation(kotlin("test"))
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-}
+rootProject.name = "build-logic"

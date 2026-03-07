@@ -17,7 +17,7 @@
  */
 
 plugins {
-    id("buildsrc.convention.kotlin-jvm")
+    id("kotlin-jvm")
     alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.shadow.jar)
     alias(libs.plugins.run.paper)

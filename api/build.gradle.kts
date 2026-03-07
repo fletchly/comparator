@@ -17,8 +17,8 @@
  */
 
 plugins {
-    id("buildsrc.convention.kotlin-jvm")
-    id("buildsrc.convention.dokka")
+    id("kotlin-jvm")
+    id("dokka")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.maven.publish)
 }

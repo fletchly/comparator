@@ -1,3 +1,6 @@
+import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.dokka
+import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.html
+
 /*
  * This file is part of comparator, licensed under the Apache License 2.0
  *
@@ -16,5 +19,19 @@
  * limitations under the License.
  */
 
-group = "io.github.fletchly"
-version = "1.2.1"
+plugins {
+    id("org.jetbrains.dokka")
+}
+
+dokka {
+    dokkaPublications.html {
+        moduleName.set(project.name)
+        moduleVersion.set(project.version.toString())
+        // Standard output directory for HTML documentation
+        outputDirectory.set(layout.buildDirectory.dir("dokka/html"))
+        failOnWarning.set(false)
+        suppressInheritedMembers.set(false)
+        suppressObviousFunctions.set(true)
+        offlineMode.set(false)
+    }
+}
