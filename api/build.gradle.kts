@@ -39,6 +39,9 @@ dokka {
     dokkaSourceSets.main {
         samples.from("src/test/kotlin/io/fletchly/comparator/example")
     }
+    dokkaPublications.html {
+        moduleName.set("Comparator Tool API")
+    }
 }
 
 tasks.test {
