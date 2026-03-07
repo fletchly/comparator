@@ -16,5 +16,21 @@
  * limitations under the License.
  */
 
-group = "io.github.fletchly"
-version = "1.2.1"
+plugins {
+    id("kotlin-jvm")
+    alias(libs.plugins.kotlin.serialization)
+}
+
+dependencies {
+    implementation(kotlin("reflect"))
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlinx.coroutines)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.caffeine)
+    api(project(":comparator-api"))
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+}

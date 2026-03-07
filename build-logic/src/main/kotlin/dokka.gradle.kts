@@ -1,3 +1,6 @@
+import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.dokka
+import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.html
+
 /*
  * This file is part of comparator, licensed under the Apache License 2.0
  *
@@ -17,22 +20,18 @@
  */
 
 plugins {
-    id("buildsrc.convention.kotlin-jvm")
-    alias(libs.plugins.kotlin.serialization)
+    id("org.jetbrains.dokka")
 }
 
-dependencies {
-    api(project(":core"))
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.bundles.ktor.client)
-    implementation(libs.bundles.configurate)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.caffeine)
-
-    testImplementation(kotlin("test"))
-    testImplementation(libs.ktor.client.mock)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
+dokka {
+    dokkaPublications.html {
+        moduleName.set(project.name)
+        moduleVersion.set(project.version.toString())
+        // Standard output directory for HTML documentation
+        outputDirectory.set(layout.buildDirectory.dir("dokka/html"))
+        failOnWarning.set(false)
+        suppressInheritedMembers.set(false)
+        suppressObviousFunctions.set(true)
+        offlineMode.set(false)
+    }
 }

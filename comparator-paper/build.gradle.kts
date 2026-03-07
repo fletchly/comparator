@@ -17,7 +17,7 @@
  */
 
 plugins {
-    id("buildsrc.convention.kotlin-jvm")
+    id("kotlin-jvm")
     alias(libs.plugins.paperweight.userdev)
     alias(libs.plugins.shadow.jar)
     alias(libs.plugins.run.paper)
@@ -25,8 +25,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":common"))
+    implementation(project(":comparator-core"))
+    implementation(project(":comparator-common"))
 
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization)

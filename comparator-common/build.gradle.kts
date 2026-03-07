@@ -17,20 +17,22 @@
  */
 
 plugins {
-    id("buildsrc.convention.kotlin-jvm")
+    id("kotlin-jvm")
     alias(libs.plugins.kotlin.serialization)
 }
 
 dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
+    api(project(":comparator-core"))
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.bundles.ktor.client)
+    implementation(libs.bundles.configurate)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.caffeine)
-    api(project(":api"))
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 }

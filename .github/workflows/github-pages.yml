@@ -25,12 +25,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Generate Dokka HTML
-        run: './gradlew :api:dokkaGenerateHtml'
+        run: './gradlew :comparator-api:dokkaGenerateHtml'
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'api/build/dokka/html'
+          path: 'comparator-api/build/dokka/html'
 
   deploy:
     needs: build

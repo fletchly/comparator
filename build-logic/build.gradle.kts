@@ -16,21 +16,15 @@
  * limitations under the License.
  */
 
-package buildsrc.convention
-
 plugins {
-    id("org.jetbrains.dokka")
+    `kotlin-dsl`
 }
 
-dokka {
-    dokkaPublications.html {
-        moduleName.set(project.name)
-        moduleVersion.set(project.version.toString())
-        // Standard output directory for HTML documentation
-        outputDirectory.set(layout.buildDirectory.dir("dokka/html"))
-        failOnWarning.set(false)
-        suppressInheritedMembers.set(false)
-        suppressObviousFunctions.set(true)
-        offlineMode.set(false)
-    }
+kotlin {
+    jvmToolchain(21)
+}
+
+dependencies {
+    implementation(libs.kotlin.gradle.plugin)
+    implementation(libs.dokka.gradle.plugin)
 }

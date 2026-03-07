@@ -16,32 +16,16 @@
  * limitations under the License.
  */
 
-pluginManagement {
-    includeBuild("build-logic")
-
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-}
-
 dependencyResolutionManagement {
-    // Use Maven Central as the default repository (where Gradle will download dependencies) in all subprojects.
     @Suppress("UnstableApiUsage")
     repositories {
         mavenCentral()
-        maven("https://repo.papermc.io/repository/maven-public/")
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
     }
 }
 
-plugins {
-    // Use the Foojay Toolchains plugin to automatically download JDKs required by subprojects.
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-}
-
-include(":comparator-core")
-include(":comparator-api")
-include(":comparator-common")
-include(":comparator-paper")
-
-rootProject.name = "comparator"
+rootProject.name = "build-logic"
