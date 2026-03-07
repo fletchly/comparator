@@ -22,4 +22,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Create Paper Release for Modrinth
-        run: './gradlew :paper:modrinth'
+        run: './gradlew :comparator-paper:modrinth'

@@ -39,9 +39,9 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-include(":core")
-include(":api")
-include(":common")
-include(":paper")
+include(":comparator-core")
+include(":comparator-api")
+include(":comparator-common")
+include(":comparator-paper")
 
 rootProject.name = "comparator"

@@ -22,17 +22,15 @@ plugins {
 }
 
 dependencies {
-    api(project(":core"))
-    implementation(libs.kotlinx.coroutines)
+    implementation(kotlin("reflect"))
     implementation(libs.kotlinx.serialization)
-    implementation(libs.bundles.ktor.client)
-    implementation(libs.bundles.configurate)
+    implementation(libs.kotlinx.coroutines)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.caffeine)
+    api(project(":comparator-api"))
 
     testImplementation(kotlin("test"))
-    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 }

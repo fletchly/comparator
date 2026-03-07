@@ -25,8 +25,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":common"))
+    implementation(project(":comparator-core"))
+    implementation(project(":comparator-common"))
 
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization)
