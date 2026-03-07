@@ -67,7 +67,7 @@ class ConversationManagerTest {
     @Test
     fun `fromUser appends message to context and echoes it to chat`() = runTest {
         val manager = buildManager()
-        val message = Message.User(content = "Hello", sender = user)
+        val message = Message.User(content = "Hello", scope = user)
 
         coEvery { context.get(user) } returns conversationOf(message)
         coEvery { ai.generateResponse(any(), any()) } returns
@@ -82,7 +82,7 @@ class ConversationManagerTest {
     @Test
     fun `fromUser warns and does not queue when channel is full`() = runTest {
         val manager = buildManager()
-        val message = Message.User(content = "Flood", sender = user)
+        val message = Message.User(content = "Flood", scope = user)
 
         coEvery { context.get(user) } returns conversationOf(message)
         coEvery { ai.generateResponse(any(), any()) } coAnswers {
@@ -104,7 +104,7 @@ class ConversationManagerTest {
     @Test
     fun `assistant response with content is sent to chat and appended to context`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", sender = user)
+        val userMessage = Message.User(content = "Hey", scope = user)
         val assistantMessage = Message.Assistant(content = "Hello!")
 
         coEvery { context.get(user) } returns conversationOf(userMessage)
@@ -120,7 +120,7 @@ class ConversationManagerTest {
     @Test
     fun `assistant response with blank content is appended to context but not sent to chat`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", sender = user)
+        val userMessage = Message.User(content = "Hey", scope = user)
         val blankAssistant = Message.Assistant(content = "   ")
 
         coEvery { context.get(user) } returns conversationOf(userMessage)
@@ -137,7 +137,7 @@ class ConversationManagerTest {
     @Test
     fun `single tool call is executed, result appended, then loop continues`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Search something", sender = user)
+        val userMessage = Message.User(content = "Search something", scope = user)
         val toolCall = mockk<ToolCall>()
         val toolResult = Message.Tool(content = "tool output", name = "tool_name")
         val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
@@ -163,7 +163,7 @@ class ConversationManagerTest {
     @Test
     fun `multiple tool calls are all executed and their results appended`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Do many things", sender = user)
+        val userMessage = Message.User(content = "Do many things", scope = user)
         val toolCall1 = mockk<ToolCall>()
         val toolCall2 = mockk<ToolCall>()
         val toolResult1 = Message.Tool(content = "result 1", name = "tool1")
@@ -196,7 +196,7 @@ class ConversationManagerTest {
     @Test
     fun `empty tool calls list is treated as terminal - loop does not recurse`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", sender = user)
+        val userMessage = Message.User(content = "Hey", scope = user)
         val assistantEmptyTools = Message.Assistant(content = "Done", toolCalls = emptyList())
 
         coEvery { context.get(user) } returns conversationOf(userMessage)
@@ -213,7 +213,7 @@ class ConversationManagerTest {
     @Test
     fun `AI failure sends error notification without messaging chat`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Uh oh", sender = user)
+        val userMessage = Message.User(content = "Uh oh", scope = user)
         val errorMessage = "AI unavailable"
 
         coEvery { context.get(user) } returns conversationOf(userMessage)
@@ -231,8 +231,8 @@ class ConversationManagerTest {
     fun `two users receive independent conversations`() = runTest {
         val manager = buildManager()
         val scope2 = mockk<ConversationScope>()
-        val msg1 = Message.User(content = "From user 1", sender = user)
-        val msg2 = Message.User(content = "From user 2", sender = scope2)
+        val msg1 = Message.User(content = "From user 1", scope = user)
+        val msg2 = Message.User(content = "From user 2", scope = scope2)
         val response = Message.Assistant(content = "OK")
 
         coEvery { context.get(user) } returns conversationOf(msg1)

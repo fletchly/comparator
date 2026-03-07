@@ -59,11 +59,11 @@ class ConversationManager(
         .build()
 
     override suspend fun fromUser(message: Message.User) {
-        val channel = scopeChannels.get(message.sender) { createChannelFor(message.sender) }
+        val channel = scopeChannels.get(message.scope) { createChannelFor(message.scope) }
 
         val sent = channel.trySend(message)
         if (sent.isFailure) {
-            chat.message(message.sender, Message.Assistant("Too many messages queued, please wait."))
+            chat.message(message.scope, Message.Assistant("Too many messages queued, please wait."))
         }
     }
 
@@ -81,8 +81,8 @@ class ConversationManager(
     }
 
     private suspend fun startConversation(message: Message.User) {
-        context.append(message.sender, message)
-        chat.message(message.sender, message)
+        context.append(message.scope, message)
+        chat.message(message.scope, message)
     }
 
     private inner class AssistantLoop(private val target: ConversationScope) {

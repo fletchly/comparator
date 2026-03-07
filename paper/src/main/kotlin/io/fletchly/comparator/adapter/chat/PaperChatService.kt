@@ -77,7 +77,7 @@ class PaperChatService(
     }
 
     private fun userMessage(message: Message.User) =
-        fromMiniMessage("<yellow>$PLAYER_ICON ${message.sender.displayName}</yellow> $ARROW ${message.content}")
+        fromMiniMessage("<yellow>$PLAYER_ICON ${message.scope.displayName}</yellow> $ARROW ${message.content}")
 
     private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
         when (isPublic) {
