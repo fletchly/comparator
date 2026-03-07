@@ -39,6 +39,7 @@ For full usage, [see the docs](https://fletchly.gitbook.io/comparator-docs/).
 ## Support
 - [Plugin Documentation](https://fletchly.gitbook.io/comparator-docs/)
 - [API Documentation](https://fletchly.github.io/comparator/)
+- [Discord](https://discord.gg/PVPfrsZTSr)
 - [Github Issues](https://github.com/fletchly/comparator/issues)
 
 ## Contributing
