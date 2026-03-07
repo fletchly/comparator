@@ -17,7 +17,7 @@
 - **Tool Calling:** The agent can invoke tools and take actions in response to player requests.
 - **Fully Concurrent:** Built on Kotlin coroutines for non-blocking, high-performance execution that won't lag your server.
 - **Configurable Prompting:** Customize the agent's personality, behavior, and context via config files.
-- *(Coming Soon)* **Extensible Tool System:** Register custom tools to expand what the agent can do in-game.
+- **Extensible Tool API:** Register custom tools to expand what the agent can do in-game.
 
 ## Installation
 1. Download the plugin `jar` from [Modrinth](https://modrinth.com/project/MQoLAFN8) or [GitHub](https://github.com/fletchly/comparator/releases/latest)
