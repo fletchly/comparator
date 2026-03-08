@@ -23,7 +23,6 @@ import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.options.WebSearchOptions
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.util.HttpClients
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*

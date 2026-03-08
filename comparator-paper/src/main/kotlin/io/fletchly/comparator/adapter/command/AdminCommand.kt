@@ -109,11 +109,11 @@ class AdminCommand(
                     }
             ).then(
                 Commands.literal("clearAll")
-                .requires { it.sender.hasPermission(clearAllPermission.name) }
-                .executes { ctx ->
-                    clearAll(ctx)
-                    Command.SINGLE_SUCCESS
-                }
+                    .requires { it.sender.hasPermission(clearAllPermission.name) }
+                    .executes { ctx ->
+                        clearAll(ctx)
+                        Command.SINGLE_SUCCESS
+                    }
             )
         }
     }

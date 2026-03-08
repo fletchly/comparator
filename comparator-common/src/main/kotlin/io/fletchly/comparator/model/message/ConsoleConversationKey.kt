@@ -18,7 +18,8 @@
 
 package io.fletchly.comparator.model.message
 
-import java.util.UUID
+import io.fletchly.comparator.model.message.ConsoleConversationKey.uniqueId
+import java.util.*
 
 /**
  * Represents a conversation key uniquely associated with the console.

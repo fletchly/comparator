@@ -40,17 +40,29 @@ class Tool(
     suspend fun execute(args: Map<String, Any>): ToolResult {
         parameters.forEach { param ->
             if (param.required && !args.containsKey(param.name)) {
-                return ToolResult.Failure(name, ToolException("Missing required parameter '${param.name}'", IllegalArgumentException()))
+                return ToolResult.Failure(
+                    name,
+                    ToolException("Missing required parameter '${param.name}'", IllegalArgumentException())
+                )
             }
             args[param.name]?.let { value ->
                 if (!value.isCompatibleWith(param.type)) {
-                    return ToolResult.Failure(name, ToolException("Parameter '${param.name}' expected ${param.type} but got ${value::class.simpleName}", IllegalArgumentException()))
+                    return ToolResult.Failure(
+                        name,
+                        ToolException(
+                            "Parameter '${param.name}' expected ${param.type} but got ${value::class.simpleName}",
+                            IllegalArgumentException()
+                        )
+                    )
                 }
                 if (param.type == Parameter.Type.ARRAY) {
                     val elementType = param.elementType ?: return@let
                     (value as List<*>).forEachIndexed { index, element ->
                         if (element == null || !element.isCompatibleWith(elementType)) {
-                            return ToolResult.Failure(name, ToolException("Parameter '${param.name}[$index]' expected $elementType but got ${element?.let { it::class.simpleName } ?: "null"}", IllegalArgumentException()))
+                            return ToolResult.Failure(
+                                name,
+                                ToolException("Parameter '${param.name}[$index]' expected $elementType but got ${element?.let { it::class.simpleName } ?: "null"}",
+                                    IllegalArgumentException()))
                         }
                     }
                 }

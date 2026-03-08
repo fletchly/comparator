@@ -22,7 +22,10 @@ import io.fletchly.comparator.annotation.ToolFunction
 import java.time.LocalDate
 
 @Suppress("RedundantSuspendModifier")
-@ToolFunction(name = "current_date", description = "Gets the current system date. Useful when used with web search to ensure up-to-date results")
+@ToolFunction(
+    name = "current_date",
+    description = "Gets the current system date. Useful when used with web search to ensure up-to-date results"
+)
 suspend fun getCurrentDate() = mapOf("date" to LocalDate.now().toString())
 
 val currentDateTool = tool(::getCurrentDate)

@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.message
 
-import java.util.UUID
+import java.util.*
 
 interface ConversationKey {
     val uniqueId: UUID

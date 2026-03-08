@@ -32,6 +32,6 @@ class ToolBuilderExample {
         ): Int = num1 + num2
 
         // Tool object creation
-        val adderTool = tool(::adderToolHandler)
+        tool(::adderToolHandler)
     }
 }

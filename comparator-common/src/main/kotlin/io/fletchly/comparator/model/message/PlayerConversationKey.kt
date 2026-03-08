@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.model.message
 
-import java.util.UUID
+import java.util.*
 
 /**
  * Represents a conversation key uniquely associated with a specific player.
@@ -30,4 +30,4 @@ import java.util.UUID
  * @property uniqueId The unique identifier for the player.
  */
 @JvmInline
-value class PlayerConversationKey(override val uniqueId: UUID): ConversationKey
+value class PlayerConversationKey(override val uniqueId: UUID) : ConversationKey
