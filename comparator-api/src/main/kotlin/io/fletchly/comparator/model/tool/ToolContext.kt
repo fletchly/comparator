@@ -20,9 +20,18 @@ package io.fletchly.comparator.model.tool
 
 import org.bukkit.entity.Player
 
+@RequiresOptIn(
+    message = "Use platform-specific extensions like `bukkitPlayer` instead of calling getPlayer() directly.",
+    level = RequiresOptIn.Level.ERROR
+)
+@Target(AnnotationTarget.FUNCTION)
+annotation class InternalToolContextApi
+
 interface ToolContext {
+    @InternalToolContextApi
     fun <T: Any> getPlayer() : T?
 }
 
+@OptIn(InternalToolContextApi::class)
 val ToolContext.bukkitPlayer: Player?
     get() = getPlayer()
