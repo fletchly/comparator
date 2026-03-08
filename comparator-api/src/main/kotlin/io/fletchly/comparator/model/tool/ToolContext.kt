@@ -27,11 +27,26 @@ import org.bukkit.entity.Player
 @Target(AnnotationTarget.FUNCTION)
 annotation class InternalToolContextApi
 
+/**
+ * Represents a context object that provides contextual data to tools during execution.
+ * Implementations of this interface may supply platform-specific information,
+ * such as a reference to the player executing a command or other relevant data.
+ */
 interface ToolContext {
     @InternalToolContextApi
     fun <T: Any> getPlayer() : T?
 }
 
+/**
+ * Provides a convenient extension property to retrieve the Bukkit `Player` instance, if available,
+ * associated with a given `ToolContext`.
+ *
+ * This property serves as a platform-specific accessor that abstracts the underlying `getPlayer` method.
+ * If no `Player` instance is linked to the context, the value will be `null`.
+ *
+ * @receiver ToolContext The context object that may provide access to a `Player` instance.
+ * @return The associated `Player` instance if available; otherwise, `null`.
+ */
 @OptIn(InternalToolContextApi::class)
 val ToolContext.bukkitPlayer: Player?
     get() = getPlayer()
