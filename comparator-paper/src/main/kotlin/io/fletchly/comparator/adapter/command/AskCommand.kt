@@ -55,7 +55,7 @@ class AskCommand(
                         val userMessage = Message.User(content, actor)
 
                         pluginRuntime.runCoroutine {
-                            messageSender.sendUser(userMessage)
+                            messageSender.sendUser(userMessage,)
                         }
 
                         Command.SINGLE_SUCCESS

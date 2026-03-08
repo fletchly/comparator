@@ -19,6 +19,7 @@
 package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.tool.ToolContext
 
 /**
  * Represents a contract for sending user-generated messages within the system.
@@ -34,5 +35,5 @@ interface MessageSender {
      * @param message The user-generated message to be processed. The message
      *                includes its content and the sender's information.
      */
-    suspend fun sendUser(message: Message.User)
+    suspend fun sendUser(message: Message.User, toolContext: ToolContext)
 }

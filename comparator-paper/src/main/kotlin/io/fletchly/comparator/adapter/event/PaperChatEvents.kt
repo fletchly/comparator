@@ -74,7 +74,7 @@ class PaperChatEvents(
         val userMessage = Message.User(content, actor)
 
         pluginRuntime.runCoroutine {
-            messageSender.sendUser(userMessage)
+            messageSender.sendUser(userMessage,)
         }
 
         event.message(assistantMentionComponent(content))

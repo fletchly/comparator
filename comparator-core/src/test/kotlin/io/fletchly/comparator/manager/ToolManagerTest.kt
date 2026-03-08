@@ -99,7 +99,7 @@ class ToolManagerTest {
 
     @Test
     fun `returns tool not found message for unknown tool`() = runTest {
-        val result = manager.execute(ToolCall("unknown_tool", emptyMap()))
+        val result = manager.execute(ToolCall("unknown_tool", emptyMap()),)
         assertEquals("tool not found", result.content)
     }
 
@@ -113,7 +113,7 @@ class ToolManagerTest {
             String.serializer()
         )
         manager.register(tool)
-        val result = manager.execute(toolCall)
+        val result = manager.execute(toolCall,)
         assertIs<Message.Tool>(result)
     }
 
@@ -127,7 +127,7 @@ class ToolManagerTest {
             String.serializer()
         )
         manager.register(tool)
-        manager.execute(toolCall)
+        manager.execute(toolCall,)
         verify { log.info(any(), any()) }
     }
 
@@ -140,7 +140,7 @@ class ToolManagerTest {
             ToolException("something went wrong", null)
         )
         manager.register(tool)
-        val result = manager.execute(toolCall)
+        val result = manager.execute(toolCall,)
         assertIs<Message.Tool>(result)
     }
 }

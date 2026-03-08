@@ -80,7 +80,7 @@ class ConversationManagerTest {
         coEvery { ai.generateResponse(any(), any()) } returns
                 MessageResult.Success(Message.Assistant(content = "Hi!"))
 
-        manager.sendUser(message)
+        manager.sendUser(message,)
 
         coVerify { context.append(conversationKey, message) }
         coVerify { chat.message(actor, message) }
@@ -98,7 +98,7 @@ class ConversationManagerTest {
         }
 
         repeat(ConversationManager.MAX_QUEUED_MESSAGES + 2) {
-            manager.sendUser(message)
+            manager.sendUser(message,)
         }
 
         coVerify(atLeast = 1) {
@@ -117,11 +117,11 @@ class ConversationManagerTest {
         coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantMessage)
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
         coVerify { chat.message(actor, assistantMessage) }
         coVerify { context.append(conversationKey, assistantMessage) }
-        coVerify(exactly = 0) { tool.execute(any()) }
+        coVerify(exactly = 0) { tool.execute(any(),) }
     }
 
     @Test
@@ -133,7 +133,7 @@ class ConversationManagerTest {
         coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(blankAssistant)
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
         coVerify(exactly = 0) { chat.message(actor, blankAssistant) }
         coVerify { context.append(conversationKey, blankAssistant) }
@@ -150,7 +150,7 @@ class ConversationManagerTest {
         val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
         val finalAssistant = Message.Assistant(content = "Done!")
 
-        coEvery { tool.execute(toolCall) } returns toolResult
+        coEvery { tool.execute(toolCall,) } returns toolResult
         coEvery { context.get(conversationKey) } returnsMany listOf(
             conversationOf(userMessage),
             conversationOf(userMessage, assistantWithTool, toolResult)
@@ -160,9 +160,9 @@ class ConversationManagerTest {
             MessageResult.Success(finalAssistant)
         )
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
-        coVerify { tool.execute(toolCall) }
+        coVerify { tool.execute(toolCall,) }
         coVerify { context.append(conversationKey, toolResult) }
         coVerify { chat.message(actor, finalAssistant) }
     }
@@ -181,8 +181,8 @@ class ConversationManagerTest {
         )
         val finalAssistant = Message.Assistant(content = "All done")
 
-        coEvery { tool.execute(toolCall1) } returns toolResult1
-        coEvery { tool.execute(toolCall2) } returns toolResult2
+        coEvery { tool.execute(toolCall1,) } returns toolResult1
+        coEvery { tool.execute(toolCall2,) } returns toolResult2
         coEvery { context.get(conversationKey) } returnsMany listOf(
             conversationOf(userMessage),
             conversationOf(userMessage, assistantWithTools, toolResult1, toolResult2)
@@ -192,10 +192,10 @@ class ConversationManagerTest {
             MessageResult.Success(finalAssistant)
         )
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
-        coVerify { tool.execute(toolCall1) }
-        coVerify { tool.execute(toolCall2) }
+        coVerify { tool.execute(toolCall1,) }
+        coVerify { tool.execute(toolCall2,) }
         coVerify { context.append(conversationKey, toolResult1) }
         coVerify { context.append(conversationKey, toolResult2) }
     }
@@ -209,10 +209,10 @@ class ConversationManagerTest {
         coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantEmptyTools)
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
         coVerify(exactly = 1) { ai.generateResponse(any(), any()) }
-        coVerify(exactly = 0) { tool.execute(any()) }
+        coVerify(exactly = 0) { tool.execute(any(),) }
     }
 
     // --- AssistantLoop: failure ---
@@ -226,7 +226,7 @@ class ConversationManagerTest {
         coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Failure(errorMessage)
 
-        manager.sendUser(userMessage)
+        manager.sendUser(userMessage,)
 
         coVerify { notification.error(actor, errorMessage) }
         coVerify(exactly = 0) { chat.message(actor, any<Message.Assistant>()) }
@@ -247,8 +247,8 @@ class ConversationManagerTest {
         coEvery { context.get(conversationKey2) } returns conversationOf(msg2)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(response)
 
-        manager.sendUser(msg1)
-        manager.sendUser(msg2)
+        manager.sendUser(msg1,)
+        manager.sendUser(msg2,)
 
         coVerify { context.append(conversationKey, msg1) }
         coVerify { context.append(conversationKey2, msg2) }
@@ -267,12 +267,12 @@ class ConversationManagerTest {
         coEvery { ai.generateResponse(any(), any()) } returns
                 MessageResult.Success(Message.Assistant(content = "Hi!"))
 
-        manager.sendUser(message)
+        manager.sendUser(message,)
 
         // Channel drained and closed, next message creates a fresh channel
         // and the AI is called again rather than reusing the old channel
         coEvery { context.get(conversationKey) } returns conversationOf(message)
-        manager.sendUser(message)
+        manager.sendUser(message,)
 
         coVerify(exactly = 2) { ai.generateResponse(any(), any()) }
     }
