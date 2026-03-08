@@ -28,6 +28,7 @@ import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -49,18 +50,20 @@ class PaperNotificationService(
         pluginRuntime.runTask { target.sendMessage(infoMessage(message)) }
 
     override suspend fun error(target: Actor, message: String) =
-        pluginRuntime.runTask { target.sendMessage(errorMessage(message)) }
+        pluginRuntime.runTask {
+            target.sendMessage(errorMessage(message)) { player -> player.playSound(ERROR_SOUND) }
+        }
 
-    private fun Actor.sendMessage(message: Component) {
+    private fun Actor.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
         if (!this.isOnline) return
         when (this) {
             is BukkitPlayerActor -> {
-                this.player.playSound(ERROR_SOUND)
+                onPlayer?.invoke(this.player)
                 this.player.sendMessage(message)
             }
 
             is BukkitChatActor -> {
-                this.player.playSound(ERROR_SOUND)
+                onPlayer?.invoke(this.player)
                 server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
             }
 
