@@ -32,12 +32,12 @@ class Tool(
     val name: String,
     val description: String,
     val parameters: List<Parameter>,
-    private val handler: suspend (Map<String, Any>) -> ToolResult
+    private val handler: suspend (Map<String, Any>, ToolContext) -> ToolResult
 ) {
     /**
      * Executes the tool using the provided arguments and validates input parameters.
      */
-    suspend fun execute(args: Map<String, Any>): ToolResult {
+    suspend fun execute(args: Map<String, Any>, context: ToolContext): ToolResult {
         parameters.forEach { param ->
             if (param.required && !args.containsKey(param.name)) {
                 return ToolResult.Failure(
@@ -68,7 +68,7 @@ class Tool(
                 }
             }
         }
-        return handler(args)
+        return handler(args, context)
     }
 
     private fun Any.isCompatibleWith(type: Parameter.Type): Boolean = when (type) {

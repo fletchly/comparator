@@ -23,6 +23,7 @@ import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
+import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,9 +56,9 @@ class ConversationManager(
 ) : MessageSender {
     private val scopeChannels = ConcurrentHashMap<ConversationKey, Channel<Message.User>>()
 
-    override suspend fun sendUser(message: Message.User) {
-        val channel = scopeChannels.computeIfAbsent(message.actor.conversationKey) {
-            createChannel(it)
+    override suspend fun sendUser(message: Message.User, toolContext: ToolContext) {
+        val channel = scopeChannels.computeIfAbsent(message.actor.conversationKey) { key ->
+            createChannel(key, toolContext)
         }
 
         if (channel.trySend(message).isFailure) {
@@ -66,13 +67,13 @@ class ConversationManager(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun createChannel(key: ConversationKey): Channel<Message.User> {
+    private fun createChannel(key: ConversationKey, toolContext: ToolContext): Channel<Message.User> {
         val channel = Channel<Message.User>(capacity = MAX_QUEUED_MESSAGES)
 
         coroutineScope.launch {
             for (message in channel) {
                 startConversation(message)
-                AssistantLoop(message.actor).run()
+                AssistantLoop(message.actor, toolContext).run()
                 if (channel.isEmpty) channel.close()
             }
             scopeChannels.remove(key)
@@ -86,7 +87,7 @@ class ConversationManager(
         chat.message(message.actor, message)
     }
 
-    private inner class AssistantLoop(private val target: Actor) {
+    private inner class AssistantLoop(private val target: Actor, private val toolContext: ToolContext) {
         tailrec suspend fun run() {
             val conversation = context.get(target.conversationKey)
 
@@ -109,7 +110,7 @@ class ConversationManager(
 
         private suspend fun handleToolCalls(toolCalls: List<ToolCall>) {
             toolCalls
-                .map { tool.execute(it) }
+                .map { toolCall -> tool.execute(toolCall, toolContext) }
                 .forEach { context.append(target.conversationKey, it) }
         }
     }

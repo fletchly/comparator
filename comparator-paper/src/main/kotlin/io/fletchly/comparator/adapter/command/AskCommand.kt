@@ -24,6 +24,7 @@ import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
 import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.tool.BukkitToolContext
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.Commands
@@ -53,9 +54,10 @@ class AskCommand(
                         val content = StringArgumentType.getString(ctx, "prompt")
                         val actor = ctx.source.sender.toActor()
                         val userMessage = Message.User(content, actor)
+                        val toolContext = BukkitToolContext(actor)
 
                         pluginRuntime.runCoroutine {
-                            messageSender.sendUser(userMessage)
+                            messageSender.sendUser(userMessage, toolContext)
                         }
 
                         Command.SINGLE_SUCCESS

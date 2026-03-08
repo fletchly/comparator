@@ -21,6 +21,7 @@ package io.fletchly.comparator.manager
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
@@ -41,8 +42,8 @@ class ToolManager(
 
     override fun getTools(): List<Tool> = tools.values.toList()
 
-    override suspend fun execute(toolCall: ToolCall): Message.Tool =
-        when (val result = tools[toolCall.name]?.execute(toolCall.arguments)) {
+    override suspend fun execute(toolCall: ToolCall, toolContext: ToolContext): Message.Tool =
+        when (val result = tools[toolCall.name]?.execute(toolCall.arguments, toolContext)) {
             is ToolResult.Success -> {
                 val resultJson = result.toJsonString()
                 val argumentsString = toolCall.arguments.map { "${it.key}: ${it.value}" }.joinToString(", ")
