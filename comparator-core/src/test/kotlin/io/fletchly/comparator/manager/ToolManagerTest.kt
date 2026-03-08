@@ -22,6 +22,7 @@ import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.port.out.LogPort
 import io.mockk.coEvery
@@ -35,6 +36,7 @@ import kotlin.test.*
 class ToolManagerTest {
     private val log = mockk<LogPort>(relaxed = true)
     private val manager = ToolManager(log)
+    private val toolContext = mockk<ToolContext>(relaxed = true)
 
     private fun mockTool(name: String): Tool {
         val tool = mockk<Tool>()
@@ -99,7 +101,7 @@ class ToolManagerTest {
 
     @Test
     fun `returns tool not found message for unknown tool`() = runTest {
-        val result = manager.execute(ToolCall("unknown_tool", emptyMap()),)
+        val result = manager.execute(ToolCall("unknown_tool", emptyMap()), toolContext)
         assertEquals("tool not found", result.content)
     }
 
@@ -107,13 +109,13 @@ class ToolManagerTest {
     fun `executes registered tool and returns result`() = runTest {
         val tool = mockTool("my_tool")
         val toolCall = ToolCall("my_tool", mapOf("input" to "hello"))
-        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Success(
+        coEvery { tool.execute(toolCall.arguments, toolContext) } returns ToolResult.Success(
             "my_tool",
             "hello",
             String.serializer()
         )
         manager.register(tool)
-        val result = manager.execute(toolCall,)
+        val result = manager.execute(toolCall, toolContext)
         assertIs<Message.Tool>(result)
     }
 
@@ -121,13 +123,13 @@ class ToolManagerTest {
     fun `logs execution info after successful tool call`() = runTest {
         val tool = mockTool("my_tool")
         val toolCall = ToolCall("my_tool", mapOf("input" to "hello"))
-        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Success(
+        coEvery { tool.execute(toolCall.arguments, toolContext) } returns ToolResult.Success(
             "my_tool",
             "hello",
             String.serializer()
         )
         manager.register(tool)
-        manager.execute(toolCall,)
+        manager.execute(toolCall, toolContext)
         verify { log.info(any(), any()) }
     }
 
@@ -135,12 +137,12 @@ class ToolManagerTest {
     fun `handles tool returning Failure result`() = runTest {
         val tool = mockTool("my_tool")
         val toolCall = ToolCall("my_tool", emptyMap())
-        coEvery { tool.execute(toolCall.arguments) } returns ToolResult.Failure(
+        coEvery { tool.execute(toolCall.arguments, toolContext) } returns ToolResult.Failure(
             "my_tool",
             ToolException("something went wrong", null)
         )
         manager.register(tool)
-        val result = manager.execute(toolCall,)
+        val result = manager.execute(toolCall, toolContext)
         assertIs<Message.Tool>(result)
     }
 }

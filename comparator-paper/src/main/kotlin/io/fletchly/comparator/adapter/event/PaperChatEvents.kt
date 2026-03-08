@@ -23,6 +23,7 @@ import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.actor.BukkitChatActor
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
+import io.fletchly.comparator.model.tool.BukkitToolContext
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -72,9 +73,10 @@ class PaperChatEvents(
         ) return
 
         val userMessage = Message.User(content, actor)
+        val toolContext = BukkitToolContext(actor)
 
         pluginRuntime.runCoroutine {
-            messageSender.sendUser(userMessage,)
+            messageSender.sendUser(userMessage, toolContext)
         }
 
         event.message(assistantMentionComponent(content))
