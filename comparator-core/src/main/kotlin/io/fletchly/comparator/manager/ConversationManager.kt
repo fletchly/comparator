@@ -18,16 +18,16 @@
 
 package io.fletchly.comparator.manager
 
-import com.github.benmanes.caffeine.cache.Cache
-import com.github.benmanes.caffeine.cache.Caffeine
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
-import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Manages user conversations and ensures efficient response generation while handling concurrent requests.
@@ -53,51 +53,50 @@ class ConversationManager(
     private val notification: NotificationPort,
     private val coroutineScope: CoroutineScopePort
 ) : MessageSender {
-    private val scopeChannels: Cache<ConversationScope, Channel<Message.User>> = Caffeine.newBuilder()
-        .expireAfterAccess(10, TimeUnit.MINUTES)
-        .removalListener<ConversationScope, Channel<Message.User>> { _, channel, _ -> channel?.close() }
-        .build()
+    private val scopeChannels = ConcurrentHashMap<ConversationKey, Channel<Message.User>>()
 
-    override suspend fun fromUser(message: Message.User) {
-        val channel = scopeChannels.get(message.scope) { createChannelFor(message.scope) }
+    override suspend fun sendUser(message: Message.User) {
+        val channel = scopeChannels.computeIfAbsent(message.actor.conversationKey) {
+            createChannel(it)
+        }
 
-        val sent = channel.trySend(message)
-        if (sent.isFailure) {
-            chat.message(message.scope, Message.Assistant("Too many messages queued, please wait."))
+        if (channel.trySend(message).isFailure) {
+            chat.message(message.actor, Message.Assistant("Too many messages queued, please wait."))
         }
     }
 
-    private fun createChannelFor(scope: ConversationScope): Channel<Message.User> {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun createChannel(key: ConversationKey): Channel<Message.User> {
         val channel = Channel<Message.User>(capacity = MAX_QUEUED_MESSAGES)
 
-        this@ConversationManager.coroutineScope.launch {
+        coroutineScope.launch {
             for (message in channel) {
                 startConversation(message)
-                AssistantLoop(scope).run()
+                AssistantLoop(message.actor).run()
+                if (channel.isEmpty) channel.close()
             }
+            scopeChannels.remove(key)
         }
 
         return channel
     }
 
     private suspend fun startConversation(message: Message.User) {
-        context.append(message.scope, message)
-        chat.message(message.scope, message)
+        context.append(message.actor.conversationKey, message)
+        chat.message(message.actor, message)
     }
 
-    private inner class AssistantLoop(private val target: ConversationScope) {
+    private inner class AssistantLoop(private val target: Actor) {
         tailrec suspend fun run() {
-            val conversation = context.get(target)
+            val conversation = context.get(target.conversationKey)
 
             when (val result = ai.generateResponse(system.getPrompt(), conversation)) {
-                is MessageResult.Failure -> {
-                    notification.error(target, result.error)
-                }
+                is MessageResult.Failure -> notification.error(target, result.error)
 
                 is MessageResult.Success<Message.Assistant> -> {
                     val response = result.message
                     if (response.content.isNotBlank()) chat.message(target, response)
-                    context.append(target, response)
+                    context.append(target.conversationKey, response)
 
                     val toolCalls = response.toolCalls
                     if (toolCalls.isNullOrEmpty()) return
@@ -111,7 +110,7 @@ class ConversationManager(
         private suspend fun handleToolCalls(toolCalls: List<ToolCall>) {
             toolCalls
                 .map { tool.execute(it) }
-                .forEach { context.append(target, it) }
+                .forEach { context.append(target.conversationKey, it) }
         }
     }
 

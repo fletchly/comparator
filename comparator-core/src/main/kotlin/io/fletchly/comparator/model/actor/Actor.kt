@@ -16,22 +16,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.port.out
+package io.fletchly.comparator.model.actor
 
-import io.fletchly.comparator.model.actor.Actor
-import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.message.ConversationKey
 
-/**
- * Displays chat messages to users
- */
-interface ChatPort {
-
-    /**
-     * Sends a message to the specified target actor.
-     *
-     * @param target The recipient actor to whom the message will be sent.
-     * @param message The message content to be delivered.
-     */
-    suspend fun message(target: Actor, message: Message)
+interface Actor {
+    val displayName: String
+    val conversationKey: ConversationKey
+    val isOnline: Boolean
 }

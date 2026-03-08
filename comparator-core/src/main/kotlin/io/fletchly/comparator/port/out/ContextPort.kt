@@ -19,38 +19,45 @@
 package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.message.Conversation
+import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
  * Defines a port for managing user-specific conversational contexts.
  */
 interface ContextPort {
     /**
-     * Retrieves the conversational context associated with a specific scope.
+     * Retrieves the conversation associated with the specified key.
      *
-     * @param scope The scope whose conversation context is to be retrieved.
-     * @return The conversation associated with the specified scope.
+     * @param key The unique identifier for the conversation to be retrieved.
+     * @return The conversation corresponding to the provided key.
      */
-    suspend fun get(scope: ConversationScope): Conversation
+    suspend fun get(key: ConversationKey): Conversation
 
     /**
-     * Appends a message to the conversational context associated with a scope.
+     * Appends a message to the conversation identified by the given key.
      *
-     * @param scope The scope whose conversation context is being updated.
-     * @param message The message to be appended to the scope's conversation context.
+     * @param key The unique identifier for the conversation to which the message will be appended.
+     * @param message The message to be appended to the conversation.
      */
-    suspend fun append(scope: ConversationScope, message: Message)
+    suspend fun append(key: ConversationKey, message: Message)
 
     /**
-     * Clears the conversational context associated with the specified scope.
+     * Clears the conversation associated with the specified key.
      *
-     * @param scope The scope whose conversational context is to be cleared.
+     * This method removes the conversation for the given key from the system,
+     * effectively resetting any associated state or messages that have been exchanged.
+     *
+     * @param key The unique identifier for the conversation to be cleared.
      */
-    suspend fun clear(scope: ConversationScope)
+    suspend fun clear(key: ConversationKey)
 
     /**
-     * Clears all conversational contexts managed by the implementation.
+     * Clears all conversations across the system.
+     *
+     * This method performs a global reset of all conversations, removing
+     * any associated state or messages. It is intended for use in scenarios
+     * where all conversational contexts need to be purged simultaneously.
      */
     suspend fun clearAll()
 }

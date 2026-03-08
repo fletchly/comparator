@@ -34,5 +34,5 @@ interface MessageSender {
      * @param message The user-generated message to be processed. The message
      *                includes its content and the sender's information.
      */
-    suspend fun fromUser(message: Message.User)
+    suspend fun sendUser(message: Message.User)
 }

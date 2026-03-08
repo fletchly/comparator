@@ -25,9 +25,9 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 /**
- * Converts a `CommandSender` instance into a `ConversationScope` implementation.
+ * Converts a `CommandSender` instance into a `ConversationKey` implementation.
  *
- * @return A `ConversationScope` representation of the sender, either as `BukkitPlayerConversationScope` or `ConsoleConversationScope`.
+ * @return A `ConversationKey` representation of the sender, either as `BukkitPlayerConversationScope` or `ConsoleConversationScope`.
  */
 fun CommandSender.toScope(): RestrictedConversationScope = when (this) {
     is Player -> BukkitPlayerConversationScope(this)

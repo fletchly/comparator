@@ -73,7 +73,7 @@ class PaperChatEvents(
         val userMessage = Message.User("<$playerName> $prompt", PublicChatConversationScope)
 
         pluginRuntime.runCoroutine {
-            messageSender.fromUser(userMessage)
+            messageSender.sendUser(userMessage)
         }
 
         event.message(assistantMentionComponent(prompt))

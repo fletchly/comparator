@@ -18,18 +18,14 @@
 
 package io.fletchly.comparator
 
-import io.fletchly.comparator.adapter.config.PluginConfigService
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.event.ToolRegistrationEvent
-import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.tool.ToolRegistry
-import io.fletchly.comparator.tool.currentDateTool
-import io.fletchly.comparator.tool.gameVersionTool
-import io.fletchly.comparator.tool.webSearchTool
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
@@ -52,11 +48,11 @@ class Comparator : JavaPlugin(), KoinComponent {
     }
 
     override fun onDisable() {
-        val context: ContextClearer = get()
+        val context: ContextLifecycle = get()
         val scheduler: BukkitPluginRuntime = get()
 
         logger.info { "Clearing context for all users" }
-        runBlocking { context.clearAll() }
+        runBlocking { context.clearFull() }
 
         logger.info { "Shutting down plugin scheduler" }
         scheduler.cancel()

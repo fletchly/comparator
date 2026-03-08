@@ -18,9 +18,9 @@
 
 package io.fletchly.comparator.manager
 
-import io.fletchly.comparator.model.scope.ConversationScope
-import io.fletchly.comparator.model.scope.RestrictedConversationScope
-import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.message.ConversationKey
+import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
@@ -42,15 +42,16 @@ class ContextManager(
     private val context: ContextPort,
     private val notification: NotificationPort,
     private val log: LogPort
-) : ContextClearer {
-    override suspend fun RestrictedConversationScope.clearSelf() {
-        context.clear(this)
-        log.info("Cleared chat context for ${this.displayName}", ContextManager::class.simpleName)
-        notification.info(this, "Cleared chat context")
+) : ContextLifecycle {
+    override suspend fun clearSelf(target: Actor) {
+        context.clear(target.conversationKey)
+        log.info("Cleared chat context for ${target.displayName}", ContextManager::class.simpleName)
+        notification.info(target, "Cleared chat context")
     }
 
-    override suspend fun RestrictedConversationScope.clearOther(
-        targets: List<ConversationScope>
+    override suspend fun clearOther(
+        requestor: Actor,
+        targets: List<ConversationKey>
     ) {
         targets.forEach {
             context.clear(it)
@@ -58,17 +59,17 @@ class ContextManager(
 
         val message = "Cleared chat context for ${targets.size} ${"target".pluralize(targets.size)}"
         log.info(message, ContextManager::class.simpleName)
-        notification.info(this, message)
+        notification.info(requestor, message)
     }
 
-    override suspend fun RestrictedConversationScope.clearAll() {
+    override suspend fun clearAll(requestor: Actor) {
         context.clearAll()
         val message = "Cleared chat context for all scopes"
         log.info(message, ContextManager::class.simpleName)
-        notification.info(this, message)
+        notification.info(requestor, message)
     }
 
-    override suspend fun clearAll() {
+    override suspend fun clearFull() {
         context.clearAll()
     }
 }

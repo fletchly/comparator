@@ -20,7 +20,7 @@ package io.fletchly.comparator.adapter.event
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
-import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.ContextLifecycle
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerQuitEvent
@@ -31,13 +31,13 @@ import org.bukkit.event.player.PlayerQuitEvent
  *
  * This class listens for Bukkit `PlayerQuitEvent` and integrates with
  * conversational systems or other context-sensitive features by utilizing
- * `ContextClearer` and `BukkitPluginRuntime` components.
+ * `ContextLifecycle` and `BukkitPluginRuntime` components.
  *
- * @param context A `ContextClearer` instance used for clearing the player's conversational context.
+ * @param context A `ContextLifecycle` instance used for clearing the player's conversational context.
  * @param pluginRuntime A `BukkitPluginRuntime` instance for managing asynchronous tasks within the plugin's lifecycle.
  */
 class BukkitPlayerEvents(
-    private val context: ContextClearer,
+    private val context: ContextLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : Listener {
     @EventHandler

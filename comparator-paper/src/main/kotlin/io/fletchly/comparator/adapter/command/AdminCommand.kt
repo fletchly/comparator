@@ -25,7 +25,7 @@ import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
 import io.fletchly.comparator.model.scope.ConsoleConversationScope
 import io.fletchly.comparator.model.scope.PublicChatConversationScope
-import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.util.toScope
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
@@ -37,11 +37,11 @@ import org.bukkit.permissions.PermissionDefault
 /**
  * Represents the administrative command definition for managing the Comparator system.
  *
- * @param contextClearer The utility that performs clearing of conversational contexts for users.
+ * @param contextLifecycle The utility that performs clearing of conversational contexts for users.
  * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
 class AdminCommand(
-    private val contextClearer: ContextClearer,
+    private val contextLifecycle: ContextLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
@@ -118,7 +118,7 @@ class AdminCommand(
         val scope = ctx.source.sender.toScope()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) { scope.clearSelf() }
+            with(contextLifecycle) { scope.clearSelf() }
         }
     }
 
@@ -129,7 +129,7 @@ class AdminCommand(
         val feedbackScope = ctx.source.sender.toScope()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) { feedbackScope.clearOther(targetScopes) }
+            with(contextLifecycle) { feedbackScope.clearOther(targetScopes) }
         }
     }
 
@@ -137,7 +137,7 @@ class AdminCommand(
         val scope = ctx.source.sender.toScope()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
+            with(contextLifecycle) {
                 when (scope) {
                     is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
                     else -> scope.clearOther(listOf(ConsoleConversationScope))
@@ -150,7 +150,7 @@ class AdminCommand(
         val scope = ctx.source.sender.toScope()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
+            with(contextLifecycle) {
                 scope.clearOther(listOf(PublicChatConversationScope))
             }
         }
@@ -160,7 +160,7 @@ class AdminCommand(
         val scope = ctx.source.sender.toScope()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
+            with(contextLifecycle) {
                 scope.clearAll()
             }
         }

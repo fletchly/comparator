@@ -35,7 +35,7 @@ sealed interface ChatMessage {
     val role: String
 
     /**
-     * ConversationScope message
+     * ConversationKey message
      *
      * @property role always `user`
      */
