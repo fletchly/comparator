@@ -20,6 +20,7 @@ package io.fletchly.comparator.adapter.persistence
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import io.fletchly.comparator.model.message.Conversation
+import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.options.ContextOptions
@@ -46,17 +47,17 @@ class CaffeineContextStore(private val config: ContextOptions) : ContextPort {
         .expireAfterAccess(config.expireAfterAccessMinutes, TimeUnit.MINUTES)
         .build<UUID, Conversation>()
 
-    override suspend fun get(scope: ConversationScope): Conversation {
-        return context.getIfPresent(scope.uniqueId) ?: conversationOf()
+    override suspend fun get(key: ConversationKey): Conversation {
+        return context.getIfPresent(key.uniqueId) ?: conversationOf()
     }
 
-    override suspend fun append(scope: ConversationScope, message: Message) {
-        val conversation = context.get(scope.uniqueId) { conversationOf() }
+    override suspend fun append(key: ConversationKey, message: Message) {
+        val conversation = context.get(key.uniqueId) { conversationOf() }
         conversation.addAndTrim(message, config.conversationMessageLimit)
     }
 
-    override suspend fun clear(scope: ConversationScope) {
-        context.invalidate(scope.uniqueId)
+    override suspend fun clear(key: ConversationKey) {
+        context.invalidate(key.uniqueId)
     }
 
     override suspend fun clearAll() {

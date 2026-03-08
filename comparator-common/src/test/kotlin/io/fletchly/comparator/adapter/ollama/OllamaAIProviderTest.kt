@@ -18,6 +18,7 @@
 
 package io.fletchly.comparator.adapter.ollama
 
+import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
@@ -245,10 +246,10 @@ class OllamaAIProviderTest {
             )
         }
 
-        val sender = mockk<ConversationScope>(relaxed = true)
+        val actor = mockk<Actor>(relaxed = true)
         provider.generateResponse(
             systemPrompt = "You are helpful",
-            conversation = conversation(Message.User("Hello", sender))
+            conversation = conversation(Message.User("Hello", actor))
         )
 
         assertNotNull(capturedBody)
