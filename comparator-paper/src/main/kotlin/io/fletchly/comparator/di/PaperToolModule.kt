@@ -19,9 +19,11 @@
 package io.fletchly.comparator.di
 
 import io.fletchly.comparator.tool.GameVersionTool
+import io.fletchly.comparator.tool.PlayerInfoTool
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val paperToolModule = module {
     singleOf(::GameVersionTool)
+    singleOf(::PlayerInfoTool)
 }

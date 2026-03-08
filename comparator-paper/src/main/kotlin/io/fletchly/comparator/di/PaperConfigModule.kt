@@ -55,6 +55,16 @@ val paperConfigModule = module {
     }
 
     single {
+        val config = get<PluginConfigService>().config.tool.playerInfo
+        PlayerInfoOptions(
+            config.entityRadiusX,
+            config.entityRadiusY,
+            config.entityRadiusZ,
+            config.lookingAtDistance
+        )
+    }
+
+    single {
         val config = get<PluginConfigService>().config
 
         PublicChatPrefixOptions(
@@ -68,7 +78,8 @@ val paperConfigModule = module {
         BuiltInToolOptions(
             config.webSearch.enabled,
             config.gameVersion.enabled,
-            config.currentDate.enabled
+            config.currentDate.enabled,
+            config.playerInfo.enabled
         )
     }
 }

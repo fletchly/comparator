@@ -22,6 +22,7 @@ import io.fletchly.comparator.event.ToolRegistrationEvent
 import io.fletchly.comparator.model.options.BuiltInToolOptions
 import io.fletchly.comparator.tool.currentDateTool
 import io.fletchly.comparator.tool.gameVersionTool
+import io.fletchly.comparator.tool.playerInfoTool
 import io.fletchly.comparator.tool.webSearchTool
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -44,8 +45,9 @@ class ToolRegistrationEvents(
     fun onToolRegistration(event: ToolRegistrationEvent) {
         val registry = event.registry
 
-        if (options.webSearch) registry.register(webSearchTool)
-        if (options.gameVersion) registry.register(gameVersionTool)
-        if (options.currentDate) registry.register(currentDateTool)
+        if (options.webSearchEnabled) registry.register(webSearchTool)
+        if (options.gameVersionEnabled) registry.register(gameVersionTool)
+        if (options.currentDateEnabled) registry.register(currentDateTool)
+        if (options.playerInfoEnabled) registry.register(playerInfoTool)
     }
 }
