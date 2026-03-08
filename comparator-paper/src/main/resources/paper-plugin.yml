@@ -1,5 +1,5 @@
 name: Comparator
-version: '1.3.0'
+version: '1.3.1'
 main: 'io.fletchly.comparator.Comparator'
 api-version: '1.21'
 authors: [ 'fletchly' ]
