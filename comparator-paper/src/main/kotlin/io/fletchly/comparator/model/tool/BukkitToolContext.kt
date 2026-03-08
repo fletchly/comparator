@@ -23,6 +23,7 @@ import io.fletchly.comparator.model.actor.BukkitChatActor
 import io.fletchly.comparator.model.actor.BukkitPlayerActor
 
 class BukkitToolContext(private val actor: Actor): ToolContext {
+    @OptIn(InternalToolContextApi::class)
     override fun <T : Any> getPlayer(): T? {
         val player = when (actor) {
             is BukkitPlayerActor -> actor.player
