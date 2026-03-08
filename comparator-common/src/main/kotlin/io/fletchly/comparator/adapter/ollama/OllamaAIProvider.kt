@@ -125,8 +125,8 @@ class OllamaAIProvider(
 
     private fun Message.toChatMessage(): ChatMessage {
         return when (this) {
-            is Message.User -> ChatMessage.User(this.content)
-            is Message.Tool -> ChatMessage.Tool(this.content)
+            is Message.User -> ChatMessage.User("[${this.actor.displayName}] ${this.content}")
+            is Message.Tool -> ChatMessage.Tool("[${this.name}] ${this.content}")
             is Message.Assistant -> ChatMessage.Assistant(
                 this.content,
                 this.toolCalls
