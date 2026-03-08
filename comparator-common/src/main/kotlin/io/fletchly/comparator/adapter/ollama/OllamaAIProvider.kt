@@ -37,6 +37,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.io.IOException
+import kotlinx.serialization.json.Json
 
 /**
  * An implementation of the [AIPort] interface that integrates with the Ollama API to generate responses
@@ -156,7 +157,8 @@ class OllamaAIProvider(
     private fun Tool.toChatTool() = ChatTool(
         function = ChatToolFunction(
             name = this.name,
-            parameters = this.parameters.toJsonSchema()
+            parameters = this.parameters.toJsonSchema(),
+            description = this.description
         )
     )
 

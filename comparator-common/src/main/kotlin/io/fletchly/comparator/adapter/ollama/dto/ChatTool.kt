@@ -48,5 +48,5 @@ data class ChatTool(val function: ChatToolFunction) {
 data class ChatToolFunction(
     val name: String,
     val parameters: JsonSchema,
-    val description: String? = null
+    val description: String
 )
