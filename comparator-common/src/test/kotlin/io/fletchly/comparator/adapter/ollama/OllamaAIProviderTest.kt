@@ -261,6 +261,7 @@ class OllamaAIProviderTest {
         val tool = mockk<Tool> {
             every { name } returns "my_tool"
             every { parameters } returns emptyList()
+            every { description } returns "my description"
         }
         val provider = OllamaAIProvider(
             OllamaOptions(
@@ -283,6 +284,7 @@ class OllamaAIProviderTest {
         provider.generateResponse("prompt", conversation())
 
         assertTrue(capturedBody!!.contains("my_tool"))
+        assertTrue(capturedBody.contains("my description"))
     }
 
     @Test
