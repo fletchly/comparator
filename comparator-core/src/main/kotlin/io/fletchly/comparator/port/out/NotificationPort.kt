@@ -19,7 +19,6 @@
 package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.actor.Actor
-import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
  * Defines a port for sending notification messages to users.

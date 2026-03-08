@@ -20,7 +20,6 @@ package io.fletchly.comparator.port.out
 
 import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.scope.ConversationScope
 
 /**
  * Displays chat messages to users
