@@ -41,6 +41,7 @@ dokka {
     }
     dokkaPublications.html {
         moduleName.set("Comparator Tool API")
+        moduleVersion.set(version.toString())
     }
 }
 
