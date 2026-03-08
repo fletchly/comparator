@@ -37,8 +37,7 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.mockk)
+    testImplementation(libs.bundles.test)
     testImplementation(libs.koin.test)
     testImplementation(libs.ktor.client.core)
 }

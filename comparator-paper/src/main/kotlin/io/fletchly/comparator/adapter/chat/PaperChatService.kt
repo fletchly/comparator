@@ -19,11 +19,12 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.actor.BukkitChatActor
+import io.fletchly.comparator.model.actor.BukkitPlayerActor
+import io.fletchly.comparator.model.actor.ConsoleActor
+import io.fletchly.comparator.model.message.ChatConversationKey
 import io.fletchly.comparator.model.message.Message
-import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
-import io.fletchly.comparator.model.scope.ConsoleConversationScope
-import io.fletchly.comparator.model.scope.PublicChatConversationScope
-import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.ChatPort
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
@@ -50,10 +51,10 @@ class PaperChatService(
     private val server = plugin.server
 
     override suspend fun message(
-        target: ConversationScope,
+        target: Actor,
         message: Message
     ) = pluginRuntime.runTask {
-        val isPublic = target is PublicChatConversationScope
+        val isPublic = target.conversationKey is ChatConversationKey
 
         when (message) {
             is Message.User -> if (!isPublic) target.sendMessage(userMessage(message))
@@ -62,22 +63,25 @@ class PaperChatService(
         }
     }
 
-    private fun ConversationScope.sendMessage(message: Component, withSound: Boolean = false) {
+    private fun Actor.sendMessage(message: Component, withSound: Boolean = false) {
         if (!this.isOnline) return
         when (this) {
-            is BukkitPlayerConversationScope -> {
+            is BukkitPlayerActor -> {
                 if (withSound) this.player.playSound(RESPONSE_SOUND)
                 this.player.sendMessage(message)
             }
 
-            is PublicChatConversationScope -> server.broadcast(message)
+            is BukkitChatActor -> {
+                if (withSound) this.player.playSound(RESPONSE_SOUND)
+                server.broadcast(message)
+            }
 
-            is ConsoleConversationScope -> server.consoleSender.sendMessage(message)
+            is ConsoleActor -> server.consoleSender.sendMessage(message)
         }
     }
 
     private fun userMessage(message: Message.User) =
-        fromMiniMessage("<yellow>$PLAYER_ICON ${message.scope.displayName}</yellow> $ARROW ${message.content}")
+        fromMiniMessage("<yellow>$PLAYER_ICON ${message.actor.displayName}</yellow> $ARROW ${message.content}")
 
     private fun assistantMessage(message: Message.Assistant, isPublic: Boolean = false) =
         when (isPublic) {

@@ -109,7 +109,7 @@ data class GameVersionConfig(
 data class CurrentDateConfig(
     @Comment("Whether the current date tool is enabled")
     override val enabled: Boolean = true
-): ToolImplementationConfig
+) : ToolImplementationConfig
 
 interface ToolImplementationConfig {
     val enabled: Boolean

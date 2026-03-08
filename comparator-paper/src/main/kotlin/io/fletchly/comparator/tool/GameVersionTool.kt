@@ -27,7 +27,10 @@ class GameVersionTool(
     private val plugin: JavaPlugin,
     private val pluginRuntime: BukkitPluginRuntime
 ) {
-    @ToolFunction(name = "game_version", description = "Get the Minecraft version the player is currently running on their client/server **THIS MAY OR MAY NOT BE THE MOST RECENT GAME VERSION**. Useful for ensuring version-relevant information.")
+    @ToolFunction(
+        name = "game_version",
+        description = "Get the Minecraft version the player is currently running on their client/server **THIS MAY OR MAY NOT BE THE MOST RECENT GAME VERSION**. Useful for ensuring version-relevant information."
+    )
     suspend fun getGameVersion(): Map<String, String> = pluginRuntime.runTask {
         mapOf("version" to plugin.server.version)
     }

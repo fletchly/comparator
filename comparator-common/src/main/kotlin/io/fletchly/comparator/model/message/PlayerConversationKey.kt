@@ -16,20 +16,18 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.util
+package io.fletchly.comparator.model.message
 
-import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
-import io.fletchly.comparator.model.scope.RestrictedConversationScope
-import io.fletchly.comparator.model.scope.ConsoleConversationScope
-import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
+import java.util.*
 
 /**
- * Converts a `CommandSender` instance into a `ConversationScope` implementation.
+ * Represents a conversation key uniquely associated with a specific player.
  *
- * @return A `ConversationScope` representation of the sender, either as `BukkitPlayerConversationScope` or `ConsoleConversationScope`.
+ * This value class implements the `ConversationKey` interface and is used to
+ * establish a unique identifier for a player's participation in a conversation.
+ * The key is based on a `UUID`, which ensures global uniqueness.
+ *
+ * @property uniqueId The unique identifier for the player.
  */
-fun CommandSender.toScope(): RestrictedConversationScope = when (this) {
-    is Player -> BukkitPlayerConversationScope(this)
-    else -> ConsoleConversationScope
-}
+@JvmInline
+value class PlayerConversationKey(override val uniqueId: UUID) : ConversationKey

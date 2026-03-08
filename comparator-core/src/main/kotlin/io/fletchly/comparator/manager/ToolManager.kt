@@ -76,7 +76,7 @@ class ToolManager(
                 )
                 return@forEach
             }
-            (this.tools as MutableMap) [tool.name] = tool // safe to do here when the registry is unfrozen
+            (this.tools as MutableMap)[tool.name] = tool // safe to do here when the registry is unfrozen
         }
     }
 

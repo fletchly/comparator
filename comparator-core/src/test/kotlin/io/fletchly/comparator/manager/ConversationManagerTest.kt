@@ -18,11 +18,12 @@
 
 package io.fletchly.comparator.manager
 
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.message.conversationOf
-import io.fletchly.comparator.model.scope.ConversationScope
 import io.fletchly.comparator.port.out.*
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -34,6 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import java.util.UUID
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -46,9 +48,14 @@ class ConversationManagerTest {
     private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
-    private val scope = mockk<CoroutineScopePort>()
+    private val coroutineScope = mockk<CoroutineScopePort>()
 
-    private val user = mockk<ConversationScope>()
+    private val conversationKey = mockk<ConversationKey> {
+        every { uniqueId } returns UUID.randomUUID()
+    }
+    private val actor = mockk<Actor> {
+        every { conversationKey } returns this@ConversationManagerTest.conversationKey
+    }
 
     @BeforeTest
     fun setUp() {
@@ -56,46 +63,46 @@ class ConversationManagerTest {
     }
 
     private fun TestScope.buildManager(): ConversationManager {
-        every { scope.launch(any()) } answers {
+        every { coroutineScope.launch(any()) } answers {
             backgroundScope.launch(UnconfinedTestDispatcher(testScheduler), block = firstArg())
         }
-        return ConversationManager(context, system, ai, tool, chat, notification, scope)
+        return ConversationManager(context, system, ai, tool, chat, notification, coroutineScope)
     }
 
-    // --- fromUser: basic flow ---
+    // --- sendUser: basic flow ---
 
     @Test
-    fun `fromUser appends message to context and echoes it to chat`() = runTest {
+    fun `sendUser appends message to context and echoes it to chat`() = runTest {
         val manager = buildManager()
-        val message = Message.User(content = "Hello", scope = user)
+        val message = Message.User(content = "Hello", actor = actor)
 
-        coEvery { context.get(user) } returns conversationOf(message)
+        coEvery { context.get(conversationKey) } returns conversationOf(message)
         coEvery { ai.generateResponse(any(), any()) } returns
                 MessageResult.Success(Message.Assistant(content = "Hi!"))
 
-        manager.fromUser(message)
+        manager.sendUser(message)
 
-        coVerify { context.append(user, message) }
-        coVerify { chat.message(user, message) }
+        coVerify { context.append(conversationKey, message) }
+        coVerify { chat.message(actor, message) }
     }
 
     @Test
-    fun `fromUser warns and does not queue when channel is full`() = runTest {
+    fun `sendUser warns and does not queue when channel is full`() = runTest {
         val manager = buildManager()
-        val message = Message.User(content = "Flood", scope = user)
+        val message = Message.User(content = "Flood", actor = actor)
 
-        coEvery { context.get(user) } returns conversationOf(message)
+        coEvery { context.get(conversationKey) } returns conversationOf(message)
         coEvery { ai.generateResponse(any(), any()) } coAnswers {
             delay(Long.MAX_VALUE)
             MessageResult.Success(Message.Assistant(content = ""))
         }
 
         repeat(ConversationManager.MAX_QUEUED_MESSAGES + 2) {
-            manager.fromUser(message)
+            manager.sendUser(message)
         }
 
         coVerify(atLeast = 1) {
-            chat.message(user, Message.Assistant("Too many messages queued, please wait."))
+            chat.message(actor, Message.Assistant("Too many messages queued, please wait."))
         }
     }
 
@@ -104,32 +111,32 @@ class ConversationManagerTest {
     @Test
     fun `assistant response with content is sent to chat and appended to context`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", scope = user)
+        val userMessage = Message.User(content = "Hey", actor = actor)
         val assistantMessage = Message.Assistant(content = "Hello!")
 
-        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantMessage)
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
-        coVerify { chat.message(user, assistantMessage) }
-        coVerify { context.append(user, assistantMessage) }
+        coVerify { chat.message(actor, assistantMessage) }
+        coVerify { context.append(conversationKey, assistantMessage) }
         coVerify(exactly = 0) { tool.execute(any()) }
     }
 
     @Test
     fun `assistant response with blank content is appended to context but not sent to chat`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", scope = user)
+        val userMessage = Message.User(content = "Hey", actor = actor)
         val blankAssistant = Message.Assistant(content = "   ")
 
-        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(blankAssistant)
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
-        coVerify(exactly = 0) { chat.message(user, blankAssistant) }
-        coVerify { context.append(user, blankAssistant) }
+        coVerify(exactly = 0) { chat.message(actor, blankAssistant) }
+        coVerify { context.append(conversationKey, blankAssistant) }
     }
 
     // --- AssistantLoop: tool calls ---
@@ -137,14 +144,14 @@ class ConversationManagerTest {
     @Test
     fun `single tool call is executed, result appended, then loop continues`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Search something", scope = user)
+        val userMessage = Message.User(content = "Search something", actor = actor)
         val toolCall = mockk<ToolCall>()
         val toolResult = Message.Tool(content = "tool output", name = "tool_name")
         val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
         val finalAssistant = Message.Assistant(content = "Done!")
 
         coEvery { tool.execute(toolCall) } returns toolResult
-        coEvery { context.get(user) } returnsMany listOf(
+        coEvery { context.get(conversationKey) } returnsMany listOf(
             conversationOf(userMessage),
             conversationOf(userMessage, assistantWithTool, toolResult)
         )
@@ -153,17 +160,17 @@ class ConversationManagerTest {
             MessageResult.Success(finalAssistant)
         )
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
         coVerify { tool.execute(toolCall) }
-        coVerify { context.append(user, toolResult) }
-        coVerify { chat.message(user, finalAssistant) }
+        coVerify { context.append(conversationKey, toolResult) }
+        coVerify { chat.message(actor, finalAssistant) }
     }
 
     @Test
     fun `multiple tool calls are all executed and their results appended`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Do many things", scope = user)
+        val userMessage = Message.User(content = "Do many things", actor = actor)
         val toolCall1 = mockk<ToolCall>()
         val toolCall2 = mockk<ToolCall>()
         val toolResult1 = Message.Tool(content = "result 1", name = "tool1")
@@ -176,7 +183,7 @@ class ConversationManagerTest {
 
         coEvery { tool.execute(toolCall1) } returns toolResult1
         coEvery { tool.execute(toolCall2) } returns toolResult2
-        coEvery { context.get(user) } returnsMany listOf(
+        coEvery { context.get(conversationKey) } returnsMany listOf(
             conversationOf(userMessage),
             conversationOf(userMessage, assistantWithTools, toolResult1, toolResult2)
         )
@@ -185,24 +192,24 @@ class ConversationManagerTest {
             MessageResult.Success(finalAssistant)
         )
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
         coVerify { tool.execute(toolCall1) }
         coVerify { tool.execute(toolCall2) }
-        coVerify { context.append(user, toolResult1) }
-        coVerify { context.append(user, toolResult2) }
+        coVerify { context.append(conversationKey, toolResult1) }
+        coVerify { context.append(conversationKey, toolResult2) }
     }
 
     @Test
     fun `empty tool calls list is treated as terminal - loop does not recurse`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Hey", scope = user)
+        val userMessage = Message.User(content = "Hey", actor = actor)
         val assistantEmptyTools = Message.Assistant(content = "Done", toolCalls = emptyList())
 
-        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(assistantEmptyTools)
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
         coVerify(exactly = 1) { ai.generateResponse(any(), any()) }
         coVerify(exactly = 0) { tool.execute(any()) }
@@ -213,38 +220,60 @@ class ConversationManagerTest {
     @Test
     fun `AI failure sends error notification without messaging chat`() = runTest {
         val manager = buildManager()
-        val userMessage = Message.User(content = "Uh oh", scope = user)
+        val userMessage = Message.User(content = "Uh oh", actor = actor)
         val errorMessage = "AI unavailable"
 
-        coEvery { context.get(user) } returns conversationOf(userMessage)
+        coEvery { context.get(conversationKey) } returns conversationOf(userMessage)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Failure(errorMessage)
 
-        manager.fromUser(userMessage)
+        manager.sendUser(userMessage)
 
-        coVerify { notification.error(user, errorMessage) }
-        coVerify(exactly = 0) { chat.message(user, any<Message.Assistant>()) }
+        coVerify { notification.error(actor, errorMessage) }
+        coVerify(exactly = 0) { chat.message(actor, any<Message.Assistant>()) }
     }
 
-    // --- ConversationScope isolation ---
+    // --- Actor isolation ---
 
     @Test
-    fun `two users receive independent conversations`() = runTest {
+    fun `two actors receive independent conversations`() = runTest {
         val manager = buildManager()
-        val scope2 = mockk<ConversationScope>()
-        val msg1 = Message.User(content = "From user 1", scope = user)
-        val msg2 = Message.User(content = "From user 2", scope = scope2)
+        val conversationKey2 = mockk<ConversationKey> { every { uniqueId } returns UUID.randomUUID() }
+        val actor2 = mockk<Actor> { every { conversationKey } returns conversationKey2 }
+        val msg1 = Message.User(content = "From actor 1", actor = actor)
+        val msg2 = Message.User(content = "From actor 2", actor = actor2)
         val response = Message.Assistant(content = "OK")
 
-        coEvery { context.get(user) } returns conversationOf(msg1)
-        coEvery { context.get(scope2) } returns conversationOf(msg2)
+        coEvery { context.get(conversationKey) } returns conversationOf(msg1)
+        coEvery { context.get(conversationKey2) } returns conversationOf(msg2)
         coEvery { ai.generateResponse(any(), any()) } returns MessageResult.Success(response)
 
-        manager.fromUser(msg1)
-        manager.fromUser(msg2)
+        manager.sendUser(msg1)
+        manager.sendUser(msg2)
 
-        coVerify { context.append(user, msg1) }
-        coVerify { context.append(scope2, msg2) }
-        coVerify(exactly = 0) { context.append(user, msg2) }
-        coVerify(exactly = 0) { context.append(scope2, msg1) }
+        coVerify { context.append(conversationKey, msg1) }
+        coVerify { context.append(conversationKey2, msg2) }
+        coVerify(exactly = 0) { context.append(conversationKey, msg2) }
+        coVerify(exactly = 0) { context.append(conversationKey2, msg1) }
+    }
+
+    // --- Channel lifecycle ---
+
+    @Test
+    fun `channel is removed from map after processing when empty`() = runTest {
+        val manager = buildManager()
+        val message = Message.User(content = "Hello", actor = actor)
+
+        coEvery { context.get(conversationKey) } returns conversationOf(message)
+        coEvery { ai.generateResponse(any(), any()) } returns
+                MessageResult.Success(Message.Assistant(content = "Hi!"))
+
+        manager.sendUser(message)
+
+        // Channel drained and closed, next message creates a fresh channel
+        // and the AI is called again rather than reusing the old channel
+        coEvery { context.get(conversationKey) } returns conversationOf(message)
+        manager.sendUser(message)
+
+        coVerify(exactly = 2) { ai.generateResponse(any(), any()) }
     }
 }

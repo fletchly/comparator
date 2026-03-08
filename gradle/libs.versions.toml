@@ -6,6 +6,7 @@ kotlinx-serialization = "1.10.0"
 
 # Testing
 mockk = "1.14.9"
+slf4j-simple = "2.0.17"
 
 # Networking
 ktor = "3.4.0"
@@ -66,7 +67,9 @@ configurate-extra-kotlin = { module = "org.spongepowered:configurate-extra-kotli
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 
 # Testing
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j-simple" }
 
 [bundles]
 ktor-client = [
@@ -78,6 +81,11 @@ ktor-client = [
 configurate = [
     "configurate-hocon",
     "configurate-extra-kotlin"
+]
+test = [
+    "kotlin-test",
+    "mockk",
+    "slf4j-simple"
 ]
 
 [plugins]

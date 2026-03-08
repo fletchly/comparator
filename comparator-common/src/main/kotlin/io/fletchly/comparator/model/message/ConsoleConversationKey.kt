@@ -16,23 +16,22 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.scope
+package io.fletchly.comparator.model.message
 
+import io.fletchly.comparator.model.message.ConsoleConversationKey.uniqueId
 import java.util.*
 
 /**
- * A singleton implementation of the [RestrictedConversationScope] interface representing a console-based
- * conversational context.
+ * Represents a conversation key uniquely associated with the console.
  *
- * This class is used to identify and interact with the console as a distinct conversation scope in the system.
- * It provides a fixed display name, a unique identifier based on the string "CONSOLE", and status information
- * indicating that the console is always considered online.
+ * This object implements the `ConversationKey` interface and serves as an identifier
+ * for console-based conversations in the system. The unique identifier is generated
+ * using a fixed string ("CONSOLE") to ensure that it corresponds specifically to the
+ * console's conversation scope.
  *
- * This scope is typically used for system-level communications with administrators or for actions initiated
- * directly through server commands.
+ * @property uniqueId The unique identifier for the console conversation, derived from
+ *                    a name-based `UUID` generated with the string "CONSOLE".
  */
-object ConsoleConversationScope : RestrictedConversationScope {
-    override val displayName: String = "Console"
+object ConsoleConversationKey : ConversationKey {
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
-    override val isOnline = true
 }

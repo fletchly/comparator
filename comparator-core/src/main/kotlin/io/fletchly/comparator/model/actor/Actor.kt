@@ -16,20 +16,12 @@
  * limitations under the License.
  */
 
-plugins {
-    id("kotlin-jvm")
-    alias(libs.plugins.kotlin.serialization)
-}
+package io.fletchly.comparator.model.actor
 
-dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.kotlinx.coroutines)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.caffeine)
-    api(project(":comparator-api"))
+import io.fletchly.comparator.model.message.ConversationKey
 
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.kotlinx.coroutines.test)
+interface Actor {
+    val displayName: String
+    val conversationKey: ConversationKey
+    val isOnline: Boolean
 }

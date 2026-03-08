@@ -40,7 +40,7 @@ import org.bukkit.event.HandlerList
  */
 class ToolRegistrationEvent(
     val registry: ToolRegistry
-): Event() {
+) : Event() {
     companion object {
         @JvmStatic
         val handlerList = HandlerList()

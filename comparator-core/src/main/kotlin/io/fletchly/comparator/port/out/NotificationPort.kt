@@ -18,31 +18,32 @@
 
 package io.fletchly.comparator.port.out
 
-import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.actor.Actor
 
 /**
  * Defines a port for sending notification messages to users.
  */
 interface NotificationPort {
-    /**
-     * Sends an informational notification message to a specified scope.
-     *
-     * This method is used to deliver non-critical, informational messages
-     * to a scope, such as updates or confirmations of certain operations.
-     *
-     * @param scope The recipient of the notification message.
-     * @param message The content of the informational message to be sent.
-     */
-    suspend fun info(scope: ConversationScope, message: String)
 
     /**
-     * Sends an error notification message to a specified scope.
+     * Sends an informational notification message to the specified target actor.
      *
-     * This method is used to deliver critical or error-related messages to a scope,
-     * usually indicating that a system operation has failed or encountered an issue.
+     * This method is used to deliver non-critical information to a specific recipient.
      *
-     * @param scope The recipient of the error notification message.
-     * @param message A description of the error or issue being reported.
+     * @param target The recipient actor who will receive the informational message.
+     * @param message The content of the informational message to be sent.
      */
-    suspend fun error(scope: ConversationScope, message: String)
+    suspend fun info(target: Actor, message: String)
+
+
+    /**
+     * Sends an error notification message to the specified target actor.
+     *
+     * This method is used to deliver critical or error-related messages
+     * to a specific recipient, typically to inform them of an issue or failure.
+     *
+     * @param target The recipient actor who will receive the error message.
+     * @param message The content of the error message to be sent.
+     */
+    suspend fun error(target: Actor, message: String)
 }

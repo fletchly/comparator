@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.scope
+package io.fletchly.comparator.model.message
 
-/**
- * Represents a conversational scope limited to a specific user or group of users.
- */
-interface RestrictedConversationScope : ConversationScope
+import java.util.*
+
+interface ConversationKey {
+    val uniqueId: UUID
+}

@@ -16,21 +16,21 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.scope
+package io.fletchly.comparator.model.message
 
+import io.fletchly.comparator.model.message.ChatConversationKey.uniqueId
 import java.util.*
 
 /**
- * Represents a conversational context for a user within the system.
+ * Represents a conversation key uniquely associated with chat-based conversations.
  *
- * This interface defines the core attributes associated with a user
- * participating in a conversation or other interactive exchanges.
+ * This object implements the `ConversationKey` interface and is used to
+ * identify chat-specific conversations in the system. The unique identifier
+ * is derived from a name-based `UUID` generated with the string "CHAT".
  *
- * It provides a foundation for identifying users and determining their
- * availability within the system.
+ * @property uniqueId The unique identifier for the chat conversation, derived
+ *                    from a name-based `UUID` using the string "CHAT".
  */
-interface ConversationScope {
-    val displayName: String
-    val uniqueId: UUID
-    val isOnline: Boolean
+object ChatConversationKey : ConversationKey {
+    override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
 }

@@ -21,12 +21,15 @@ package io.fletchly.comparator.adapter.command
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.actor.BukkitPlayerActor
+import io.fletchly.comparator.model.actor.ConsoleActor
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
-import io.fletchly.comparator.model.scope.ConsoleConversationScope
-import io.fletchly.comparator.model.scope.PublicChatConversationScope
-import io.fletchly.comparator.port.`in`.ContextClearer
-import io.fletchly.comparator.util.toScope
+import io.fletchly.comparator.model.message.ChatConversationKey
+import io.fletchly.comparator.model.message.ConsoleConversationKey
+import io.fletchly.comparator.model.message.PlayerConversationKey
+import io.fletchly.comparator.port.`in`.ContextLifecycle
+import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
@@ -37,11 +40,11 @@ import org.bukkit.permissions.PermissionDefault
 /**
  * Represents the administrative command definition for managing the Comparator system.
  *
- * @param contextClearer The utility that performs clearing of conversational contexts for users.
+ * @param contextLifecycle The utility that performs clearing of conversational contexts for users.
  * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
 class AdminCommand(
-    private val contextClearer: ContextClearer,
+    private val contextLifecycle: ContextLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
@@ -104,65 +107,60 @@ class AdminCommand(
                         clearPublicChat(ctx)
                         Command.SINGLE_SUCCESS
                     }
-            ).then(Commands.literal("clearAll")
-                .requires { it.sender.hasPermission(clearAllPermission.name) }
-                .executes { ctx ->
-                    clearAll(ctx)
-                    Command.SINGLE_SUCCESS
-                }
+            ).then(
+                Commands.literal("clearAll")
+                    .requires { it.sender.hasPermission(clearAllPermission.name) }
+                    .executes { ctx ->
+                        clearAll(ctx)
+                        Command.SINGLE_SUCCESS
+                    }
             )
         }
     }
 
     private fun clearSelf(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val actor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) { scope.clearSelf() }
+            contextLifecycle.clearSelf(actor)
         }
     }
 
     private fun clearOther(ctx: CommandContext<CommandSourceStack>) {
         val targetResolver =
             ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-        val targetScopes = targetResolver.resolve(ctx.source).map { it.toScope() }
-        val feedbackScope = ctx.source.sender.toScope()
+        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId) }
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) { feedbackScope.clearOther(targetScopes) }
+            contextLifecycle.clearOther(requestor, targets)
         }
     }
 
     private fun clearConsole(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
-                when (scope) {
-                    is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
-                    else -> scope.clearOther(listOf(ConsoleConversationScope))
-                }
+            when (requestor) {
+                is ConsoleActor -> contextLifecycle.clearSelf(requestor)
+                is BukkitPlayerActor -> contextLifecycle.clearOther(requestor, listOf(ConsoleConversationKey))
             }
         }
     }
 
     private fun clearPublicChat(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
-                scope.clearOther(listOf(PublicChatConversationScope))
-            }
+            contextLifecycle.clearOther(requestor, listOf(ChatConversationKey))
         }
     }
 
     private fun clearAll(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextClearer) {
-                scope.clearAll()
-            }
+            contextLifecycle.clearAll(requestor)
         }
     }
 }

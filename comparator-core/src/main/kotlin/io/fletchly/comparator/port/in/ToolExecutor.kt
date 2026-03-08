@@ -20,7 +20,6 @@ package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.ToolCall
-import io.fletchly.comparator.model.tool.Tool
 
 /**
  * Defines a registry for managing a collection of tools within the system.

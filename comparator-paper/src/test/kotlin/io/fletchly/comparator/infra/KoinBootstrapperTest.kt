@@ -18,8 +18,7 @@
 
 package io.fletchly.comparator.infra
 
-import io.fletchly.comparator.util.HttpClients
-import io.ktor.client.HttpClient
+import io.ktor.client.*
 import io.mockk.every
 import io.mockk.mockk
 import org.bukkit.plugin.java.JavaPlugin

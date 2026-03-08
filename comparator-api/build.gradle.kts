@@ -30,7 +30,7 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     compileOnly(libs.paper.api)
 
-    testImplementation(kotlin("test"))
+    testImplementation(libs.bundles.test)
     testImplementation(libs.kotlinx.coroutines.test)
     testCompileOnly(libs.paper.api)
 }

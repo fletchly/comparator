@@ -36,6 +36,9 @@ tasks.withType<Test>().configureEach {
     // Configure all test Gradle tasks to use JUnitPlatform.
     useJUnitPlatform()
 
+    // Silence warning when using mockk
+    jvmArgs("-XX:+EnableDynamicAgentLoading", "-Xshare:off")
+
     // Log information about all test results, not only the failed ones.
     testLogging {
         events(

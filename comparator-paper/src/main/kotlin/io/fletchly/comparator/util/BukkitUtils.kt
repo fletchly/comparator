@@ -16,20 +16,20 @@
  * limitations under the License.
  */
 
-plugins {
-    id("kotlin-jvm")
-    alias(libs.plugins.kotlin.serialization)
-}
+package io.fletchly.comparator.util
 
-dependencies {
-    implementation(kotlin("reflect"))
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.kotlinx.coroutines)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.core)
-    implementation(libs.caffeine)
-    api(project(":comparator-api"))
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.actor.BukkitPlayerActor
+import io.fletchly.comparator.model.actor.ConsoleActor
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.kotlinx.coroutines.test)
+/**
+ * Converts a `CommandSender` instance into a `ConversationKey` implementation.
+ *
+ * @return A `ConversationKey` representation of the sender, either as `BukkitPlayerConversationScope` or `ConsoleConversationScope`.
+ */
+fun CommandSender.toActor(): Actor = when (this) {
+    is Player -> BukkitPlayerActor(this)
+    else -> ConsoleActor
 }

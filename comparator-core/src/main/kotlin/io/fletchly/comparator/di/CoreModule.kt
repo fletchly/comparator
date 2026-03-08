@@ -21,7 +21,7 @@ package io.fletchly.comparator.di
 import io.fletchly.comparator.manager.ContextManager
 import io.fletchly.comparator.manager.ConversationManager
 import io.fletchly.comparator.manager.ToolManager
-import io.fletchly.comparator.port.`in`.ContextClearer
+import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
@@ -33,6 +33,6 @@ import org.koin.dsl.module
 
 val coreModule = module {
     singleOf(::ToolManager) binds arrayOf(ToolExecutor::class, ToolRegistryLifecycle::class, ToolRegistry::class)
-    singleOf(::ContextManager) bind ContextClearer::class
+    singleOf(::ContextManager) bind ContextLifecycle::class
     singleOf(::ConversationManager) bind MessageSender::class
 }
