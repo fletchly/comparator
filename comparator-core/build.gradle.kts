@@ -30,7 +30,6 @@ dependencies {
     implementation(libs.caffeine)
     api(project(":comparator-api"))
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.mockk)
+    testImplementation(libs.bundles.test)
     testImplementation(libs.kotlinx.coroutines.test)
 }
