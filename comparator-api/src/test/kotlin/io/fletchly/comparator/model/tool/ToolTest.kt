@@ -18,6 +18,7 @@
 
 package io.fletchly.comparator.model.tool
 
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlin.test.Test
@@ -29,8 +30,10 @@ class ToolTest {
     @Serializable
     data class SimpleResult(val value: String)
 
+    private val toolContext = mockk<ToolContext>(relaxed = true)
+
     private fun buildSimpleTool(vararg params: Parameter): Tool {
-        return Tool("test_tool", "A test tool", params.toList()) { args ->
+        return Tool("test_tool", "A test tool", params.toList()) { args, _ ->
             ToolResult.Success("test_tool", SimpleResult("ok"), SimpleResult.serializer())
         }
     }
@@ -42,7 +45,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input", required = true)
         )
-        val result = tool.execute(emptyMap())
+        val result = tool.execute(emptyMap(), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -51,7 +54,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input", required = true)
         )
-        val result = tool.execute(emptyMap()) as ToolResult.Failure
+        val result = tool.execute(emptyMap(), toolContext) as ToolResult.Failure
         assertTrue(result.error.message.contains("input"))
     }
 
@@ -60,7 +63,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input", required = false)
         )
-        val result = tool.execute(emptyMap())
+        val result = tool.execute(emptyMap(), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -71,7 +74,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input")
         )
-        val result = tool.execute(mapOf("input" to 42))
+        val result = tool.execute(mapOf("input" to 42), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -80,7 +83,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.INTEGER, "An input")
         )
-        val result = tool.execute(mapOf("input" to 42))
+        val result = tool.execute(mapOf("input" to 42), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -89,7 +92,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.INTEGER, "An input")
         )
-        val result = tool.execute(mapOf("input" to 42L))
+        val result = tool.execute(mapOf("input" to 42L), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -98,7 +101,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.NUMBER, "An input")
         )
-        val result = tool.execute(mapOf("input" to 3.14f))
+        val result = tool.execute(mapOf("input" to 3.14f), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -107,7 +110,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.NUMBER, "An input")
         )
-        val result = tool.execute(mapOf("input" to 3.14))
+        val result = tool.execute(mapOf("input" to 3.14), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -116,7 +119,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.BOOLEAN, "An input")
         )
-        val result = tool.execute(mapOf("input" to true))
+        val result = tool.execute(mapOf("input" to true), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -125,7 +128,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.BOOLEAN, "An input")
         )
-        val result = tool.execute(mapOf("input" to "true"))
+        val result = tool.execute(mapOf("input" to "true"), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -134,7 +137,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.INTEGER, "An input")
         )
-        val result = tool.execute(mapOf("input" to "not_an_int")) as ToolResult.Failure
+        val result = tool.execute(mapOf("input" to "not_an_int"), toolContext) as ToolResult.Failure
         assertTrue(result.error.message.contains("input"))
         assertTrue(result.error.message.contains("INTEGER"))
     }
@@ -146,7 +149,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to listOf("a", "b", "c")))
+        val result = tool.execute(mapOf("tags" to listOf("a", "b", "c")), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -155,7 +158,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to "not_a_list"))
+        val result = tool.execute(mapOf("tags" to "not_a_list"), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -164,7 +167,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to listOf("valid", 42, "also_valid")))
+        val result = tool.execute(mapOf("tags" to listOf("valid", 42, "also_valid")), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -173,7 +176,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to listOf("valid", 42))) as ToolResult.Failure
+        val result = tool.execute(mapOf("tags" to listOf("valid", 42)), toolContext) as ToolResult.Failure
         assertTrue(result.error.message.contains("[1]"))
     }
 
@@ -182,7 +185,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to listOf("valid", null)))
+        val result = tool.execute(mapOf("tags" to listOf("valid", null)), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
@@ -191,7 +194,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("tags", Parameter.Type.ARRAY, "A list", elementType = Parameter.Type.STRING)
         )
-        val result = tool.execute(mapOf("tags" to emptyList<String>()))
+        val result = tool.execute(mapOf("tags" to emptyList<String>()), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -202,7 +205,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input")
         )
-        val result = tool.execute(mapOf("input" to "hello"))
+        val result = tool.execute(mapOf("input" to "hello"), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
@@ -211,7 +214,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input")
         )
-        val result = tool.execute(mapOf("input" to "hello")) as ToolResult.Success
+        val result = tool.execute(mapOf("input" to "hello"), toolContext) as ToolResult.Success
         assertEquals("test_tool", result.toolName)
     }
 
@@ -220,7 +223,7 @@ class ToolTest {
         val tool = buildSimpleTool(
             Parameter("input", Parameter.Type.STRING, "An input", required = true)
         )
-        val result = tool.execute(emptyMap()) as ToolResult.Failure
+        val result = tool.execute(emptyMap(), toolContext) as ToolResult.Failure
         assertIs<IllegalArgumentException>(result.error.cause)
     }
 }

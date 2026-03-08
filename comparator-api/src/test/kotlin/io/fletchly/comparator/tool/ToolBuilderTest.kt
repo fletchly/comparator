@@ -23,7 +23,9 @@ import io.fletchly.comparator.annotation.ToolFunction
 import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.tool.Parameter
+import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.model.tool.ToolResult
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.Serializable
 import kotlin.test.*
@@ -34,6 +36,8 @@ class ToolBuilderTest {
 
     @Serializable
     data class SimpleResult(val value: String)
+
+    private val toolContext = mockk<ToolContext>(relaxed = true)
 
     @Serializable
     data class NumberResult(val value: Double)
@@ -284,49 +288,49 @@ class ToolBuilderTest {
     @Test
     fun `executes handler and returns Success`() = runTest {
         val tool = tool(::echoHandler)
-        val result = tool.execute(mapOf("input" to "hello"))
+        val result = tool.execute(mapOf("input" to "hello"), toolContext)
         assertIs<ToolResult.Success>(result)
     }
 
     @Test
     fun `success result contains correct tool name`() = runTest {
         val tool = tool(::echoHandler)
-        val result = tool.execute(mapOf("input" to "hello")) as ToolResult.Success
+        val result = tool.execute(mapOf("input" to "hello"), toolContext) as ToolResult.Success
         assertEquals("echo", result.toolName)
     }
 
     @Test
     fun `success result contains correct value`() = runTest {
         val tool = tool(::echoHandler)
-        val result = tool.execute(mapOf("input" to "hello")) as ToolResult.Success
+        val result = tool.execute(mapOf("input" to "hello"), toolContext) as ToolResult.Success
         assertEquals(SimpleResult("hello"), result.value)
     }
 
     @Test
     fun `handler throwing ToolException returns Failure`() = runTest {
         val tool = tool(::throwingHandler)
-        val result = tool.execute(mapOf("input" to "x"))
+        val result = tool.execute(mapOf("input" to "x"), toolContext)
         assertIs<ToolResult.Failure>(result)
     }
 
     @Test
     fun `failure result contains correct tool name`() = runTest {
         val tool = tool(::throwingHandler)
-        val result = tool.execute(mapOf("input" to "x")) as ToolResult.Failure
+        val result = tool.execute(mapOf("input" to "x"), toolContext) as ToolResult.Failure
         assertEquals("throwing_tool", result.toolName)
     }
 
     @Test
     fun `failure result contains correct error message`() = runTest {
         val tool = tool(::throwingHandler)
-        val result = tool.execute(mapOf("input" to "x")) as ToolResult.Failure
+        val result = tool.execute(mapOf("input" to "x"), toolContext) as ToolResult.Failure
         assertEquals("something went wrong", result.error.message)
     }
 
     @Test
     fun `executes handler with list parameter`() = runTest {
         val tool = tool(::listParamHandler)
-        val result = tool.execute(mapOf("tags" to listOf("a", "b", "c"))) as ToolResult.Success
+        val result = tool.execute(mapOf("tags" to listOf("a", "b", "c")), toolContext) as ToolResult.Success
         assertEquals(SimpleResult("a, b, c"), result.value)
     }
 }
