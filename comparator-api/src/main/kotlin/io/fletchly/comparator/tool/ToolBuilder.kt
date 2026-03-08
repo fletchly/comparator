@@ -24,6 +24,7 @@ import io.fletchly.comparator.annotation.ToolParameter
 import io.fletchly.comparator.exception.ToolException
 import io.fletchly.comparator.model.tool.Parameter
 import io.fletchly.comparator.model.tool.Tool
+import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.model.tool.ToolResult
 import io.fletchly.comparator.model.tool.toToolParameterType
 import kotlinx.serialization.KSerializer
@@ -67,7 +68,7 @@ fun tool(fn: KFunction<*>): Tool {
     validateReturnType(fn)
 
     val parameters = fn.parameters
-        .filter { it.kind == KParameter.Kind.VALUE }
+        .filter { it.kind == KParameter.Kind.VALUE && it.type.classifier != ToolContext::class }
         .map { param ->
             val paramAnnotation = param.findAnnotation<ToolParameter>()
                 ?: error("Parameter '${param.name}' on tool '$name' must be annotated with @ToolParameter")
@@ -98,11 +99,14 @@ fun tool(fn: KFunction<*>): Tool {
             )
         }
 
-    return Tool(name, toolFunctionAnnotation.description, parameters) { args ->
+    return Tool(name, toolFunctionAnnotation.description, parameters) { args, context ->
         try {
             val mappedArgs = fn.parameters
                 .filter { it.kind == KParameter.Kind.VALUE }
-                .associateWith { param -> args[param.name] }
+                .associateWith { param ->
+                    if (param.type.classifier == ToolContext::class) context
+                    else args[param.name]
+                }
 
             // safe to cast here because of the validateReturnType call
             @Suppress("UNCHECKED_CAST")
