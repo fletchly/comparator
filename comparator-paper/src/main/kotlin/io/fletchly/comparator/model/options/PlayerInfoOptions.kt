@@ -18,16 +18,9 @@
 
 package io.fletchly.comparator.model.options
 
-/**
- * Represents configuration options for enabling built-in tools in the application.
- *
- * @property webSearchEnabled Indicates if the web search tool is enabled.
- * @property gameVersionEnabled Indicates if the game version tool is enabled.
- * @property currentDateEnabled Indicates if the current date tool is enabled.
- */
-data class BuiltInToolOptions(
-    val webSearchEnabled: Boolean,
-    val gameVersionEnabled: Boolean,
-    val currentDateEnabled: Boolean,
-    val playerInfoEnabled: Boolean
+data class PlayerInfoOptions(
+    val entityRadiusX: Double,
+    val entityRadiusY: Double,
+    val entityRadiusZ: Double,
+    val lookingAtDistance: Int
 )

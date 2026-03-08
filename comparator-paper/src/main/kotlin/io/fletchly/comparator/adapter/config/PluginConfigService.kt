@@ -55,6 +55,16 @@ class PluginConfigService(
 ) {
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
+        val `3 to 4`: ConfigurationTransformation = ConfigurationTransformation.builder()
+            .addAction(path("tool")) { _, value ->
+                value.node("player-info", "enabled").set(true)
+                value.node("player-info", "entity-radius-x").set(5.0)
+                value.node("player-info", "entity-radius-y").set(5.0)
+                value.node("player-info", "entity-radius-z").set(5.0)
+                value.node("player-info", "looking-at-distance").set(5)
+                null
+            }.build()
+
         val `2 to 3`: ConfigurationTransformation = ConfigurationTransformation.builder()
             .addAction(path("tool")) { _, value ->
                 value.node("current-date", "enabled").set(true)
@@ -75,6 +85,7 @@ class PluginConfigService(
 
         val migrations = ConfigurationTransformation.versionedBuilder()
             .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(4, `3 to 4`)
             .addVersion(3, `2 to 3`)
             .addVersion(2, `1 to 2`)
             .addVersion(1, `0 to 1`)

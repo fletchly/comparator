@@ -40,7 +40,7 @@ data class PluginConfig(
 
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Config version - do not modify this value, as it may cause your config to be overwritten")
-    val version: Int = 3
+    val version: Int = 4
 )
 
 @ConfigSerializable
@@ -86,7 +86,11 @@ data class ToolConfig(
 
     @Setting("current-date")
     @Comment("Options for the current date tool")
-    val currentDate: CurrentDateConfig = CurrentDateConfig()
+    val currentDate: CurrentDateConfig = CurrentDateConfig(),
+
+    @Setting("player-info")
+    @Comment("Options for the player info tool")
+    val playerInfo: PlayerInfoConfig = PlayerInfoConfig()
 )
 
 @ConfigSerializable
@@ -109,6 +113,28 @@ data class GameVersionConfig(
 data class CurrentDateConfig(
     @Comment("Whether the current date tool is enabled")
     override val enabled: Boolean = true
+) : ToolImplementationConfig
+
+@ConfigSerializable
+data class PlayerInfoConfig(
+    @Comment("Whether the player info tool is enabled")
+    override val enabled: Boolean = true,
+
+    @Setting("entity-radius-x")
+    @Comment("How far to scan for nearby entities in the east/west direction (in blocks)")
+    val entityRadiusX: Double = 5.0,
+
+    @Setting("entity-radius-y")
+    @Comment("How far to scan for nearby entities in the up/down direction (in blocks)")
+    val entityRadiusY: Double = 5.0,
+
+    @Setting("entity-radius-z")
+    @Comment("How far to scan for nearby entities in the north/south direction (in blocks)")
+    val entityRadiusZ: Double = 5.0,
+
+    @Setting("looking-at-distance")
+    @Comment("Maximum distance (in blocks) to check for a block or entity the player is looking at")
+    val lookingAtDistance: Int = 5
 ) : ToolImplementationConfig
 
 interface ToolImplementationConfig {
