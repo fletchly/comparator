@@ -56,13 +56,13 @@ class PluginConfigService(
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
         val `2 to 3`: ConfigurationTransformation = ConfigurationTransformation.builder()
-            .addAction(path("tool")) {_, value ->
+            .addAction(path("tool")) { _, value ->
                 value.node("current-date", "enabled").set(true)
                 null
             }.build()
 
         val `1 to 2`: ConfigurationTransformation = ConfigurationTransformation.builder()
-            .addAction(path("context")) {_, value ->
+            .addAction(path("context")) { _, value ->
                 value.node("expire-after-access-minutes").set(10L)
                 null
             }.build()

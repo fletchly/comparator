@@ -20,9 +20,9 @@ package io.fletchly.comparator.adapter.event
 
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.actor.BukkitChatActor
 import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.options.PublicChatPrefixOptions
-import io.fletchly.comparator.model.scope.PublicChatConversationScope
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.event.player.AsyncChatEvent
@@ -63,21 +63,22 @@ class PaperChatEvents(
     @EventHandler(ignoreCancelled = true)
     fun onAsyncChat(event: AsyncChatEvent) {
         val player = event.player
-        val playerName = player.name
+        val actor = BukkitChatActor(player)
         val plainText = PlainTextComponentSerializer.plainText().serialize(event.message())
-        val prompt = plainText.substring(prefix.length).trim()
+        val content = plainText.substring(prefix.length).trim()
         if (!plainText.startsWith("$prefix ")
             || !player.hasPermission(AskCommand.ASK_PERMISSION)
-            || prompt.isEmpty()) return
+            || content.isEmpty()
+        ) return
 
-        val userMessage = Message.User("<$playerName> $prompt", PublicChatConversationScope)
+        val userMessage = Message.User(content, actor)
 
         pluginRuntime.runCoroutine {
             messageSender.sendUser(userMessage)
         }
 
-        event.message(assistantMentionComponent(prompt))
+        event.message(assistantMentionComponent(content))
     }
 
-    private fun assistantMentionComponent(prompt: String) = fromMiniMessage("<aqua>$prefix</aqua> $prompt")
+    private fun assistantMentionComponent(content: String) = fromMiniMessage("<aqua>$prefix</aqua> $content")
 }

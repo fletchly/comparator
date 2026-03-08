@@ -20,11 +20,9 @@ package io.fletchly.comparator.infra
 
 import io.fletchly.comparator.di.*
 import org.bukkit.plugin.java.JavaPlugin
-import org.koin.core.Koin
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.java.KoinJavaComponent.getKoin
 
 /**
  * A class responsible for initializing the Koin dependency injection framework within a Bukkit plugin.
@@ -38,7 +36,8 @@ import org.koin.java.KoinJavaComponent.getKoin
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
     private val commonModule = module { includes(commonAdapterModule, commonToolModule) }
-    private val paperModule = module { includes(paperInfraModule(plugin), paperConfigModule, paperAdapterModule, paperToolModule) }
+    private val paperModule =
+        module { includes(paperInfraModule(plugin), paperConfigModule, paperAdapterModule, paperToolModule) }
 
     val rootModule = module {
         includes(

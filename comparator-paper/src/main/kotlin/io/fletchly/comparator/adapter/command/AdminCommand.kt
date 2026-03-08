@@ -21,12 +21,15 @@ package io.fletchly.comparator.adapter.command
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.context.CommandContext
 import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.model.actor.BukkitPlayerActor
+import io.fletchly.comparator.model.actor.ConsoleActor
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.command
-import io.fletchly.comparator.model.scope.ConsoleConversationScope
-import io.fletchly.comparator.model.scope.PublicChatConversationScope
+import io.fletchly.comparator.model.message.ChatConversationKey
+import io.fletchly.comparator.model.message.ConsoleConversationKey
+import io.fletchly.comparator.model.message.PlayerConversationKey
 import io.fletchly.comparator.port.`in`.ContextLifecycle
-import io.fletchly.comparator.util.toScope
+import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes
@@ -104,7 +107,8 @@ class AdminCommand(
                         clearPublicChat(ctx)
                         Command.SINGLE_SUCCESS
                     }
-            ).then(Commands.literal("clearAll")
+            ).then(
+                Commands.literal("clearAll")
                 .requires { it.sender.hasPermission(clearAllPermission.name) }
                 .executes { ctx ->
                     clearAll(ctx)
@@ -115,54 +119,48 @@ class AdminCommand(
     }
 
     private fun clearSelf(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val actor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextLifecycle) { scope.clearSelf() }
+            contextLifecycle.clearSelf(actor)
         }
     }
 
     private fun clearOther(ctx: CommandContext<CommandSourceStack>) {
         val targetResolver =
             ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-        val targetScopes = targetResolver.resolve(ctx.source).map { it.toScope() }
-        val feedbackScope = ctx.source.sender.toScope()
+        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId) }
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextLifecycle) { feedbackScope.clearOther(targetScopes) }
+            contextLifecycle.clearOther(requestor, targets)
         }
     }
 
     private fun clearConsole(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextLifecycle) {
-                when (scope) {
-                    is ConsoleConversationScope -> ConsoleConversationScope.clearSelf()
-                    else -> scope.clearOther(listOf(ConsoleConversationScope))
-                }
+            when (requestor) {
+                is ConsoleActor -> contextLifecycle.clearSelf(requestor)
+                is BukkitPlayerActor -> contextLifecycle.clearOther(requestor, listOf(ConsoleConversationKey))
             }
         }
     }
 
     private fun clearPublicChat(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextLifecycle) {
-                scope.clearOther(listOf(PublicChatConversationScope))
-            }
+            contextLifecycle.clearOther(requestor, listOf(ChatConversationKey))
         }
     }
 
     private fun clearAll(ctx: CommandContext<CommandSourceStack>) {
-        val scope = ctx.source.sender.toScope()
+        val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            with(contextLifecycle) {
-                scope.clearAll()
-            }
+            contextLifecycle.clearAll(requestor)
         }
     }
 }

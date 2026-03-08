@@ -16,23 +16,20 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.scope
+package io.fletchly.comparator.model.message
 
-import java.util.*
+import java.util.UUID
 
 /**
- * A singleton implementation of the [ConversationScope] interface that represents a public chat context.
+ * Represents a conversation key uniquely associated with chat-based conversations.
  *
- * This class is used to identify and interact with a public chat within the system, providing a fixed
- * display name, a unique identifier, and an indication of its always-online status. The singleton nature
- * of this implementation ensures that the public chat is treated as a shared conversational context
- * for system-wide interactions.
+ * This object implements the `ConversationKey` interface and is used to
+ * identify chat-specific conversations in the system. The unique identifier
+ * is derived from a name-based `UUID` generated with the string "CHAT".
  *
- * This scope is commonly used when broadcasting messages or interacting with a general audience
- * rather than individual users or specific groups.
+ * @property uniqueId The unique identifier for the chat conversation, derived
+ *                    from a name-based `UUID` using the string "CHAT".
  */
-object PublicChatConversationScope : ConversationScope {
-    override val displayName = "Public Chat"
+object ChatConversationKey : ConversationKey {
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
-    override val isOnline = true
 }

@@ -19,16 +19,15 @@
 package io.fletchly.comparator.adapter.chat
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
-import io.fletchly.comparator.model.scope.BukkitPlayerConversationScope
-import io.fletchly.comparator.model.scope.ConsoleConversationScope
-import io.fletchly.comparator.model.scope.PublicChatConversationScope
-import io.fletchly.comparator.model.scope.ConversationScope
+import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.actor.BukkitChatActor
+import io.fletchly.comparator.model.actor.BukkitPlayerActor
+import io.fletchly.comparator.model.actor.ConsoleActor
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.fromMiniMessage
 import io.papermc.paper.registry.keys.SoundEventKeys
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -46,22 +45,26 @@ class PaperNotificationService(
 ) : NotificationPort {
     private val server = plugin.server
 
-    override suspend fun info(scope: ConversationScope, message: String) =
-        pluginRuntime.runTask { scope.sendMessage(infoMessage(message)) }
+    override suspend fun info(target: Actor, message: String) =
+        pluginRuntime.runTask { target.sendMessage(infoMessage(message)) }
 
-    override suspend fun error(scope: ConversationScope, message: String) =
-        pluginRuntime.runTask { scope.sendMessage(errorMessage(message)) { it.playSound(ERROR_SOUND) } }
+    override suspend fun error(target: Actor, message: String) =
+        pluginRuntime.runTask { target.sendMessage(errorMessage(message)) }
 
-    private fun ConversationScope.sendMessage(message: Component, onPlayer: ((Player) -> Unit)? = null) {
+    private fun Actor.sendMessage(message: Component) {
         if (!this.isOnline) return
         when (this) {
-            is BukkitPlayerConversationScope -> {
-                onPlayer?.invoke(this.player)
+            is BukkitPlayerActor -> {
+                this.player.playSound(ERROR_SOUND)
                 this.player.sendMessage(message)
             }
 
-            is ConsoleConversationScope -> server.consoleSender.sendMessage(message)
-            is PublicChatConversationScope -> server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
+            is BukkitChatActor -> {
+                this.player.playSound(ERROR_SOUND)
+                server.broadcast(fromMiniMessage("<<green>$AGENT_NAME</green>> ").append(message))
+            }
+
+            is ConsoleActor -> server.consoleSender.sendMessage(message)
         }
     }
 
