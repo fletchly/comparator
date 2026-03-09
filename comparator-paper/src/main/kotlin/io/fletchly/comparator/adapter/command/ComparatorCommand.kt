@@ -29,6 +29,7 @@ import io.fletchly.comparator.model.message.ChatConversationKey
 import io.fletchly.comparator.model.message.ConsoleConversationKey
 import io.fletchly.comparator.model.message.PlayerConversationKey
 import io.fletchly.comparator.port.`in`.ContextLifecycle
+import io.fletchly.comparator.port.`in`.WebPanelLifecycle
 import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
@@ -43,7 +44,7 @@ import org.bukkit.permissions.PermissionDefault
  * @param contextLifecycle The utility that performs clearing of conversational contexts for users.
  * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
-class AdminCommand(
+class ComparatorCommand(
     private val contextLifecycle: ContextLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
