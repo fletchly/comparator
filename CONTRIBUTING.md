@@ -25,7 +25,7 @@ If you want to discuss an idea before committing to a full proposal, feel free t
 
 ## Architecture Overview
 
-Comparator is structured as a multi-module Gradle project following a **hexagonal (ports and adapters) architecture**. Understanding this layout will help you find your way around the codebase quickly.
+Comparator is structured as a multi-module Gradle project following a loosely **hexagonal (ports and adapters) architecture**. Understanding this layout will help you find your way around the codebase quickly.
 
 ### Modules
 
