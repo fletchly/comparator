@@ -46,6 +46,7 @@ import org.bukkit.permissions.PermissionDefault
  */
 class ComparatorCommand(
     private val contextLifecycle: ContextLifecycle,
+    private val webPanelLifecycle: WebPanelLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
@@ -72,10 +73,17 @@ class ComparatorCommand(
             PermissionDefault.OP
         )
 
+        val webPanelPermission = Permission(
+            "$permission.web",
+            "Allow a player to control the web panel",
+            PermissionDefault.OP
+        )
+
         childPermissions = listOf(
             clearSelfPermission,
             clearOtherPermission,
-            clearAllPermission
+            clearAllPermission,
+            webPanelPermission
         )
 
         node {
@@ -115,6 +123,37 @@ class ComparatorCommand(
                         clearAll(ctx)
                         Command.SINGLE_SUCCESS
                     }
+            ).then(
+                Commands.literal("web")
+                    .requires { it.sender.hasPermission(webPanelPermission.name) }
+                    .then(
+                        Commands.literal("start")
+                            .executes { ctx ->
+                                startWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("stop")
+                            .executes { ctx ->
+                                stopWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("restart")
+                            .executes { ctx ->
+                                restartWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("status")
+                            .executes { ctx ->
+                                webPanelStatus(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
             )
         }
     }
@@ -162,6 +201,38 @@ class ComparatorCommand(
 
         pluginRuntime.runCoroutine {
             contextLifecycle.clearAll(requestor)
+        }
+    }
+
+    private fun startWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.start(requestor)
+        }
+    }
+
+    private fun stopWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.stop(requestor)
+        }
+    }
+
+    private fun restartWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.restart(requestor)
+        }
+    }
+
+    private fun webPanelStatus(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.status(requestor)
         }
     }
 }
