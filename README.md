@@ -9,6 +9,7 @@
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Release](https://img.shields.io/github/v/release/fletchly/comparator)
 [![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/fletchly/comparator/badge/main)](https://www.codefactor.io/repository/github/fletchly/comparator/overview/main)
 
 ## Features
 - **AI-Powered Agent:** Embed a fully conversational AI agent directly into your Minecraft server.
