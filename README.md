@@ -4,10 +4,10 @@
 
 [![Github](https://img.shields.io/badge/github-comparator-FFBD59?logo=github)](https://github.com/fletchly/comparator)
 [![Modrinth](https://img.shields.io/badge/modrinth-comparator-00AF5C?logo=modrinth)](https://modrinth.com/project/MQoLAFN8)
+![Release](https://img.shields.io/github/v/release/fletchly/comparator)
 [![Documentation](https://img.shields.io/badge/read%20the%20docs-gray?logo=gitbook&logoColor=FFBD59)](https://fletchly.gitbook.io/comparator-docs/)
 ![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
-![Release](https://img.shields.io/github/v/release/fletchly/comparator)
 [![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/fletchly/comparator/badge/main)](https://www.codefactor.io/repository/github/fletchly/comparator/overview/main)
 
@@ -28,7 +28,7 @@ The agent can to more than just chat. Comparator ships with several built-in too
 | **Web Search** | Searches the web for up-to-date information, so the agent isn't limited to its training data |
 | **Current Date** | Retrieves the current date, helping the agent reason about how recent its knowledge is |
 | **Game Version** | Fetches the server's running Minecraft version so answers are version-accurate |
-| **Player Info** | Retrieves the player's surroundings, inventory, nearby entities, biome, game mode, and what they're looking at — enabling deeply contextual, in-game assistance |
+| **Player Info** | Retrieves the player's surroundings, inventory, nearby entities, biome, game mode, and what they're looking at. This enables contextual in-game assistance |
 
 ### 🧩 Extensible Tool API
 Third-party plugins can register their own tools using the Comparator API. Defining a tool is as simple as annotating a function:
