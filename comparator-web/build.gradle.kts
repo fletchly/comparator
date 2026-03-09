@@ -18,8 +18,21 @@
 
 plugins {
     id("kotlin-jvm")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktor)
 }
 
 dependencies {
     implementation(project(":comparator-core"))
+
+    implementation(libs.bundles.ktor.server)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization)
 }
+
+//tasks.register<Copy>("copySvelteBuild") {
+//    from("$projectDir/frontend/build")
+//    into("$projectDir/src/main/resources/web")
+//    dependsOn(":web:frontendNpmBuild")  // custom task or use npmRunBuild if you configure it
+//}
+//tasks.named("build") { dependsOn("copySvelteBuild") }
