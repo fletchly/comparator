@@ -57,7 +57,6 @@ Comparator was built with safety and transparency in mind. This sets it apart fr
 - **Context scoping** — Conversations are isolated per-player, per-console, and for public chat. A player cannot read or pollute another player's conversation history.
 - **Automatic context expiry** — Conversation history expires after a configurable period of inactivity, limiting unintended data retention.
 - **Tool result and parameter validation** — Tool inputs are validated against declared parameter types and constraints before execution. The agent cannot invoke a tool with malformed arguments.
-- **Frozen tool registry** — The tool registry is locked at startup after the `ToolRegistrationEvent` fires. No tools can be registered or modified at runtime.
 - **Queue-based message handling** — Each conversation runs through a bounded channel. If a player floods the agent with messages, excess requests are rejected gracefully rather than queued unboundedly.
 - **Structured error handling** — Tool failures are surfaced to the model as descriptive errors, not raw stack traces or internal state.
 
