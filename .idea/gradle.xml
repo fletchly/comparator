@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/comparator-common" />
             <option value="$PROJECT_DIR$/comparator-core" />
             <option value="$PROJECT_DIR$/comparator-paper" />
+            <option value="$PROJECT_DIR$/comparator-web" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />
