@@ -28,7 +28,7 @@ import io.fletchly.comparator.port.out.WebPanelPort
 
 class WebPanelLifecycleManager(
     private val options: WebPanelOptions,
-    private val webPanel: WebPanelPort,
+    private val webPanel: WebPanelPort, // TODO: Bind web panel
     private val notification: NotificationPort,
     private val log: LogPort
 ) : WebPanelLifecycle {

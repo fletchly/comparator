@@ -35,12 +35,16 @@ data class PluginConfig(
     @Comment("Options for the AI provider")
     val aiProvider: AIProviderConfig = AIProviderConfig(),
 
+    @Setting("web-panel")
+    @Comment("Options for the web panel")
+    val webPanel: WebPanelConfig = WebPanelConfig(),
+
     @Comment("Options for assistant tools")
     val tool: ToolConfig = ToolConfig(),
 
     @Setting(ConfigLoader.VERSION_KEY)
     @Comment("Config version - do not modify this value, as it may cause your config to be overwritten")
-    val version: Int = 4
+    val version: Int = 5
 )
 
 @ConfigSerializable
@@ -72,6 +76,12 @@ data class OllamaConfig(
 
     @Comment("The model to use for response generation")
     val model: String = "qwen3.5:397b-cloud"
+)
+
+@ConfigSerializable
+data class WebPanelConfig(
+    @Comment("Port to run the web panel on")
+    val port: Int = 8080
 )
 
 @ConfigSerializable

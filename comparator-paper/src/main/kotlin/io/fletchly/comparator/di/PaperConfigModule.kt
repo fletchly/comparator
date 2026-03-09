@@ -82,4 +82,12 @@ val paperConfigModule = module {
             config.playerInfo.enabled
         )
     }
+
+    single {
+        val config = get<PluginConfigService>().config.webPanel
+
+        WebPanelOptions(
+            config.port
+        )
+    }
 }
