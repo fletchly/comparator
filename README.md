@@ -11,7 +11,7 @@
 [![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/fletchly/comparator/badge/main)](https://www.codefactor.io/repository/github/fletchly/comparator/overview/main)
 
-Comparator is a fully conversational AI agent plugin for Paper servers. Players can ask questions in private (`/ask`) or mention the bot in public chat, and the agent responds using context-aware multi-turn conversation, built-in tools, and a flexible API for adding your own.
+Comparator brings a fully conversational AI agent to your Paper server; with multi-turn memory, built-in tools, and an API to extend it on your own.
 
 ---
 
