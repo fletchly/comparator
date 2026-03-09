@@ -87,7 +87,8 @@ val paperConfigModule = module {
         val config = get<PluginConfigService>().config.webPanel
 
         WebPanelOptions(
-            config.port
+            config.port,
+            config.host
         )
     }
 }

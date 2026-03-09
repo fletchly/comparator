@@ -21,7 +21,7 @@ package io.fletchly.comparator.port.out
 import io.fletchly.comparator.model.web.WebPanelMessage
 
 interface WebPanelPort {
-    fun start(port: Int): WebPanelMessage
+    fun start(): WebPanelMessage
     fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage
     fun restart(): WebPanelMessage
     fun status(): WebPanelMessage

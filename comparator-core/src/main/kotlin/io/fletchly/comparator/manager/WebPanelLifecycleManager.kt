@@ -27,19 +27,18 @@ import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.port.out.WebPanelPort
 
 class WebPanelLifecycleManager(
-    private val options: WebPanelOptions,
     private val webPanel: WebPanelPort, // TODO: Bind web panel
     private val notification: NotificationPort,
     private val log: LogPort
 ) : WebPanelLifecycle {
     override suspend fun start(requestor: Actor) {
-        val message = webPanel.start(options.port)
-        displayPanelMessage(requestor, message)
+        val message = webPanel.start()
+        displayPanelMessage(requestor, message, true)
     }
 
     override suspend fun stop(requestor: Actor) {
         val message = webPanel.stop(GRACE_MS, TIMEOUT_MS)
-        displayPanelMessage(requestor, message)
+        displayPanelMessage(requestor, message, true)
     }
 
     override suspend fun status(requestor: Actor) {
@@ -49,7 +48,7 @@ class WebPanelLifecycleManager(
 
     override suspend fun restart(requestor: Actor) {
         val message = webPanel.restart()
-        displayPanelMessage(requestor, message)
+        displayPanelMessage(requestor, message, true)
     }
 
     override suspend fun forceStop() {
@@ -57,15 +56,15 @@ class WebPanelLifecycleManager(
         webPanel.forceStop()
     }
 
-    private suspend fun displayPanelMessage(requestor: Actor, panelMessage: WebPanelMessage) {
+    private suspend fun displayPanelMessage(requestor: Actor, panelMessage: WebPanelMessage, printLog: Boolean = false) {
         when (panelMessage) {
             is WebPanelMessage.Ok -> {
                 notification.info(requestor, panelMessage.message )
-                log.info(panelMessage.message, this::class.simpleName)
+                if (printLog) log.info(panelMessage.message, this::class.simpleName)
             }
             is WebPanelMessage.Error -> {
                 notification.error(requestor, panelMessage.message)
-                log.info(panelMessage.message, this::class.simpleName)
+                if (printLog) log.info(panelMessage.message, this::class.simpleName)
             }
         }
     }

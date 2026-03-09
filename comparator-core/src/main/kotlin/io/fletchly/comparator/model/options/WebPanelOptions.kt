@@ -19,5 +19,6 @@
 package io.fletchly.comparator.model.options
 
 data class WebPanelOptions(
-    val port: Int
+    val port: Int,
+    val host: String
 )

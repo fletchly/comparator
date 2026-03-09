@@ -58,6 +58,7 @@ class PluginConfigService(
         val `4 to 5`: ConfigurationTransformation = ConfigurationTransformation.builder()
             .addAction(path()) {_, value ->
                 value.node("web-panel", "port").set(8080)
+                value.node("web-panel", "host").set("0.0.0.0")
                 null
             }.build()
 

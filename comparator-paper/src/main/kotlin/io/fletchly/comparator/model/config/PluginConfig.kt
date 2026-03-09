@@ -81,7 +81,9 @@ data class OllamaConfig(
 @ConfigSerializable
 data class WebPanelConfig(
     @Comment("Port to run the web panel on")
-    val port: Int = 8080
+    val port: Int = 8080,
+    @Comment("Host to run the web panel on")
+    val host: String = "0.0.0.0"
 )
 
 @ConfigSerializable
