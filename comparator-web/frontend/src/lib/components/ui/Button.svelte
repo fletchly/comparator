@@ -11,7 +11,7 @@
 </script>
 
 <button
-	class="border-2 border-primary-foreground bg-muted px-4 py-2 font-mono text-sm text-muted-foreground transition-colors duration-200 disabled:pointer-events-none {variants[
+	class="border-2 border-primary-foreground bg-muted px-3 py-1 font-mono text-sm text-muted-foreground transition-colors duration-200 disabled:pointer-events-none {variants[
 		variant
 	]}"
 	{onclick}

@@ -20,7 +20,7 @@
 
 <h1>Conversations</h1>
 
-<Button onclick={handleClearAll}
+<Button onclick={handleClearAll} variant="destructive"
 	><Trash class="inline h-[1em] w-[1em] align-[-0.1em]" /> Clear All</Button
 >
 
