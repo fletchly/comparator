@@ -34,11 +34,12 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import org.koin.java.KoinJavaComponent.getKoin
 
 class KtorWebPanel(
     private val options: WebPanelOptions,
-    private val repository: DataRepositoryPort
 ) : WebPanelPort {
+    private val repository: DataRepositoryPort by lazy { getKoin().get() }
     private var server: EmbeddedServer<*, *>? = null
     private var isRunning = false
 
