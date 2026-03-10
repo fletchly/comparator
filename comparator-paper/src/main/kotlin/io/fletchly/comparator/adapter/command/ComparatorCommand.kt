@@ -124,7 +124,7 @@ class ComparatorCommand(
                         Command.SINGLE_SUCCESS
                     }
             ).then(
-                Commands.literal("web")
+                Commands.literal("panel")
                     .requires { it.sender.hasPermission(webPanelPermission.name) }
                     .then(
                         Commands.literal("start")
