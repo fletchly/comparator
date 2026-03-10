@@ -22,6 +22,8 @@ import io.fletchly.comparator.model.dto.MessageDto
 import io.fletchly.comparator.model.dto.ToolDto
 import io.fletchly.comparator.model.dto.toDto
 import io.fletchly.comparator.model.message.BasicConversationKey
+import io.fletchly.comparator.model.message.ChatConversationKey
+import io.fletchly.comparator.model.message.ConsoleConversationKey
 import io.fletchly.comparator.port.`in`.WebPanelData
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import java.util.*
@@ -30,9 +32,21 @@ class ComparatorDataRepository(
     private val data: WebPanelData
 ) : DataRepositoryPort {
     override suspend fun getAllConversations(): Map<String, List<MessageDto>> =
-        data.getAllConversations().map { (key, value) ->
-            key.uniqueId.toString() to value.messages.map { it.toDto() }
-        }.toMap()
+        data.getAllConversations()
+            .map { (key, value) ->
+                key.uniqueId.toString() to value.messages.map { it.toDto() }
+            }
+            .toMap()
+
+    override suspend fun getAllPlayerConversations(): Map<String, List<MessageDto>> =
+        data.getAllConversations()
+            .filter { (key, _) ->
+                key != ChatConversationKey && key != ConsoleConversationKey
+            }
+            .map { (key, value) ->
+                key.uniqueId.toString() to value.messages.map { it.toDto() }
+            }
+            .toMap()
 
     override suspend fun getConversation(key: UUID): List<MessageDto> =
         data.getConversation(BasicConversationKey(key)).messages.map { it.toDto() }

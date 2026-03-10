@@ -24,6 +24,7 @@ plugins {
 
 dependencies {
     implementation(project(":comparator-core"))
+    implementation(project(":comparator-common"))
 
     implementation(libs.bundles.ktor.server)
     implementation(libs.kotlinx.coroutines)

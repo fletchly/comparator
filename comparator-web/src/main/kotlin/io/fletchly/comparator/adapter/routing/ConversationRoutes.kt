@@ -18,6 +18,8 @@
 
 package io.fletchly.comparator.adapter.routing
 
+import io.fletchly.comparator.model.message.ChatConversationKey
+import io.fletchly.comparator.model.message.ConsoleConversationKey
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
@@ -31,11 +33,20 @@ fun Route.conversationRoutes(repository: DataRepositoryPort) {
         get {
             call.respond(repository.getAllConversations())
         }
+        get("/console") {
+            call.respond(repository.getConversation(ConsoleConversationKey.uniqueId))
+        }
+        get("/chat") {
+            call.respond(repository.getConversation(ChatConversationKey.uniqueId))
+        }
+        get("/player") {
+            call.respond(repository.getAllPlayerConversations())
+        }
         get("/{id}") {
             val id = call.parameters["id"]
-                ?: return@get call.respond(HttpStatusCode.Companion.BadRequest)
+                ?: return@get call.respond(HttpStatusCode.BadRequest)
             val uuid = runCatching { UUID.fromString(id) }
-                .getOrElse { return@get call.respond(HttpStatusCode.Companion.BadRequest) }
+                .getOrElse { return@get call.respond(HttpStatusCode.BadRequest) }
             val conversation = repository.getConversation(uuid)
             call.respond(conversation)
         }
