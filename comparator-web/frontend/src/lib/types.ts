@@ -40,3 +40,5 @@ export interface WellKnownIds {
 	console: string;
 	chat: string;
 }
+
+export type ButtonVariant = 'primary' | 'success' | 'destructive';
