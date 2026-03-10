@@ -16,21 +16,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.di
+package io.fletchly.comparator.adapter.event
 
-import io.fletchly.comparator.adapter.event.EventBus
-import io.fletchly.comparator.adapter.ollama.OllamaAIProvider
-import io.fletchly.comparator.adapter.persistence.CaffeineContextStore
-import io.fletchly.comparator.port.out.AIPort
-import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.model.ComparatorEvent
 import io.fletchly.comparator.port.out.EventPort
-import io.fletchly.comparator.util.HttpClients
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import kotlinx.coroutines.flow.MutableSharedFlow
 
-val commonAdapterModule = module {
-    single { OllamaAIProvider(get(), get(), get(), HttpClients.KtorCIO) } bind AIPort::class
-    singleOf(::CaffeineContextStore) bind ContextPort::class
-    singleOf(::EventBus) bind EventPort::class
+class EventBus: EventPort {
+    override val events = MutableSharedFlow<ComparatorEvent>()
+
+    override fun emit(event: ComparatorEvent) {
+        events.tryEmit(event)
+    }
 }
