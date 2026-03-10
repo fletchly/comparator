@@ -34,6 +34,14 @@ dependencies {
     implementation(libs.koin.core)
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir("frontend/src")
+        }
+    }
+}
+
 val bunExecutable: String by lazy {
     val fromEnv = System.getenv("BUN_INSTALL")
     if (fromEnv != null) {
