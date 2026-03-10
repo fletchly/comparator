@@ -22,6 +22,7 @@ import java.util.*
 
 abstract class ConversationKey {
     abstract val uniqueId: UUID
+    abstract val displayName: String
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

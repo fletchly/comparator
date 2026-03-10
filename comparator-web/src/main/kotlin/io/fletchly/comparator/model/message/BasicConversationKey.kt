@@ -20,4 +20,8 @@ package io.fletchly.comparator.model.message
 
 import java.util.UUID
 
-class BasicConversationKey(override val uniqueId: UUID) : ConversationKey()
+class BasicConversationKey(
+    override val uniqueId: UUID,
+) : ConversationKey() {
+    override val displayName: String = "none"
+}

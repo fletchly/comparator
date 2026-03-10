@@ -33,4 +33,5 @@ import java.util.*
  */
 object ChatConversationKey : ConversationKey() {
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
+    override val displayName: String = "Chat"
 }

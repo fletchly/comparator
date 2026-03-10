@@ -169,7 +169,7 @@ class ComparatorCommand(
     private fun clearOther(ctx: CommandContext<CommandSourceStack>) {
         val targetResolver =
             ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId) }
+        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId, it.name) }
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
