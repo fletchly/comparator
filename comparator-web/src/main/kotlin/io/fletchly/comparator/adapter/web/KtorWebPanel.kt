@@ -24,16 +24,13 @@ import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.fletchly.comparator.port.out.WebPanelPort
-import io.ktor.serialization.kotlinx.json.json
-import io.ktor.server.application.install
-import io.ktor.server.engine.EmbeddedServer
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.response.respondText
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
-import io.ktor.server.routing.routing
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.http.content.*
+import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.routing.*
 import org.koin.java.KoinJavaComponent.getKoin
 
 class KtorWebPanel(
@@ -54,8 +51,14 @@ class KtorWebPanel(
                         conversationRoutes(repository)
                         toolRoutes(repository)
                     }
-                }
 
+                    singlePageApplication {
+                        useResources = true
+                        filesPath = "web"
+                        defaultPage = "index.html"
+                        ignoreFiles { it.endsWith(".map") }
+                    }
+                }
             }.apply {
                 start(wait = false)  // non-blocking
             }
