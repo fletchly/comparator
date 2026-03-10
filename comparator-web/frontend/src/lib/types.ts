@@ -30,3 +30,8 @@ export interface Tool {
 	description: string;
 	parameters: Parameter[];
 }
+
+export interface WellKnownIds {
+	console: string;
+	chat: string;
+}

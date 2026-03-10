@@ -1,4 +1,4 @@
-import type { Message, Tool } from '$lib/types';
+import type { Message, Tool, WellKnownIds } from '$lib/types';
 
 const BASE_URL = '/api';
 
@@ -59,4 +59,8 @@ export function getAllTools(): Promise<Tool[]> {
 
 export function getTool(name: string): Promise<Tool> {
 	return request(`/tool/${name}`);
+}
+
+export function getWellKnownIds(): Promise<WellKnownIds> {
+	return request('/conversation/well-known');
 }

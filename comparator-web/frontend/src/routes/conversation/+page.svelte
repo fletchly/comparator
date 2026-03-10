@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+	import { invalidate } from '$app/navigation';
 	import { clearAllConversations } from '$lib/api';
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
@@ -7,12 +7,18 @@
 
 	let { data }: { data: PageData } = $props();
 
-	async function handleClearAll() {
-		await clearAllConversations();
-		await invalidateAll();
+	const entries = $derived(Object.entries(data.conversations) as [string, Message[]][]);
+
+	function displayName(id: string): string {
+		if (id === data.wellKnown.console) return 'Console';
+		if (id === data.wellKnown.chat) return 'Chat';
+		return id;
 	}
 
-	const entries = $derived(Object.entries(data.conversations) as [string, Message[]][]);
+	async function handleClearAll() {
+		await clearAllConversations();
+		await invalidate('app:conversations');
+	}
 </script>
 
 <h1>Conversations</h1>
@@ -21,7 +27,7 @@
 
 {#each entries as [id, messages] (id)}
 	<section>
-		<h2><a href={resolve('/conversation/[id]', { id })}>{id}</a></h2>
+		<h2><a href={resolve('/conversation/[id]', { id })}>{displayName(id)}</a></h2>
 		<p>{messages.length} message{messages.length === 1 ? '' : 's'}</p>
 	</section>
 {:else}

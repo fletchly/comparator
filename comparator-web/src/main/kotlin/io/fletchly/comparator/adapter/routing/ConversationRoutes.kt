@@ -59,6 +59,13 @@ fun Route.conversationRoutes(repository: DataRepositoryPort) {
             call.respond(repository.getAllPlayerConversations())
         }
 
+        get("/well-known") {
+            call.respond(mapOf(
+                "console" to ConsoleConversationKey.uniqueId.toString(),
+                "chat" to ChatConversationKey.uniqueId.toString()
+            ))
+        }
+
         get("/{id}") {
             val id = call.parameters["id"]
                 ?: return@get call.respond(HttpStatusCode.BadRequest)
@@ -73,7 +80,7 @@ fun Route.conversationRoutes(repository: DataRepositoryPort) {
                 ?: return@delete call.respond(HttpStatusCode.BadRequest)
             val key = runCatching { UUID.fromString(id) }
                 .getOrElse { return@delete call.respond(HttpStatusCode.BadRequest) }
-            repository.getConversation(key)
+            repository.clearConversation(key)
             call.respond(HttpStatusCode.NoContent)
         }
     }
