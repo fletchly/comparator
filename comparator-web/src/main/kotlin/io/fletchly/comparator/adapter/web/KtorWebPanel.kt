@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.web.adapter
+package io.fletchly.comparator.adapter.web
 
 import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
