@@ -32,11 +32,13 @@
 	--color-success-tint: color-mix(in srgb, var(--color-success) 10%, transparent);
 	--color-destructive: #f87171;
 	--color-destructive-tint: color-mix(in srgb, var(--color-destructive) 10%, transparent);
-	--color-primary-foreground: #727272;
-	--color-background: #0f0f0f;
+	--color-primary-foreground: #1a1a1a;
+	--color-foreground-muted: #727272;
+	--color-background: #1a1a1a;
+	--color-background-secondary: #212121;
 	--color-foreground: #f0f0f0;
 	--color-muted: #373737;
-	--color-muted-foreground: #acacac;
+	--color-muted-light: #acacac;
 	--color-border-accent: var(--color-primary);
 }
 

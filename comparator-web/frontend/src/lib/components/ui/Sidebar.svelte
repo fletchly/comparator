@@ -1,32 +1,36 @@
-<script lang="ts">
-	import { PanelLeftClose, PanelLeftOpen } from '@lucide/svelte';
-	import { fade } from 'svelte/transition';
-	import { resolve } from '$app/paths';
+<script module lang="ts">
 	import type { Pathname } from '$app/types';
 
-	type NavItem = {
+	export type NavItem = {
 		id: string;
 		label: string;
 		href: Pathname;
 		icon?: import('svelte').Component;
+		children?: Omit<NavItem, 'children'>[];
 	};
+</script>
+
+<script lang="ts">
+	import { PanelLeftClose, PanelLeftOpen } from '@lucide/svelte';
+	import { fade, slide } from 'svelte/transition';
+	import favicon from '$lib/assets/favicon.svg';
+	import { resolve } from '$app/paths';
 
 	type Props = {
 		items: NavItem[];
 		activeId?: string;
 		collapsed?: boolean;
 		brandName?: string;
+		isMobile?: boolean;
 	};
 
 	let {
 		items,
 		activeId = $bindable(''),
 		collapsed = $bindable(false),
-		brandName = 'My App'
+		brandName = 'Comparator',
+		isMobile = $bindable(false)
 	}: Props = $props();
-
-	// Consolidate both MediaQuery effects into one
-	let isMobile = $state(false);
 
 	$effect(() => {
 		const mq = window.matchMedia('(max-width: 767px)');
@@ -45,21 +49,26 @@
 <aside
 	data-collapsed={collapsed}
 	data-mobile={isMobile}
-	class="flex h-full w-64 flex-col transition-[width]
+	class="flex h-full w-64 flex-col bg-background-secondary transition-[width]
          duration-200 data-[collapsed=true]:w-14
          data-[mobile=true]:fixed data-[mobile=true]:inset-y-0 data-[mobile=true]:left-0 data-[mobile=true]:z-50"
 >
 	<!-- Header: logo + brand name + toggle -->
 	<div class="flex items-center gap-3 overflow-hidden p-2">
 		{#if !collapsed}
-			<div class="contents" transition:fade={{ duration: 150 }}>
-				<!-- Logo placeholder -->
-				<span class="block size-8 shrink-0 rounded bg-gray-200"></span>
+			<div
+				class="flex flex-1 items-center gap-3 overflow-hidden"
+				transition:fade={{ duration: 150 }}
+			>
+				<!-- Logo -->
+				<img src={favicon} alt="Comparator" class="size-6 shrink-0 rounded" />
 
 				<!-- Brand name -->
-				<span class="flex-1 overflow-hidden text-sm font-semibold text-ellipsis whitespace-nowrap">
+				<div
+					class="translate-y-px overflow-hidden font-mono text-lg leading-none text-ellipsis whitespace-nowrap text-primary uppercase"
+				>
 					{brandName}
-				</span>
+				</div>
 			</div>
 		{/if}
 
@@ -67,7 +76,7 @@
 		<button
 			onclick={() => (collapsed = !collapsed)}
 			aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-			class="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded"
+			class="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded p-0 leading-none text-foreground-muted transition-colors hover:text-muted-light"
 		>
 			{#if collapsed}
 				<PanelLeftOpen size={18} />
@@ -84,8 +93,8 @@
 				href={resolve(item.href)}
 				data-active={activeId === item.id}
 				onclick={() => (activeId = item.id)}
-				class="flex items-center gap-3 rounded px-2 py-2 whitespace-nowrap
-               data-[active=true]:font-semibold"
+				class="flex items-center gap-3 px-2 py-2 whitespace-nowrap text-muted-light
+               transition-colors hover:bg-muted hover:text-foreground data-[active=true]:border-l-2 data-[active=true]:border-l-primary data-[active=true]:bg-primary-tint data-[active=true]:text-foreground"
 			>
 				{#if item.icon}
 					<span class="shrink-0">
@@ -99,6 +108,30 @@
 					</span>
 				{/if}
 			</a>
+
+			<!-- Child routes: shown when parent or any child is active, and sidebar is expanded -->
+			{#if item.children && (activeId === item.id || item.children.some((c) => c.id === activeId)) && !collapsed}
+				<div transition:slide={{ duration: 150 }}>
+					{#each item.children as child (child.id)}
+						<a
+							href={resolve(child.href)}
+							data-active={activeId === child.id}
+							onclick={() => (activeId = child.id)}
+							class="flex items-center gap-3 py-2 pr-2 pl-8 whitespace-nowrap text-muted-light
+                             transition-colors hover:bg-muted hover:text-foreground data-[active=true]:border-l-2 data-[active=true]:border-l-primary data-[active=true]:bg-primary-tint data-[active=true]:text-foreground"
+						>
+							{#if !collapsed}
+								<span
+									transition:fade={{ duration: 150 }}
+									class="overflow-hidden text-sm text-ellipsis"
+								>
+									{child.label}
+								</span>
+							{/if}
+						</a>
+					{/each}
+				</div>
+			{/if}
 		{/each}
 	</nav>
 </aside>

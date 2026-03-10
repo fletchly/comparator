@@ -16,7 +16,7 @@
   - limitations under the License.
   -->
 
-<script lang="ts">
+<!-- <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
@@ -27,4 +27,48 @@
 	<link rel="icon" href={favicon} />
 	<title>Comparator Panel</title>
 </svelte:head>
-{@render children()}
+{@render children()} -->
+
+<script lang="ts">
+	import './layout.css';
+	import favicon from '$lib/assets/favicon.svg';
+	import { MessageSquare, House, MessageSquareCode, MessageSquareText } from '@lucide/svelte';
+	import Sidebar, { type NavItem } from '$lib/components/ui/Sidebar.svelte';
+	import { page } from '$app/state';
+
+	const { children } = $props();
+
+	const navItems: NavItem[] = [
+		{ id: 'home', label: 'Home', href: '/', icon: House },
+		{
+			id: 'conversation',
+			label: 'Conversation',
+			href: '/conversation',
+			icon: MessageSquare,
+			children: [
+				{ id: 'chat', label: 'Chat', href: '/conversation/chat', icon: MessageSquareText },
+				{ id: 'console', label: 'Console', href: '/conversation/console', icon: MessageSquareCode }
+			]
+		}
+	];
+
+	// Flatten parents + children for route matching
+	const allItems = navItems.flatMap((item) => [item, ...(item.children ?? [])]);
+
+	let activeId = $derived(allItems.find((item) => page.url.pathname === item.href)?.id ?? '');
+
+	let isMobile = $state(false);
+</script>
+
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<title>Comparator Panel</title>
+</svelte:head>
+
+<div class="flex h-screen">
+	<Sidebar items={navItems} bind:activeId bind:isMobile />
+
+	<main class="flex-1 overflow-auto" style:padding-left={isMobile ? '3.5rem' : undefined}>
+		{@render children()}
+	</main>
+</div>
