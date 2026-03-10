@@ -82,9 +82,15 @@ class WebPanelManager(
 
     override suspend fun getConversation(key: ConversationKey): Conversation = context.get(key)
 
-    override suspend fun clearAllConversations() = context.clearAll()
+    override suspend fun clearAllConversations() {
+        context.clearAll()
+        log.info("Cleared all conversations", this::class.simpleName)
+    }
 
-    override suspend fun clearConversation(key: ConversationKey) = context.clear(key)
+    override suspend fun clearConversation(key: ConversationKey) {
+        context.clear(key)
+        log.info("Cleared conversation ${key.uniqueId}", this::class.simpleName)
+    }
 
     override suspend fun getAllTools(): List<Tool> = toolRegistry.getTools()
 
