@@ -26,6 +26,10 @@ interface DataRepositoryPort {
     suspend fun getAllConversations(): Map<String, List<MessageDto>>
     suspend fun getAllPlayerConversations(): Map<String, List<MessageDto>>
     suspend fun getConversation(key: UUID): List<MessageDto>
+
+    suspend fun clearAllConversations()
+    suspend fun clearConversation(key: UUID)
+
     suspend fun getAllTools(): List<ToolDto>
     suspend fun getTool(name: String): Result<ToolDto>
 }

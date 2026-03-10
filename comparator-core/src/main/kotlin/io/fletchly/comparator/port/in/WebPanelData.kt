@@ -25,6 +25,8 @@ import io.fletchly.comparator.model.tool.Tool
 interface WebPanelData {
     suspend fun getAllConversations(): Map<ConversationKey, Conversation>
     suspend fun getConversation(key: ConversationKey): Conversation
+    suspend fun clearAllConversations()
+    suspend fun clearConversation(key: ConversationKey)
     suspend fun getAllTools(): List<Tool>
     suspend fun getTool(name: String): Tool?
 }

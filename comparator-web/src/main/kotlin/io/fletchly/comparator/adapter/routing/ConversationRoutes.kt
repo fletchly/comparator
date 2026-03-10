@@ -24,6 +24,7 @@ import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import java.util.UUID
@@ -33,22 +34,47 @@ fun Route.conversationRoutes(repository: DataRepositoryPort) {
         get {
             call.respond(repository.getAllConversations())
         }
+        delete {
+            repository.clearAllConversations()
+            call.respond(HttpStatusCode.NoContent)
+        }
+
         get("/console") {
             call.respond(repository.getConversation(ConsoleConversationKey.uniqueId))
         }
+        delete("/console") {
+            repository.clearConversation(ConsoleConversationKey.uniqueId)
+            call.respond(HttpStatusCode.NoContent)
+        }
+
         get("/chat") {
             call.respond(repository.getConversation(ChatConversationKey.uniqueId))
         }
+        delete("/chat") {
+            repository.clearConversation(ChatConversationKey.uniqueId)
+            call.respond(HttpStatusCode.NoContent)
+        }
+
         get("/player") {
             call.respond(repository.getAllPlayerConversations())
         }
+
         get("/{id}") {
             val id = call.parameters["id"]
                 ?: return@get call.respond(HttpStatusCode.BadRequest)
-            val uuid = runCatching { UUID.fromString(id) }
+            val key = runCatching { UUID.fromString(id) }
                 .getOrElse { return@get call.respond(HttpStatusCode.BadRequest) }
-            val conversation = repository.getConversation(uuid)
+            val conversation = repository.getConversation(key)
             call.respond(conversation)
+        }
+
+        delete("/{id}") {
+            val id = call.parameters["id"]
+                ?: return@delete call.respond(HttpStatusCode.BadRequest)
+            val key = runCatching { UUID.fromString(id) }
+                .getOrElse { return@delete call.respond(HttpStatusCode.BadRequest) }
+            repository.getConversation(key)
+            call.respond(HttpStatusCode.NoContent)
         }
     }
 }

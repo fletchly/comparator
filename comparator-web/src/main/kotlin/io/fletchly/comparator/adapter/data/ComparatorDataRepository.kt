@@ -51,6 +51,14 @@ class ComparatorDataRepository(
     override suspend fun getConversation(key: UUID): List<MessageDto> =
         data.getConversation(BasicConversationKey(key)).messages.map { it.toDto() }
 
+    override suspend fun clearAllConversations() {
+        data.getAllConversations()
+    }
+
+    override suspend fun clearConversation(key: UUID) {
+        data.clearConversation(BasicConversationKey(key))
+    }
+
     override suspend fun getAllTools(): List<ToolDto> =
         data.getAllTools().map { it.toDto() }
 
