@@ -26,6 +26,7 @@ import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
+import io.fletchly.comparator.port.`in`.WebPanelData
 import io.fletchly.comparator.port.`in`.WebPanelLifecycle
 import io.fletchly.comparator.tool.ToolRegistry
 import org.koin.core.module.dsl.singleOf
@@ -37,5 +38,5 @@ val coreModule = module {
     singleOf(::ToolManager) binds arrayOf(ToolExecutor::class, ToolRegistryLifecycle::class, ToolRegistry::class)
     singleOf(::ContextManager) bind ContextLifecycle::class
     singleOf(::ConversationManager) bind MessageSender::class
-    singleOf(::WebPanelManager) bind WebPanelLifecycle::class
+    singleOf(::WebPanelManager) binds arrayOf(WebPanelLifecycle::class, WebPanelData::class)
 }

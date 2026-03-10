@@ -16,13 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.web
+package io.fletchly.comparator.web.adapter
 
 import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.out.WebPanelPort
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.engine.EmbeddedServer
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
@@ -30,7 +31,7 @@ import io.ktor.server.routing.routing
 class KtorWebPanel(
     private val options: WebPanelOptions
 ) : WebPanelPort {
-    private var server: EmbeddedServer<*,*>? = null
+    private var server: EmbeddedServer<*, *>? = null
     private var isRunning = false
 
     override suspend fun start(): WebPanelMessage {

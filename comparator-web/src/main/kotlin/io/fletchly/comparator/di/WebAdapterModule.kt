@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.di
 
-import io.fletchly.comparator.adapter.web.KtorWebPanel
+import io.fletchly.comparator.web.adapter.KtorWebPanel
 import io.fletchly.comparator.port.out.WebPanelPort
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
