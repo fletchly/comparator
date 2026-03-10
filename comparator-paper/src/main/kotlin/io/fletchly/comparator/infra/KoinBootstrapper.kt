@@ -36,6 +36,7 @@ import org.koin.dsl.module
  */
 class KoinBootstrapper(private val plugin: JavaPlugin) {
     private val commonModule = module { includes(commonAdapterModule, commonToolModule) }
+    private val webModule = module { includes(webAdapterModule) }
     private val paperModule =
         module { includes(paperInfraModule(plugin), paperConfigModule, paperAdapterModule, paperToolModule) }
 
@@ -43,6 +44,7 @@ class KoinBootstrapper(private val plugin: JavaPlugin) {
         includes(
             coreModule,
             commonModule,
+            webModule,
             paperModule
         )
     }

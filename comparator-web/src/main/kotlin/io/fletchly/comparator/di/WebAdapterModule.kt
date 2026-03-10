@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.port.out
+package io.fletchly.comparator.di
 
-import io.fletchly.comparator.model.web.WebPanelMessage
+import io.fletchly.comparator.adapter.web.KtorWebPanel
+import io.fletchly.comparator.port.out.WebPanelPort
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-interface WebPanelPort {
-    suspend fun start(): WebPanelMessage
-    suspend fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage
-    suspend fun restart(onStop: suspend (WebPanelMessage) -> Unit, onStart: suspend (WebPanelMessage) -> Unit)
-    suspend fun status(): WebPanelMessage
-    suspend fun forceStop()
+val webAdapterModule = module {
+    singleOf(::KtorWebPanel) bind WebPanelPort::class
 }

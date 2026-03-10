@@ -23,6 +23,9 @@ import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.out.WebPanelPort
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 
 class KtorWebPanel(
     private val options: WebPanelOptions
@@ -30,12 +33,13 @@ class KtorWebPanel(
     private var server: EmbeddedServer<*,*>? = null
     private var isRunning = false
 
-    override fun start(): WebPanelMessage {
+    override suspend fun start(): WebPanelMessage {
         if (isRunning) return WebPanelMessage.Ok("Web panel is already running on port ${options.port}")
         try {
             server = embeddedServer(Netty, port = options.port, host = options.host) {
-                // Your existing module / routing setup here
-                TODO()  // or directly: routing { ... }
+                routing {
+                    get("/hello") { call.respondText("Hello!") }
+                }
             }.apply {
                 start(wait = false)  // non-blocking
             }
@@ -46,7 +50,7 @@ class KtorWebPanel(
         }
     }
 
-    override fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage {
+    override suspend fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage {
         if (!isRunning || server == null) return WebPanelMessage.Ok("The web panel is not running")
 
         server?.stop(graceMs, timeoutMs)
@@ -55,17 +59,17 @@ class KtorWebPanel(
         return WebPanelMessage.Ok("Stopped the web panel")
     }
 
-    override fun restart(): WebPanelMessage {
-        stop(500, 1000)
-        return start()
+    override suspend fun restart(onStop: suspend (WebPanelMessage) -> Unit, onStart: suspend (WebPanelMessage) -> Unit) {
+        onStop.invoke(stop(1000,1000))
+        onStart.invoke(start())
     }
 
-    override fun status(): WebPanelMessage = when {
+    override suspend fun status(): WebPanelMessage = when {
         isRunning -> WebPanelMessage.Ok("The web panel is running on ${options.port}")
         else -> WebPanelMessage.Ok("The web panel is not running")
     }
 
-    override fun forceStop() {
+    override suspend fun forceStop() {
         stop(500, 1000)
     }
 }

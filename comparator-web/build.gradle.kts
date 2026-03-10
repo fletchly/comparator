@@ -19,7 +19,7 @@
 plugins {
     id("kotlin-jvm")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ktor)
+//    alias(libs.plugins.ktor)
 }
 
 dependencies {
@@ -28,6 +28,9 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
 }
 
 //tasks.register<Copy>("copySvelteBuild") {

@@ -47,8 +47,11 @@ class WebPanelLifecycleManager(
     }
 
     override suspend fun restart(requestor: Actor) {
-        val message = webPanel.restart()
-        displayPanelMessage(requestor, message, true)
+        webPanel.restart(onStop = { msg ->
+            displayPanelMessage(requestor, msg, true)
+        }, onStart = { msg ->
+            displayPanelMessage(requestor, msg, true)
+        })
     }
 
     override suspend fun forceStop() {
