@@ -36,7 +36,7 @@ dependencies {
 
 sourceSets {
     main {
-        java {
+        resources {
             srcDir("frontend/src")
         }
     }
