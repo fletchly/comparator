@@ -2,6 +2,7 @@
 	import { invalidate } from '$app/navigation';
 	import { clearConversation } from '$lib/api';
 	import Message from '$lib/components/Message.svelte';
+	import PageHeading from '$lib/components/ui/PageHeading.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -13,6 +14,7 @@
 </script>
 
 <h1>Conversation {data.displayName ?? data.id}</h1>
+<PageHeading heading={data.displayName ?? data.id} />
 
 <button onclick={handleClear}>Clear</button>
 

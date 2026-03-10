@@ -7,6 +7,7 @@
 	import { Trash } from '@lucide/svelte';
 	import type { Conversation } from '$lib/types';
 	import type { PageData } from './$types';
+	import PageHeading from '$lib/components/ui/PageHeading.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -18,7 +19,7 @@
 	}
 </script>
 
-<h1>Conversations</h1>
+<PageHeading heading="Conversations" />
 
 <Button onclick={handleClearAll} variant="destructive"
 	><Trash class="inline h-[1em] w-[1em] align-[-0.1em]" /> Clear All</Button
