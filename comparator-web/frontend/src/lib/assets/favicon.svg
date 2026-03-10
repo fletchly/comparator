@@ -1,19 +1,36 @@
-<!--
-  - This file is part of comparator, licensed under the Apache License 2.0
-  -
-  - Copyright (c) 2026 fletchly <https://github.com/fletchly>
-  -
-  - Licensed under the Apache License, Version 2.0 (the "License");
-  - you may not use this file except in compliance with the License.
-  - You may obtain a copy of the License at
-  -
-  -     http://www.apache.org/licenses/LICENSE-2.0
-  -
-  - Unless required by applicable law or agreed to in writing, software
-  - distributed under the License is distributed on an "AS IS" BASIS,
-  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  - See the License for the specific language governing permissions and
-  - limitations under the License.
-  -->
-
-<svg xmlns="http://www.w3.org/2000/svg" width="107" height="128" viewBox="0 0 107 128"><title>svelte-logo</title><path d="M94.157 22.819c-10.4-14.885-30.94-19.297-45.792-9.835L22.282 29.608A29.92 29.92 0 0 0 8.764 49.65a31.5 31.5 0 0 0 3.108 20.231 30 30 0 0 0-4.477 11.183 31.9 31.9 0 0 0 5.448 24.116c10.402 14.887 30.942 19.297 45.791 9.835l26.083-16.624A29.92 29.92 0 0 0 98.235 78.35a31.53 31.53 0 0 0-3.105-20.232 30 30 0 0 0 4.474-11.182 31.88 31.88 0 0 0-5.447-24.116" style="fill:#ff3e00"/><path d="M45.817 106.582a20.72 20.72 0 0 1-22.237-8.243 19.17 19.17 0 0 1-3.277-14.503 18 18 0 0 1 .624-2.435l.49-1.498 1.337.981a33.6 33.6 0 0 0 10.203 5.098l.97.294-.09.968a5.85 5.85 0 0 0 1.052 3.878 6.24 6.24 0 0 0 6.695 2.485 5.8 5.8 0 0 0 1.603-.704L69.27 76.28a5.43 5.43 0 0 0 2.45-3.631 5.8 5.8 0 0 0-.987-4.371 6.24 6.24 0 0 0-6.698-2.487 5.7 5.7 0 0 0-1.6.704l-9.953 6.345a19 19 0 0 1-5.296 2.326 20.72 20.72 0 0 1-22.237-8.243 19.17 19.17 0 0 1-3.277-14.502 17.99 17.99 0 0 1 8.13-12.052l26.081-16.623a19 19 0 0 1 5.3-2.329 20.72 20.72 0 0 1 22.237 8.243 19.17 19.17 0 0 1 3.277 14.503 18 18 0 0 1-.624 2.435l-.49 1.498-1.337-.98a33.6 33.6 0 0 0-10.203-5.1l-.97-.294.09-.968a5.86 5.86 0 0 0-1.052-3.878 6.24 6.24 0 0 0-6.696-2.485 5.8 5.8 0 0 0-1.602.704L37.73 51.72a5.42 5.42 0 0 0-2.449 3.63 5.79 5.79 0 0 0 .986 4.372 6.24 6.24 0 0 0 6.698 2.486 5.8 5.8 0 0 0 1.602-.704l9.952-6.342a19 19 0 0 1 5.295-2.328 20.72 20.72 0 0 1 22.237 8.242 19.17 19.17 0 0 1 3.277 14.503 18 18 0 0 1-8.13 12.053l-26.081 16.622a19 19 0 0 1-5.3 2.328" style="fill:#fff"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   viewBox="-5 -10 100 100"
+   id="svg2"
+   width="100"
+   height="100"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="g5"
+     transform="translate(6.1999999,6.1999999)">
+    <path
+       d="M 76.2999,-3.6999998 V 12.968 H 59.6319 V 8.8000002 H 53.1905 L 26.5105,39.288 c -1.582,1.8086 -3.8633,2.8438 -6.2695,2.8438 H 9.6320002 c -4.5977,0 -8.332,-3.7383 -8.332,-8.332 v -20.832 h 8.332 v 20.832 H 20.241 L 46.917,3.3118002 c 1.582,-1.8086 3.8711,-2.84380002 6.2734,-2.84380002 h 6.4414 V -3.6999998 Z M 51.2999,71.3 h 16.668 V 54.632 h -16.668 z m -25,-74.9999998 H 9.6319002 V 12.968 H 26.2999 Z M 67.9679,25.468 h -10.609 c -2.4023,0 -4.6914,1.0391 -6.2734,2.8477 l -26.676,30.484 h -6.4414 v -4.168 H 1.3001002 v 16.668 H 17.9681 v -4.168 h 6.4414 c 2.4102,0 4.6914,-1.0391 6.2695,-2.8516 l 26.68,-30.48 h 10.609 v 20.832 H 76.3 v -20.832 c 0,-4.5977 -3.7383,-8.332 -8.332,-8.332 z"
+       id="path1"
+       style="stroke:#ffbd58;stroke-width:12.6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" />
+    <path
+       style="fill:#ffbd58;fill-opacity:1;stroke:none;stroke-width:12.6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 27.046234,17.917797 H 13.42963 l 0.326799,11.220082 4.466246,0.108932 z"
+       id="path2" />
+    <path
+       style="fill:#ffbd58;fill-opacity:1;stroke:none;stroke-width:12.6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 49.813196,21.730446 59.835017,19.987521 53.952644,14.758745 Z"
+       id="path3" />
+    <path
+       style="fill:#ffbd58;fill-opacity:1;stroke:none;stroke-width:12.6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 17.242279,46.458199 11.220082,-0.653597 -5.119843,7.189567 z"
+       id="path4" />
+    <path
+       style="fill:#ffbd58;fill-opacity:1;stroke:none;stroke-width:12.6;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 50.031062,49.290453 9.912887,-11.220082 2.505456,0.108933 0.544664,10.893283 z"
+       id="path5" />
+  </g>
+</svg>

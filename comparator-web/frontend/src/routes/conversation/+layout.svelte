@@ -19,4 +19,5 @@
 	});
 </script>
 
+<svelte:head><title>Comparator Panel - Conversation</title></svelte:head>
 {@render children()}
