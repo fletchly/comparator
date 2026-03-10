@@ -25,4 +25,24 @@
 @theme {
 	--font-sans: 'Geist Variable', sans-serif;
 	--font-mono: 'Geist Mono Variable', monospace;
+
+	--color-primary: #ffbd59;
+	--color-primary-tint: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--color-success: #4bde80;
+	--color-success-tint: color-mix(in srgb, var(--color-success) 10%, transparent);
+	--color-destructive: #f87171;
+	--color-destructive-tint: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+	--color-primary-foreground: #1a1a1a;
+	--color-background: #0f0f0f;
+	--color-foreground: #f0f0f0;
+	--color-muted: #141414;
+	--color-muted-foreground: #c8c8c8;
+	--color-border: #2a2a2a;
+	--color-border-accent: var(--color-primary);
+}
+
+@layer base {
+	body {
+		@apply bg-background text-foreground;
+	}
 }
