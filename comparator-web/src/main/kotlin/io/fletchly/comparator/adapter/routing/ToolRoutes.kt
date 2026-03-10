@@ -19,32 +19,26 @@
 package io.fletchly.comparator.adapter.routing
 
 import io.fletchly.comparator.port.out.DataRepositoryPort
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
-class ToolRoutes(
-    private val repository: DataRepositoryPort
-) {
-    fun Route.toolRoutes() {
-        route("/tool") {
-            get {
-                call.respond(repository.getAllTools())
-            }
-            get("/{name}") {
-                val name = call.parameters["name"]
-                    ?: return@get call.respond(HttpStatusCode.BadRequest)
-                repository.getTool(name)
-                    .onSuccess { call.respond(it) }
-                    .onFailure {
-                        when (it) {
-                            is NoSuchElementException -> call.respond(HttpStatusCode.NotFound)
-                            else -> call.respond(HttpStatusCode.InternalServerError)
-                        }
+fun Route.toolRoutes(repository: DataRepositoryPort) {
+    route("/tool") {
+        get {
+            call.respond(repository.getAllTools())
+        }
+        get("/{name}") {
+            val name = call.parameters["name"]
+                ?: return@get call.respond(HttpStatusCode.BadRequest)
+            repository.getTool(name)
+                .onSuccess { call.respond(it) }
+                .onFailure {
+                    when (it) {
+                        is NoSuchElementException -> call.respond(HttpStatusCode.NotFound)
+                        else -> call.respond(HttpStatusCode.InternalServerError)
                     }
-            }
+                }
         }
     }
 }

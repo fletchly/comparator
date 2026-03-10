@@ -18,18 +18,26 @@
 
 package io.fletchly.comparator.adapter.web
 
+import io.fletchly.comparator.adapter.routing.conversationRoutes
+import io.fletchly.comparator.adapter.routing.toolRoutes
 import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
+import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.fletchly.comparator.port.out.WebPanelPort
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.install
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 
 class KtorWebPanel(
-    private val options: WebPanelOptions
+    private val options: WebPanelOptions,
+    private val repository: DataRepositoryPort
 ) : WebPanelPort {
     private var server: EmbeddedServer<*, *>? = null
     private var isRunning = false
@@ -38,9 +46,15 @@ class KtorWebPanel(
         if (isRunning) return WebPanelMessage.Ok("Web panel is already running on port ${options.port}")
         try {
             server = embeddedServer(Netty, port = options.port, host = options.host) {
+                install(ContentNegotiation) { json() }
+
                 routing {
-                    get("/hello") { call.respondText("Hello!") }
+                    route("/api") {
+                        conversationRoutes(repository)
+                        toolRoutes(repository)
+                    }
                 }
+
             }.apply {
                 start(wait = false)  // non-blocking
             }

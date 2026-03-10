@@ -18,7 +18,9 @@
 
 package io.fletchly.comparator.di
 
+import io.fletchly.comparator.adapter.data.ComparatorDataRepository
 import io.fletchly.comparator.adapter.web.KtorWebPanel
+import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.fletchly.comparator.port.out.WebPanelPort
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -26,4 +28,5 @@ import org.koin.dsl.module
 
 val webAdapterModule = module {
     singleOf(::KtorWebPanel) bind WebPanelPort::class
+    singleOf(::ComparatorDataRepository) bind DataRepositoryPort::class
 }
