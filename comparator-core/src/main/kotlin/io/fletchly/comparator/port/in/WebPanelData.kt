@@ -16,19 +16,15 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.tool
+package io.fletchly.comparator.port.`in`
 
+import io.fletchly.comparator.model.message.Conversation
+import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.tool.Tool
 
-/**
- * Defines a registry for managing tools that can be executed.
- *
- * An implementation of this interface is responsible for maintaining a collection of tools and providing
- * functionality to register new tools. Tools are expected to conform to the [Tool] structure, which includes
- * metadata such as name, description, input parameters, and execution logic.
- */
-interface ToolRegistry {
-    fun register(vararg tools: Tool)
-    fun getTool(name: String): Tool?
-    fun getTools(): List<Tool>
+interface WebPanelData {
+    suspend fun getAllConversations(): Map<ConversationKey, Conversation>
+    suspend fun getConversation(key: ConversationKey): Conversation
+    suspend fun getAllTools(): List<Tool>
+    suspend fun getTool(name: String): Tool?
 }

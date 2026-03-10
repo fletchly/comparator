@@ -19,17 +19,25 @@
 package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.model.actor.Actor
+import io.fletchly.comparator.model.message.Conversation
+import io.fletchly.comparator.model.message.ConversationKey
+import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.model.web.WebPanelMessage
+import io.fletchly.comparator.port.`in`.WebPanelData
 import io.fletchly.comparator.port.`in`.WebPanelLifecycle
+import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.port.out.WebPanelPort
+import io.fletchly.comparator.tool.ToolRegistry
 
 class WebPanelManager(
     private val webPanel: WebPanelPort,
+    private val context: ContextPort,
+    private val toolRegistry: ToolRegistry,
     private val notification: NotificationPort,
     private val log: LogPort
-) : WebPanelLifecycle {
+) : WebPanelLifecycle, WebPanelData {
     override suspend fun start(requestor: Actor) {
         val message = webPanel.start()
         displayPanelMessage(requestor, message, true)
@@ -69,6 +77,14 @@ class WebPanelManager(
             }
         }
     }
+
+    override suspend fun getAllConversations(): Map<ConversationKey, Conversation> = context.getAll()
+
+    override suspend fun getConversation(key: ConversationKey): Conversation = context.get(key)
+
+    override suspend fun getAllTools(): List<Tool> = toolRegistry.getTools()
+
+    override suspend fun getTool(name: String): Tool? = toolRegistry.getTool(name)
 
     private companion object {
         const val GRACE_MS = 1000L

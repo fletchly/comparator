@@ -40,6 +40,8 @@ class ToolManager(
     private var tools: Map<String, Tool> = mutableMapOf()
     private var frozen = false
 
+    override fun getTool(name: String): Tool? = tools[name]
+
     override fun getTools(): List<Tool> = tools.values.toList()
 
     override suspend fun execute(toolCall: ToolCall, toolContext: ToolContext): Message.Tool =
