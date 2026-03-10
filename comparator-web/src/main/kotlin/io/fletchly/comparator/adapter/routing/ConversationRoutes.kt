@@ -27,19 +27,19 @@ import io.ktor.server.routing.route
 import java.util.UUID
 
 class ConversationRoutes(
-    private val data: DataRepositoryPort
+    private val repository: DataRepositoryPort
 ) {
     fun Route.conversationRoutes() {
         route("/conversation") {
             get {
-                call.respond(data.getAllConversations())
+                call.respond(repository.getAllConversations())
             }
             get("/{id}") {
                 val id = call.parameters["id"]
                     ?: return@get call.respond(HttpStatusCode.Companion.BadRequest)
                 val uuid = runCatching { UUID.fromString(id) }
                     .getOrElse { return@get call.respond(HttpStatusCode.Companion.BadRequest) }
-                val conversation = data.getConversation(uuid)
+                val conversation = repository.getConversation(uuid)
                 call.respond(conversation)
             }
         }
