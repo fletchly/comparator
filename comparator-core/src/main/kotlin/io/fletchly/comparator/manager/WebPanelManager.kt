@@ -19,14 +19,13 @@
 package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.model.actor.Actor
-import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.`in`.WebPanelLifecycle
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.port.out.WebPanelPort
 
-class WebPanelLifecycleManager(
+class WebPanelManager(
     private val webPanel: WebPanelPort, // TODO: Bind web panel
     private val notification: NotificationPort,
     private val log: LogPort

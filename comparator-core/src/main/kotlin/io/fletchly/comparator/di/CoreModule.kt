@@ -21,7 +21,7 @@ package io.fletchly.comparator.di
 import io.fletchly.comparator.manager.ContextManager
 import io.fletchly.comparator.manager.ConversationManager
 import io.fletchly.comparator.manager.ToolManager
-import io.fletchly.comparator.manager.WebPanelLifecycleManager
+import io.fletchly.comparator.manager.WebPanelManager
 import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.`in`.ToolExecutor
@@ -37,5 +37,5 @@ val coreModule = module {
     singleOf(::ToolManager) binds arrayOf(ToolExecutor::class, ToolRegistryLifecycle::class, ToolRegistry::class)
     singleOf(::ContextManager) bind ContextLifecycle::class
     singleOf(::ConversationManager) bind MessageSender::class
-    singleOf(::WebPanelLifecycleManager) bind WebPanelLifecycle::class
+    singleOf(::WebPanelManager) bind WebPanelLifecycle::class
 }
