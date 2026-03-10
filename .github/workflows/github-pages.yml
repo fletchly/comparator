@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths: [ "comparator-api/**" ]
 
 permissions:
   contents: read
