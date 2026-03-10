@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ButtonVariant } from '$lib/types';
 
-	let { variant = 'primary' as ButtonVariant, children, onclick, disabled } = $props();
+	let { variant = 'primary' as ButtonVariant, children, onclick, disabled = false } = $props();
 
 	const variants: Record<ButtonVariant, string> = {
 		primary: 'hover:border-primary hover:text-primary',
