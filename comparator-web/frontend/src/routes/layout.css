@@ -19,3 +19,10 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+@import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/geist';
+
+@theme {
+	--font-sans: 'Geist Variable', sans-serif;
+	--font-mono: 'Geist Mono Variable', monospace;
+}
