@@ -18,6 +18,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
