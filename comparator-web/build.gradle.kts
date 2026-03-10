@@ -34,6 +34,43 @@ dependencies {
     implementation(libs.koin.core)
 }
 
+val bunExecutable: String by lazy {
+    val fromEnv = System.getenv("BUN_INSTALL")
+    if (fromEnv != null) {
+        "$fromEnv/bin/bun"
+    } else {
+        "${System.getProperty("user.home")}/.bun/bin/bun"
+    }
+}
+
+
+val frontendBunInstall by tasks.registering(Exec::class) {
+    workingDir = file("$projectDir/frontend")
+    commandLine(bunExecutable, "install")
+    inputs.file("$projectDir/frontend/bun.lock")
+    outputs.dir("$projectDir/frontend/node_modules")
+}
+
+val frontendBuild by tasks.registering(Exec::class) {
+    dependsOn(frontendBunInstall)
+    workingDir = file("$projectDir/frontend")
+    commandLine(bunExecutable, "run", "build")
+    inputs.dir("$projectDir/frontend/src")
+    inputs.file("$projectDir/frontend/svelte.config.js")
+    outputs.dir("$projectDir/frontend/build")
+}
+
+// Copy the SvelteKit build output into Ktor's classpath resources
+val copySvelteBuild by tasks.registering(Copy::class) {
+    dependsOn(frontendBuild)
+    from("$projectDir/frontend/build")
+    into("$projectDir/src/main/resources/web")
+}
+
+tasks.named("processResources") {
+    dependsOn(copySvelteBuild)
+}
+
 //tasks.register<Copy>("copySvelteBuild") {
 //    from("$projectDir/frontend/build")
 //    into("$projectDir/src/main/resources/web")

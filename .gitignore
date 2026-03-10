@@ -47,3 +47,6 @@ bin/
 # Common working directory
 run/
 runs/
+
+# Built web panel frontend
+comparator-web/src/main/resources/web/
