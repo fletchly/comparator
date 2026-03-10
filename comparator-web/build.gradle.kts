@@ -70,10 +70,3 @@ val copySvelteBuild by tasks.registering(Copy::class) {
 tasks.named("processResources") {
     dependsOn(copySvelteBuild)
 }
-
-//tasks.register<Copy>("copySvelteBuild") {
-//    from("$projectDir/frontend/build")
-//    into("$projectDir/src/main/resources/web")
-//    dependsOn(":web:frontendNpmBuild")  // custom task or use npmRunBuild if you configure it
-//}
-//tasks.named("build") { dependsOn("copySvelteBuild") }
