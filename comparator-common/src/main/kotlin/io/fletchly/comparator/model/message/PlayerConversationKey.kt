@@ -29,5 +29,4 @@ import java.util.*
  *
  * @property uniqueId The unique identifier for the player.
  */
-@JvmInline
-value class PlayerConversationKey(override val uniqueId: UUID) : ConversationKey
+class PlayerConversationKey(override val uniqueId: UUID) : ConversationKey()

@@ -20,6 +20,16 @@ package io.fletchly.comparator.model.message
 
 import java.util.*
 
-interface ConversationKey {
-    val uniqueId: UUID
+abstract class ConversationKey {
+    abstract val uniqueId: UUID
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ConversationKey) return false
+        return this.uniqueId == other.uniqueId
+    }
+
+    override fun hashCode(): Int {
+        return uniqueId.hashCode()
+    }
 }
