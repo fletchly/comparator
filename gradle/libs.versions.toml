@@ -55,6 +55,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor" }
 
 # Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -87,7 +88,8 @@ ktor-server = [
     "ktor-server-core",
     "ktor-server-netty",
     "ktor-server-content-negotiation",
-    "ktor-serialization-kotlinx-json"
+    "ktor-serialization-kotlinx-json",
+    "ktor-server-sse"
 ]
 configurate = [
     "configurate-hocon",

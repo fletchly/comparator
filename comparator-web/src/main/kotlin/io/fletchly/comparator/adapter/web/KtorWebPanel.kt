@@ -19,10 +19,12 @@
 package io.fletchly.comparator.adapter.web
 
 import io.fletchly.comparator.adapter.routing.conversationRoutes
+import io.fletchly.comparator.adapter.routing.eventRoutes
 import io.fletchly.comparator.adapter.routing.toolRoutes
 import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.out.DataRepositoryPort
+import io.fletchly.comparator.port.out.EventPort
 import io.fletchly.comparator.port.out.WebPanelPort
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -31,10 +33,12 @@ import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
+import io.ktor.server.sse.*
 import org.koin.java.KoinJavaComponent.getKoin
 
 class KtorWebPanel(
     private val options: WebPanelOptions,
+    private val eventBus: EventPort
 ) : WebPanelPort {
     private val repository: DataRepositoryPort by lazy { getKoin().get() }
     private var server: EmbeddedServer<*, *>? = null
@@ -45,9 +49,11 @@ class KtorWebPanel(
         try {
             server = embeddedServer(Netty, port = options.port, host = options.host) {
                 install(ContentNegotiation) { json() }
+                install(SSE)
 
                 routing {
                     route("/api") {
+                        eventRoutes(eventBus)
                         conversationRoutes(repository)
                         toolRoutes(repository)
                     }
@@ -78,8 +84,11 @@ class KtorWebPanel(
         return WebPanelMessage.Ok("Stopped the web panel")
     }
 
-    override suspend fun restart(onStop: suspend (WebPanelMessage) -> Unit, onStart: suspend (WebPanelMessage) -> Unit) {
-        onStop.invoke(stop(1000,1000))
+    override suspend fun restart(
+        onStop: suspend (WebPanelMessage) -> Unit,
+        onStart: suspend (WebPanelMessage) -> Unit
+    ) {
+        onStop.invoke(stop(1000, 1000))
         onStart.invoke(start())
     }
 

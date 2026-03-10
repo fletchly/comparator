@@ -23,7 +23,7 @@ import io.fletchly.comparator.port.out.EventPort
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 class EventBus: EventPort {
-    override val events = MutableSharedFlow<ComparatorEvent>()
+    override val events = MutableSharedFlow<ComparatorEvent>(extraBufferCapacity = 64)
 
     override fun emit(event: ComparatorEvent) {
         events.tryEmit(event)
