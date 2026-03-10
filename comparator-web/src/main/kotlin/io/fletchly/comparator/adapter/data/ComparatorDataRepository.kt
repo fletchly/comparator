@@ -52,7 +52,7 @@ class ComparatorDataRepository(
         data.getConversation(BasicConversationKey(key)).messages.map { it.toDto() }
 
     override suspend fun clearAllConversations() {
-        data.getAllConversations()
+        data.clearAllConversations()
     }
 
     override suspend fun clearConversation(key: UUID) {
