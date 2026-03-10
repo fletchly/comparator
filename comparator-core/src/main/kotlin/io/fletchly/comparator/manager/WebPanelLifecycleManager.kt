@@ -55,7 +55,6 @@ class WebPanelLifecycleManager(
     }
 
     override suspend fun forceStop() {
-        log.info("Shutting down web panel")
         webPanel.forceStop()
     }
 
