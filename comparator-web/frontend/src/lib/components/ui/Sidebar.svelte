@@ -32,6 +32,13 @@
 		isMobile = $bindable(false)
 	}: Props = $props();
 
+	// Initialise synchronously to avoid a collapsed→expanded flash on load
+	const _mq = typeof window !== 'undefined' ? window.matchMedia('(max-width: 767px)') : null;
+	if (_mq?.matches) {
+		isMobile = true;
+		collapsed = true;
+	}
+
 	$effect(() => {
 		const mq = window.matchMedia('(max-width: 767px)');
 
@@ -40,7 +47,6 @@
 			collapsed = e.matches;
 		};
 
-		onChange(mq);
 		mq.addEventListener('change', onChange);
 		return () => mq.removeEventListener('change', onChange);
 	});
@@ -54,7 +60,7 @@
          data-[mobile=true]:fixed data-[mobile=true]:inset-y-0 data-[mobile=true]:left-0 data-[mobile=true]:z-50"
 >
 	<!-- Header: logo + brand name + toggle -->
-	<div class="flex items-center gap-3 overflow-hidden p-2">
+	<div class="flex items-center gap-3 overflow-hidden border-b border-b-muted p-2">
 		{#if !collapsed}
 			<div
 				class="flex flex-1 items-center gap-3 overflow-hidden"
@@ -120,6 +126,11 @@
 							class="flex items-center gap-3 py-2 pr-2 pl-8 whitespace-nowrap text-muted-light
                              transition-colors hover:bg-muted hover:text-foreground data-[active=true]:border-l-2 data-[active=true]:border-l-primary data-[active=true]:bg-primary-tint data-[active=true]:text-foreground"
 						>
+							{#if child.icon}
+								<span class="shrink-0">
+									<child.icon size={18} />
+								</span>
+							{/if}
 							{#if !collapsed}
 								<span
 									transition:fade={{ duration: 150 }}

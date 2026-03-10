@@ -16,19 +16,6 @@
   - limitations under the License.
   -->
 
-<!-- <script lang="ts">
-	import './layout.css';
-	import favicon from '$lib/assets/favicon.svg';
-
-	let { children } = $props();
-</script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-	<title>Comparator Panel</title>
-</svelte:head>
-{@render children()} -->
-
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
@@ -42,7 +29,7 @@
 		{ id: 'home', label: 'Home', href: '/', icon: House },
 		{
 			id: 'conversation',
-			label: 'Conversation',
+			label: 'Conversations',
 			href: '/conversation',
 			icon: MessageSquare,
 			children: [

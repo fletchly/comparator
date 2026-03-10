@@ -1,14 +1,9 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { type ComponentProps } from 'svelte';
-	import {
-		Users,
-		House,
-		MessageSquare,
-		MessageSquareText,
-		MessageSquareCode
-	} from '@lucide/svelte';
+	import { House, MessageSquare, MessageSquareText, MessageSquareCode } from '@lucide/svelte';
 	import Sidebar from './Sidebar.svelte';
+	import SidebarStoryWrapper from './SidebarStoryWrapper.svelte';
 
 	type Args = ComponentProps<typeof Sidebar>;
 
@@ -52,16 +47,7 @@
 </script>
 
 {#snippet template(args: Args)}
-	{@const state = { isMobile: false }}
-	<div class="relative flex h-screen">
-		<Sidebar {...args as Args} bind:isMobile={state.isMobile} />
-		<main
-			class="flex-1 overflow-auto p-6"
-			style:padding-left={state.isMobile ? '3.5rem' : undefined}
-		>
-			<p class="text-sm text-gray-400">Main content area</p>
-		</main>
-	</div>
+	<SidebarStoryWrapper {args} />
 {/snippet}
 
 <!-- Default: no active item, children hidden -->
