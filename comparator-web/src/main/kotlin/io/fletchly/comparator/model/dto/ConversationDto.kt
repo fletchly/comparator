@@ -16,12 +16,12 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.message
+package io.fletchly.comparator.model.dto
 
-import java.util.UUID
+import kotlinx.serialization.Serializable
 
-class BasicConversationKey(
-    override val uniqueId: UUID,
-) : ConversationKey() {
-    override val displayName: String? = null
-}
+@Serializable
+data class ConversationDto(
+    val displayName: String?,
+    val messages: List<MessageDto>
+)

@@ -2,17 +2,15 @@
 	import { invalidate } from '$app/navigation';
 	import { clearAllConversations } from '$lib/api';
 	import { resolve } from '$app/paths';
+	import type { Conversation } from '$lib/types';
 	import type { PageData } from './$types';
-	import type { Message } from '$lib/types';
 
 	let { data }: { data: PageData } = $props();
 
-	const entries = $derived(Object.entries(data.conversations) as [string, Message[]][]);
+	const entries = $derived(Object.entries(data.conversations) as [string, Conversation][]);
 
-	function displayName(id: string): string {
-		if (id === data.wellKnown.console) return 'Console';
-		if (id === data.wellKnown.chat) return 'Chat';
-		return id;
+	function displayName(id: string, conversation: Conversation): string {
+		return conversation.displayName ?? id;
 	}
 
 	async function handleClearAll() {
@@ -25,10 +23,10 @@
 
 <button onclick={handleClearAll}>Clear all</button>
 
-{#each entries as [id, messages] (id)}
+{#each entries as [id, conversation] (id)}
 	<section>
-		<h2><a href={resolve('/conversation/[id]', { id })}>{displayName(id)}</a></h2>
-		<p>{messages.length} message{messages.length === 1 ? '' : 's'}</p>
+		<h2><a href={resolve('/conversation/[id]', { id })}>{displayName(id, conversation)}</a></h2>
+		<p>{conversation.messages.length} message{conversation.messages.length === 1 ? '' : 's'}</p>
 	</section>
 {:else}
 	<p>No conversations.</p>

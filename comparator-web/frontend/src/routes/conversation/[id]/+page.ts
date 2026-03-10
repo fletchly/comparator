@@ -12,8 +12,12 @@ export const load: PageLoad = async ({ params, depends }) => {
 	if (id === chatId) redirect(307, '/conversation/chat');
 
 	try {
-		const messages = await getConversation(id);
-		return { id, messages };
+		const conversation = await getConversation(id);
+		return {
+			id,
+			messages: conversation.messages,
+			displayName: conversation.displayName
+		};
 	} catch {
 		error(404, 'Conversation not found');
 	}

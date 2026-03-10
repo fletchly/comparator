@@ -11,6 +11,11 @@ export interface ToolCall {
 	arguments: Record<string, ArgumentValue>;
 }
 
+export interface Conversation {
+	displayName: string | null;
+	messages: Message[];
+}
+
 export type Message =
 	| { type: 'user'; content: string; name: string }
 	| { type: 'assistant'; content: string; toolCalls: ToolCall[] | null }

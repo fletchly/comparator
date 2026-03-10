@@ -11,7 +11,7 @@
 	}
 </script>
 
-<h1>Conversation {data.id}</h1>
+<h1>Conversation {data.displayName ?? data.id}</h1>
 
 <button onclick={handleClear}>Clear</button>
 

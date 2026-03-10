@@ -3,6 +3,6 @@ import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ depends }) => {
 	depends('app:conversations');
-	const messages = await getChatConversation();
-	return { messages };
+	const conversation = await getChatConversation();
+	return { messages: conversation.messages };
 };

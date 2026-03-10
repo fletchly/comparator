@@ -18,12 +18,15 @@
 
 package io.fletchly.comparator.adapter.data
 
+import io.fletchly.comparator.model.dto.ConversationDto
 import io.fletchly.comparator.model.dto.MessageDto
 import io.fletchly.comparator.model.dto.ToolDto
 import io.fletchly.comparator.model.dto.toDto
 import io.fletchly.comparator.model.message.BasicConversationKey
 import io.fletchly.comparator.model.message.ChatConversationKey
 import io.fletchly.comparator.model.message.ConsoleConversationKey
+import io.fletchly.comparator.model.message.Conversation
+import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.port.`in`.WebPanelData
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import java.util.*
@@ -31,25 +34,36 @@ import java.util.*
 class ComparatorDataRepository(
     private val data: WebPanelData
 ) : DataRepositoryPort {
-    override suspend fun getAllConversations(): Map<String, List<MessageDto>> =
+    override suspend fun getAllConversations(): Map<String, ConversationDto> =
         data.getAllConversations()
             .map { (key, value) ->
-                key.uniqueId.toString() to value.messages.map { it.toDto() }
+                key.uniqueId.toString() to ConversationDto(
+                    displayName = key.displayName,
+                    messages = value.messages.map { it.toDto() }
+                )
             }
             .toMap()
 
-    override suspend fun getAllPlayerConversations(): Map<String, List<MessageDto>> =
+    override suspend fun getAllPlayerConversations(): Map<String, ConversationDto> =
         data.getAllConversations()
             .filter { (key, _) ->
                 key != ChatConversationKey && key != ConsoleConversationKey
             }
             .map { (key, value) ->
-                key.uniqueId.toString() to value.messages.map { it.toDto() }
+                key.uniqueId.toString() to ConversationDto(
+                    displayName = key.displayName,
+                    messages = value.messages.map { it.toDto() }
+                )
             }
             .toMap()
 
-    override suspend fun getConversation(key: UUID): List<MessageDto> =
-        data.getConversation(BasicConversationKey(key)).messages.map { it.toDto() }
+    override suspend fun getConversation(key: UUID): ConversationDto =
+        data.getConversation(BasicConversationKey(key)).let {
+            ConversationDto(
+                displayName = it.ownerDisplayName(),
+                messages = it.messages.map { m -> m.toDto() }
+            )
+        }
 
     override suspend fun clearAllConversations() {
         data.clearAllConversations()
@@ -65,4 +79,7 @@ class ComparatorDataRepository(
     override suspend fun getTool(name: String): Result<ToolDto> = runCatching {
         data.getTool(name)?.toDto() ?: throw NoSuchElementException("Tool not found")
     }
+
+    private fun Conversation.ownerDisplayName(): String? =
+        messages.filterIsInstance<Message.User>().firstOrNull()?.actor?.displayName
 }
