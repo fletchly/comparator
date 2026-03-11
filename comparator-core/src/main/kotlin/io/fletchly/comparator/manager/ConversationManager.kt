@@ -24,7 +24,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.ToolContext
-import io.fletchly.comparator.model.web.ConversationEvent
+import io.fletchly.comparator.model.event.ConversationEvent
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi

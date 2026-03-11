@@ -20,7 +20,7 @@ package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.ConversationKey
-import io.fletchly.comparator.model.web.ConversationEvent
+import io.fletchly.comparator.model.event.ConversationEvent
 import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.EventPort

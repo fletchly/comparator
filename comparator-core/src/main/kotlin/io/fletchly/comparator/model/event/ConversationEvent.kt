@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.web
+package io.fletchly.comparator.model.event
 
-import io.fletchly.comparator.model.ComparatorEvent
 import io.fletchly.comparator.model.message.ConversationKey
 
 sealed interface ConversationEvent: ComparatorEvent {

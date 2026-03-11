@@ -16,6 +16,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model
+package io.fletchly.comparator.model.event
 
 interface ComparatorEvent

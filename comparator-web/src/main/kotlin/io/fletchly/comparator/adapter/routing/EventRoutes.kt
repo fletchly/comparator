@@ -19,7 +19,7 @@
 package io.fletchly.comparator.adapter.routing
 
 import io.fletchly.comparator.adapter.event.EventBus
-import io.fletchly.comparator.model.web.ConversationEvent
+import io.fletchly.comparator.model.event.ConversationEvent
 import io.fletchly.comparator.port.out.EventPort
 import io.ktor.server.routing.Route
 import io.ktor.server.sse.sse

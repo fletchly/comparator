@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.event
 
-import io.fletchly.comparator.model.ComparatorEvent
+import io.fletchly.comparator.model.event.ComparatorEvent
 import io.fletchly.comparator.port.out.EventPort
 import kotlinx.coroutines.flow.MutableSharedFlow
 
