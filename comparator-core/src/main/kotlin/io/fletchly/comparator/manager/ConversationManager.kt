@@ -25,8 +25,10 @@ import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.ToolContext
 import io.fletchly.comparator.model.event.ConversationEvent
+import io.fletchly.comparator.model.event.ToolEvent
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
+import io.fletchly.comparator.util.toJsonObject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import java.util.concurrent.ConcurrentHashMap
@@ -114,10 +116,11 @@ class ConversationManager(
 
         private suspend fun handleToolCalls(toolCalls: List<ToolCall>) {
             toolCalls
-                .map { toolCall -> tool.execute(toolCall, toolContext) }
-                .forEach {
-                    context.append(target.conversationKey, it)
+                .map { toolCall -> toolCall to tool.execute(toolCall, toolContext) }
+                .forEach { (toolCall, result) ->
+                    context.append(target.conversationKey, result)
                     event.emit(ConversationEvent.MessageAdded(target.conversationKey))
+                    event.emit(ToolEvent.ToolExecuted(toolCall.arguments, result, target.conversationKey))
                 }
         }
     }
