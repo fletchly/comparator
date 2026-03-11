@@ -23,10 +23,19 @@ const mockConversations: Record<string, MockConversation> = {
 			{ type: 'user', content: "What's a good sword enchantment?", name: 'Steve' },
 			{
 				type: 'assistant',
-				content: 'Sharpness V is generally the best for damage.',
-				toolCalls: [{ name: 'game_version', arguments: {} }]
+				content: 'Let me search',
+				toolCalls: [
+					{ name: 'web_search', arguments: { query: 'best sword enchantment' } },
+					{ name: 'game_version', arguments: {} }
+				]
 			},
-			{ type: 'tool', content: '{"version": "1.21.4"}', name: 'game_version' }
+			{ type: 'tool', content: '{"Sharpness V"}', name: 'web_search' },
+			{ type: 'tool', content: '{"version": "1.21.4"}', name: 'game_version' },
+			{
+				type: 'assistant',
+				content: 'The best sword enchantment as of 1.21.4 is Sharpness V',
+				toolCalls: null
+			}
 		]
 	}
 };

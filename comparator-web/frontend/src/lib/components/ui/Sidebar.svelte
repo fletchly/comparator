@@ -93,7 +93,7 @@
 	</div>
 
 	<!-- Nav items -->
-	<nav class="flex flex-col gap-1 overflow-hidden p-2">
+	<nav class="flex flex-col gap-1 overflow-hidden p-2 font-mono font-medium uppercase">
 		{#each items as item (item.id)}
 			<a
 				href={resolve(item.href)}

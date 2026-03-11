@@ -28,6 +28,8 @@
 
 	--color-primary: #ffbd59;
 	--color-primary-tint: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--color-secondary: #de7937;
+	--color-primary-tint: color-mix(in srgb, var(--color-secondary) 10%, transparent);
 	--color-success: #4bde80;
 	--color-success-tint: color-mix(in srgb, var(--color-success) 10%, transparent);
 	--color-destructive: #f87171;
