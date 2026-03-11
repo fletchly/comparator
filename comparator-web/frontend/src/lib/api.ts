@@ -64,3 +64,7 @@ export function getTool(name: string): Promise<Tool> {
 export function getWellKnownIds(): Promise<WellKnownIds> {
 	return request('/conversation/well-known');
 }
+
+export function getVersion(): Promise<{ version: string }> {
+	return request('/version');
+}

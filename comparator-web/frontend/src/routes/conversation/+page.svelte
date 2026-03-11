@@ -21,14 +21,21 @@
 
 <PageHeading heading="Conversations" />
 
-<Button onclick={handleClearAll} variant="destructive"
-	><Trash class="inline h-[1em] w-[1em] align-[-0.1em]" /> Clear All</Button
->
+<div class="mb-4 flex items-center justify-between">
+	<span class="font-mono text-sm text-muted-light"
+		>{entries.length} conversation{entries.length === 1 ? '' : 's'}</span
+	>
+	<Button onclick={handleClearAll} variant="destructive">
+		<Trash class="inline h-[1em] w-[1em] align-[-0.1em]" /> Clear All
+	</Button>
+</div>
 
-{#each entries as [id, conversation] (id)}
-	<a href={resolve('/conversation/[id]', { id })}>
-		<ConversationListItem {id} {conversation} />
-	</a>
-{:else}
-	<p>No conversations.</p>
-{/each}
+<div class="flex flex-col gap-2">
+	{#each entries as [id, conversation] (id)}
+		<a href={resolve('/conversation/[id]', { id })}>
+			<ConversationListItem {id} {conversation} />
+		</a>
+	{:else}
+		<p class="font-mono text-sm text-muted-light">No conversations.</p>
+	{/each}
+</div>

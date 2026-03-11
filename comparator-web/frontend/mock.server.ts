@@ -116,6 +116,8 @@ serve({
 
 		const noContent = () => new Response(null, { status: 204, headers });
 
+		if (path === '/api/version' && method === 'GET') return json({ version: '0.1.0-dev' });
+
 		// SSE
 		if (path === '/api/events') return sseResponse();
 
