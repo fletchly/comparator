@@ -55,7 +55,10 @@
 <div class="flex h-screen">
 	<Sidebar items={navItems} bind:activeId bind:isMobile />
 
-	<main class="flex-1 overflow-auto" style:padding-left={isMobile ? '3.5rem' : undefined}>
+	<main
+		class="flex-1 overflow-auto p-8"
+		style:padding-left={isMobile ? 'calc(3.5rem + 1.5rem)' : undefined}
+	>
 		{@render children()}
 	</main>
 </div>

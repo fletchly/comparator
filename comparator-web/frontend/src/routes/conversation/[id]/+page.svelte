@@ -13,7 +13,6 @@
 	}
 </script>
 
-<h1>Conversation {data.displayName ?? data.id}</h1>
 <PageHeading heading={data.displayName ?? data.id} />
 
 <button onclick={handleClear}>Clear</button>

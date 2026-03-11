@@ -30,6 +30,23 @@ const dirname =
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
+	server: {
+		proxy: {
+			'/api': {
+				target: 'http://localhost:3001',
+				changeOrigin: true,
+				configure: (proxy) => {
+					proxy.on('error', (err, _req, res) => {
+						console.warn('Mock API unavailable:', err.message);
+						if ('writeHead' in res) {
+							res.writeHead(503, { 'Content-Type': 'application/json' });
+							res.end(JSON.stringify({ error: 'Mock API unavailable' }));
+						}
+					});
+				}
+			}
+		}
+	},
 	test: {
 		projects: [
 			{

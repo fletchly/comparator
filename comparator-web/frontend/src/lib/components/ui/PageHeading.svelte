@@ -14,7 +14,10 @@
 
 	let { heading }: Props = $props();
 
+	const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 	function formatLabel(segment: string): string {
+		if (UUID_REGEX.test(segment)) return segment;
 		return segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 	}
 
@@ -31,15 +34,17 @@
 	});
 </script>
 
-<header class="border-b border-b-muted">
+<header class="mb-2 border-b border-b-muted pb-2">
 	<h1 class="font-mono text-xl">{heading}</h1>
 
 	<nav aria-label="Breadcrumb" class="font-mono text-[12px] text-muted-light uppercase">
-		<ol class="flex items-center gap-2">
+		<ol class="hidden items-center gap-2 sm:flex">
 			{#each breadcrumbs as crumb, i (i)}
 				<li>
 					{#if i < breadcrumbs.length - 1}
-						<a href={resolve(crumb.href)}>{crumb.label}</a>
+						<a class="transition-colors hover:text-foreground" href={resolve(crumb.href)}
+							>{crumb.label}</a
+						>
 					{:else}
 						<span aria-current="page">{crumb.label}</span>
 					{/if}
