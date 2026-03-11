@@ -24,6 +24,7 @@ import io.fletchly.comparator.model.message.Message
 import io.fletchly.comparator.model.message.MessageResult
 import io.fletchly.comparator.model.message.ToolCall
 import io.fletchly.comparator.model.tool.ToolContext
+import io.fletchly.comparator.model.web.ConversationEvent
 import io.fletchly.comparator.port.`in`.MessageSender
 import io.fletchly.comparator.port.out.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,6 +53,7 @@ class ConversationManager(
     private val tool: ToolManager,
     private val chat: ChatPort,
     private val notification: NotificationPort,
+    private val event: EventPort,
     private val coroutineScope: CoroutineScopePort
 ) : MessageSender {
     private val scopeChannels = ConcurrentHashMap<ConversationKey, Channel<Message.User>>()
@@ -84,6 +86,7 @@ class ConversationManager(
 
     private suspend fun startConversation(message: Message.User) {
         context.append(message.actor.conversationKey, message)
+        event.emit(ConversationEvent.MessageAdded(message.actor.conversationKey))
         chat.message(message.actor, message)
     }
 
@@ -98,6 +101,7 @@ class ConversationManager(
                     val response = result.message
                     if (response.content.isNotBlank()) chat.message(target, response)
                     context.append(target.conversationKey, response)
+                    event.emit(ConversationEvent.MessageAdded(target.conversationKey))
 
                     val toolCalls = response.toolCalls
                     if (toolCalls.isNullOrEmpty()) return
@@ -111,7 +115,10 @@ class ConversationManager(
         private suspend fun handleToolCalls(toolCalls: List<ToolCall>) {
             toolCalls
                 .map { toolCall -> tool.execute(toolCall, toolContext) }
-                .forEach { context.append(target.conversationKey, it) }
+                .forEach {
+                    context.append(target.conversationKey, it)
+                    event.emit(ConversationEvent.MessageAdded(target.conversationKey))
+                }
         }
     }
 

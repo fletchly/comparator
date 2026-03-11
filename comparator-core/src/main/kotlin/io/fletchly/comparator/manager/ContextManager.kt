@@ -20,8 +20,10 @@ package io.fletchly.comparator.manager
 
 import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.ConversationKey
+import io.fletchly.comparator.model.web.ConversationEvent
 import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.EventPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.pluralize
@@ -41,10 +43,12 @@ import io.fletchly.comparator.util.pluralize
 class ContextManager(
     private val context: ContextPort,
     private val notification: NotificationPort,
-    private val log: LogPort
+    private val log: LogPort,
+    private val event: EventPort
 ) : ContextLifecycle {
     override suspend fun clearSelf(target: Actor) {
         context.clear(target.conversationKey)
+        event.emit(ConversationEvent.ConversationCleared(target.conversationKey))
         log.info("Cleared chat context for ${target.displayName}", ContextManager::class.simpleName)
         notification.info(target, "Cleared chat context")
     }
@@ -55,6 +59,7 @@ class ContextManager(
     ) {
         targets.forEach {
             context.clear(it)
+            event.emit(ConversationEvent.ConversationCleared(it))
         }
 
         val message = "Cleared chat context for ${targets.size} ${"target".pluralize(targets.size)}"
@@ -64,6 +69,7 @@ class ContextManager(
 
     override suspend fun clearAll(requestor: Actor) {
         context.clearAll()
+        event.emit(ConversationEvent.AllCleared)
         val message = "Cleared chat context for all scopes"
         log.info(message, ContextManager::class.simpleName)
         notification.info(requestor, message)
@@ -71,5 +77,6 @@ class ContextManager(
 
     override suspend fun clearFull() {
         context.clearAll()
+        event.emit(ConversationEvent.AllCleared)
     }
 }

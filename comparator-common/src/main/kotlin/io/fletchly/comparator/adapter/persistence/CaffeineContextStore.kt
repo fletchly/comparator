@@ -44,19 +44,23 @@ import java.util.concurrent.TimeUnit
 class CaffeineContextStore(private val config: ContextOptions) : ContextPort {
     private val context = Caffeine.newBuilder()
         .expireAfterAccess(config.expireAfterAccessMinutes, TimeUnit.MINUTES)
-        .build<UUID, Conversation>()
+        .build<ConversationKey, Conversation>()
+
+    override suspend fun getAll(): Map<ConversationKey, Conversation> {
+        return context.asMap()
+    }
 
     override suspend fun get(key: ConversationKey): Conversation {
-        return context.getIfPresent(key.uniqueId) ?: conversationOf()
+        return context.getIfPresent(key) ?: conversationOf()
     }
 
     override suspend fun append(key: ConversationKey, message: Message) {
-        val conversation = context.get(key.uniqueId) { conversationOf() }
+        val conversation = context.get(key) { conversationOf() }
         conversation.addAndTrim(message, config.conversationMessageLimit)
     }
 
     override suspend fun clear(key: ConversationKey) {
-        context.invalidate(key.uniqueId)
+        context.invalidate(key)
     }
 
     override suspend fun clearAll() {

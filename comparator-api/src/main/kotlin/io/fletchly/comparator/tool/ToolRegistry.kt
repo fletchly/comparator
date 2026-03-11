@@ -29,5 +29,6 @@ import io.fletchly.comparator.model.tool.Tool
  */
 interface ToolRegistry {
     fun register(vararg tools: Tool)
+    fun getTool(name: String): Tool?
     fun getTools(): List<Tool>
 }

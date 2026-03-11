@@ -21,11 +21,14 @@ package io.fletchly.comparator.port.out
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.message.Message
+import java.util.UUID
 
 /**
  * Defines a port for managing user-specific conversational contexts.
  */
 interface ContextPort {
+    suspend fun getAll(): Map<ConversationKey, Conversation>
+
     /**
      * Retrieves the conversation associated with the specified key.
      *

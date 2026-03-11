@@ -43,6 +43,7 @@ plugins {
 include(":comparator-core")
 include(":comparator-api")
 include(":comparator-common")
+include(":comparator-web")
 include(":comparator-paper")
 
 rootProject.name = "comparator"

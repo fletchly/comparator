@@ -1,0 +1,51 @@
+/*
+ * This file is part of comparator, licensed under the Apache License 2.0
+ *
+ * Copyright (c) 2026 fletchly <https://github.com/fletchly>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+@import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/geist';
+
+@theme {
+	--font-sans: 'Geist Variable', sans-serif;
+	--font-mono: 'Geist Mono Variable', monospace;
+
+	--color-primary: #ffbd59;
+	--color-primary-tint: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	--color-secondary: #de7937;
+	--color-primary-tint: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+	--color-success: #4bde80;
+	--color-success-tint: color-mix(in srgb, var(--color-success) 10%, transparent);
+	--color-destructive: #f87171;
+	--color-destructive-tint: color-mix(in srgb, var(--color-destructive) 10%, transparent);
+	--color-primary-foreground: #1a1a1a;
+	--color-foreground-muted: #727272;
+	--color-background: #1a1a1a;
+	--color-background-secondary: #212121;
+	--color-foreground: #f0f0f0;
+	--color-muted: #373737;
+	--color-muted-light: #acacac;
+	--color-border-accent: var(--color-primary);
+}
+
+@layer base {
+	body {
+		@apply bg-background text-foreground;
+	}
+}

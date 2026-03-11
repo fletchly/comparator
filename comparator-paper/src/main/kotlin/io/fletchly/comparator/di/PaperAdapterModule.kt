@@ -20,25 +20,27 @@ package io.fletchly.comparator.di
 
 import io.fletchly.comparator.adapter.chat.PaperChatService
 import io.fletchly.comparator.adapter.chat.PaperNotificationService
-import io.fletchly.comparator.adapter.command.AdminCommand
+import io.fletchly.comparator.adapter.command.ComparatorCommand
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
 import io.fletchly.comparator.adapter.event.PaperChatEvents
 import io.fletchly.comparator.adapter.event.ToolRegistrationEvents
 import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleCoroutineScope
 import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
+import io.fletchly.comparator.adapter.version.BukkitVersionAdapter
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.port.out.ChatPort
 import io.fletchly.comparator.port.out.CoroutineScopePort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
+import io.fletchly.comparator.port.out.VersionPort
 import org.bukkit.event.Listener
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private val commands = module {
-    singleOf(::AdminCommand) bind CommandDefinition::class
+    singleOf(::ComparatorCommand) bind CommandDefinition::class
     singleOf(::AskCommand) bind CommandDefinition::class
 }
 
@@ -54,4 +56,5 @@ val paperAdapterModule = module {
     singleOf(::PaperChatService) bind ChatPort::class
     singleOf(::BukkitPluginLogger) bind LogPort::class
     singleOf(::BukkitPluginLifecycleCoroutineScope) bind CoroutineScopePort::class
+    singleOf(::BukkitVersionAdapter) bind VersionPort::class
 }

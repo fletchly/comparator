@@ -49,6 +49,7 @@ class ConversationManagerTest {
     private val tool = mockk<ToolManager>(relaxed = true)
     private val chat = mockk<ChatPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
+    private val event = mockk<EventPort>(relaxed = true)
     private val coroutineScope = mockk<CoroutineScopePort>()
     private val toolContext = mockk<ToolContext>(relaxed = true)
 
@@ -68,7 +69,7 @@ class ConversationManagerTest {
         every { coroutineScope.launch(any()) } answers {
             backgroundScope.launch(UnconfinedTestDispatcher(testScheduler), block = firstArg())
         }
-        return ConversationManager(context, system, ai, tool, chat, notification, coroutineScope)
+        return ConversationManager(context, system, ai, tool, chat, notification, event, coroutineScope)
     }
 
     // --- sendUser: basic flow ---

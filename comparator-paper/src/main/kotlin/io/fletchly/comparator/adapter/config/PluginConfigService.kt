@@ -55,6 +55,13 @@ class PluginConfigService(
 ) {
     @Suppress("ObjectPropertyName") // allow more readable transformation names
     private companion object {
+        val `4 to 5`: ConfigurationTransformation = ConfigurationTransformation.builder()
+            .addAction(path()) {_, value ->
+                value.node("web-panel", "port").set(8080)
+                value.node("web-panel", "host").set("0.0.0.0")
+                null
+            }.build()
+
         val `3 to 4`: ConfigurationTransformation = ConfigurationTransformation.builder()
             .addAction(path("tool")) { _, value ->
                 value.node("player-info", "enabled").set(true)
@@ -85,6 +92,7 @@ class PluginConfigService(
 
         val migrations = ConfigurationTransformation.versionedBuilder()
             .versionKey(ConfigLoader.VERSION_KEY)
+            .addVersion(5, `4 to 5`)
             .addVersion(4, `3 to 4`)
             .addVersion(3, `2 to 3`)
             .addVersion(2, `1 to 2`)

@@ -31,6 +31,7 @@ import java.util.*
  * @property uniqueId The unique identifier for the chat conversation, derived
  *                    from a name-based `UUID` using the string "CHAT".
  */
-object ChatConversationKey : ConversationKey {
+object ChatConversationKey : ConversationKey() {
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CHAT".toByteArray())
+    override val displayName: String = "Chat"
 }

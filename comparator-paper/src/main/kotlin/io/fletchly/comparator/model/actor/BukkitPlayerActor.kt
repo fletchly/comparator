@@ -40,7 +40,7 @@ value class BukkitPlayerActor(val player: Player) : Actor {
     override val displayName: String
         get() = player.name
     override val conversationKey: ConversationKey
-        get() = PlayerConversationKey(player.uniqueId)
+        get() = PlayerConversationKey(player.uniqueId, player.name)
     override val isOnline: Boolean
         get() = player.isOnline
 }

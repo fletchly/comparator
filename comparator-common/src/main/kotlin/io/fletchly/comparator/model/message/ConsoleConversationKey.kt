@@ -32,6 +32,7 @@ import java.util.*
  * @property uniqueId The unique identifier for the console conversation, derived from
  *                    a name-based `UUID` generated with the string "CONSOLE".
  */
-object ConsoleConversationKey : ConversationKey {
+object ConsoleConversationKey : ConversationKey() {
     override val uniqueId: UUID = UUID.nameUUIDFromBytes("CONSOLE".toByteArray())
+    override val displayName: String = "Console"
 }

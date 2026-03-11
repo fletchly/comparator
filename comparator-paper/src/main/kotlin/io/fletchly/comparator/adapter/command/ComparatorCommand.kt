@@ -29,6 +29,7 @@ import io.fletchly.comparator.model.message.ChatConversationKey
 import io.fletchly.comparator.model.message.ConsoleConversationKey
 import io.fletchly.comparator.model.message.PlayerConversationKey
 import io.fletchly.comparator.port.`in`.ContextLifecycle
+import io.fletchly.comparator.port.`in`.WebPanelLifecycle
 import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
@@ -43,8 +44,9 @@ import org.bukkit.permissions.PermissionDefault
  * @param contextLifecycle The utility that performs clearing of conversational contexts for users.
  * @param pluginRuntime The scheduler for managing asynchronous command execution and tasks.
  */
-class AdminCommand(
+class ComparatorCommand(
     private val contextLifecycle: ContextLifecycle,
+    private val webPanelLifecycle: WebPanelLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
@@ -71,10 +73,17 @@ class AdminCommand(
             PermissionDefault.OP
         )
 
+        val webPanelPermission = Permission(
+            "$permission.web",
+            "Allow a player to control the web panel",
+            PermissionDefault.OP
+        )
+
         childPermissions = listOf(
             clearSelfPermission,
             clearOtherPermission,
-            clearAllPermission
+            clearAllPermission,
+            webPanelPermission
         )
 
         node {
@@ -114,6 +123,37 @@ class AdminCommand(
                         clearAll(ctx)
                         Command.SINGLE_SUCCESS
                     }
+            ).then(
+                Commands.literal("panel")
+                    .requires { it.sender.hasPermission(webPanelPermission.name) }
+                    .then(
+                        Commands.literal("start")
+                            .executes { ctx ->
+                                startWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("stop")
+                            .executes { ctx ->
+                                stopWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("restart")
+                            .executes { ctx ->
+                                restartWebPanel(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
+                    .then(
+                        Commands.literal("status")
+                            .executes { ctx ->
+                                webPanelStatus(ctx)
+                                Command.SINGLE_SUCCESS
+                            }
+                    )
             )
         }
     }
@@ -129,7 +169,7 @@ class AdminCommand(
     private fun clearOther(ctx: CommandContext<CommandSourceStack>) {
         val targetResolver =
             ctx.getArgument("targets", PlayerSelectorArgumentResolver::class.java)
-        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId) }
+        val targets = targetResolver.resolve(ctx.source).map { PlayerConversationKey(it.uniqueId, it.name) }
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
@@ -161,6 +201,38 @@ class AdminCommand(
 
         pluginRuntime.runCoroutine {
             contextLifecycle.clearAll(requestor)
+        }
+    }
+
+    private fun startWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.start(requestor)
+        }
+    }
+
+    private fun stopWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.stop(requestor)
+        }
+    }
+
+    private fun restartWebPanel(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.restart(requestor)
+        }
+    }
+
+    private fun webPanelStatus(ctx: CommandContext<CommandSourceStack>) {
+        val requestor = ctx.source.sender.toActor()
+
+        pluginRuntime.runCoroutine {
+            webPanelLifecycle.status(requestor)
         }
     }
 }
