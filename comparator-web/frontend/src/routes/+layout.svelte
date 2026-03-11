@@ -45,14 +45,8 @@
 
 		source.addEventListener('tool-executed', (event) => {
 			const payload = JSON.parse(event.data);
-			toolRuns.update((runs) => [
-				...runs,
-				{
-					...payload,
-					id: crypto.randomUUID(),
-					timestamp: new Date()
-				}
-			]);
+			const id = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
+			toolRuns.update((runs) => [...runs, { ...payload, id, timestamp: new Date() }]);
 		});
 
 		// Invalidate conversation-dependent load functions on any conversation event.

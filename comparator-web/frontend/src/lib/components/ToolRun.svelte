@@ -33,6 +33,12 @@
     let { toolRun }: Props = $props();
 
     let expanded = $state(false);
+    let resultExpanded = $state(false);
+
+    const COLLAPSE_THRESHOLD = 300;
+    const isResultLong = $derived(
+        toolRun.result.split('\n').length > 5 || toolRun.result.length > COLLAPSE_THRESHOLD
+    );
 
     const argsJson = $derived(JSON.stringify(toolRun.args, null, 2));
     const hasArgs = $derived(Object.keys(toolRun.args).length > 0);
@@ -85,6 +91,23 @@
 
     <div class="mt-2 border-t border-t-muted pt-2">
         <span class="text-[10px] tracking-widest text-foreground-muted uppercase">result</span>
-        <p class="mt-0.5 text-sm leading-relaxed text-foreground opacity-80">{toolRun.result}</p>
+        <p
+                data-role="content"
+                class="mt-0.5 text-sm leading-relaxed text-foreground opacity-80 {!resultExpanded && isResultLong ? 'line-clamp-5' : ''}"
+        >
+            {toolRun.result}
+        </p>
+        {#if isResultLong}
+            <button
+                    onclick={() => (resultExpanded = !resultExpanded)}
+                    class="mt-1 flex cursor-pointer items-center gap-1 text-xs text-muted-light transition-colors hover:text-foreground"
+            >
+                <ChevronDown
+                        size={13}
+                        class="transition-transform duration-200 {resultExpanded ? 'rotate-180' : ''}"
+                />
+                {resultExpanded ? 'Collapse' : 'Expand'}
+            </button>
+        {/if}
     </div>
 </article>
