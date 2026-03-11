@@ -23,12 +23,15 @@ Embed a fully conversational AI agent directly into your Minecraft server. Compa
 ### 🔧 Built-In Tools
 The agent can to more than just chat. Comparator ships with several built-in tools the AI can invoke to give accurate, grounded answers:
 
-| Tool | Description |
-|------|-------------|
-| **Web Search** | Searches the web for up-to-date information, so the agent isn't limited to its training data |
-| **Current Date** | Retrieves the current date, helping the agent reason about how recent its knowledge is |
-| **Game Version** | Fetches the server's running Minecraft version so answers are version-accurate |
-| **Player Info** | Retrieves the player's surroundings, inventory, nearby entities, biome, game mode, and what they're looking at. This enables contextual in-game assistance |
+| Tool             | Description                                                                                                                                                |
+|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Web Search**   | Searches the web for up-to-date information, so the agent isn't limited to its training data                                                               |
+| **Current Date** | Retrieves the current date, helping the agent reason about how recent its knowledge is                                                                     |
+| **Game Version** | Fetches the server's running Minecraft version so answers are version-accurate                                                                             |
+| **Player Info**  | Retrieves the player's surroundings, inventory, nearby entities, biome, game mode, and what they're looking at. This enables contextual in-game assistance |
+
+### 🌐 Embedded Web Panel
+Comparator includes a built-in web panel served directly from the plugin via an embedded server. It gives server admins a live view into conversations, tool runs, and registered tools with real-time updates. No separate deployment needed; just configure the host and port in `comparator.conf` and run `/comparator panel start` to launch it.
 
 ### 🧩 Extensible Tool API
 Third-party plugins can register their own tools using the Comparator API. Defining a tool is as simple as annotating a function:
@@ -63,7 +66,7 @@ Comparator was built with safety and transparency in mind. This sets it apart fr
 ### ⚡ High-Performance, Non-Blocking Architecture
 Built on Kotlin coroutines for fully non-blocking execution. AI requests, tool calls, and context operations never block the server thread, so the agent has no impact on server tick performance.
 
-### 🌐 Flexible AI Provider Support
+### ✨ Flexible AI Provider Support
 Integrates with [Ollama](https://ollama.com), supporting both cloud-hosted and self-hosted models. Configure your model, base URL, and optional API key in `comparator.conf`.
 
 ---
