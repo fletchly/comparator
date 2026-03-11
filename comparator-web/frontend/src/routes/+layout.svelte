@@ -1,27 +1,11 @@
-<!--
-  - This file is part of comparator, licensed under the Apache License 2.0
-  -
-  - Copyright (c) 2026 fletchly <https://github.com/fletchly>
-  -
-  - Licensed under the Apache License, Version 2.0 (the "License");
-  - you may not use this file except in compliance with the License.
-  - You may obtain a copy of the License at
-  -
-  -     http://www.apache.org/licenses/LICENSE-2.0
-  -
-  - Unless required by applicable law or agreed to in writing, software
-  - distributed under the License is distributed on an "AS IS" BASIS,
-  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  - See the License for the specific language governing permissions and
-  - limitations under the License.
-  -->
-
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { MessageSquare, House, MessageSquareCode, MessageSquareText } from '@lucide/svelte';
 	import Sidebar, { type NavItem } from '$lib/components/ui/Sidebar.svelte';
 	import { page } from '$app/state';
+	import { getVersion } from '$lib/api';
+	import { onMount } from 'svelte';
 
 	const { children } = $props();
 
@@ -39,12 +23,24 @@
 		}
 	];
 
-	// Flatten parents + children for route matching
 	const allItems = navItems.flatMap((item) => [item, ...(item.children ?? [])]);
-
 	let activeId = $derived(allItems.find((item) => page.url.pathname === item.href)?.id ?? '');
-
 	let isMobile = $state(false);
+
+	let version = $state<string | null>(null);
+	let connected = $state(false);
+
+	onMount(() => {
+		getVersion()
+			.then((v) => (version = v.version))
+			.catch(() => (version = null));
+
+		const source = new EventSource('/api/events');
+		source.onopen = () => (connected = true);
+		source.onerror = () => (connected = false);
+
+		return () => source.close();
+	});
 </script>
 
 <svelte:head>
@@ -55,10 +51,50 @@
 <div class="flex h-screen">
 	<Sidebar items={navItems} bind:activeId bind:isMobile />
 
-	<main
-		class="flex-1 overflow-auto p-8"
-		style:padding-left={isMobile ? 'calc(3.5rem + 1.5rem)' : undefined}
-	>
-		{@render children()}
-	</main>
+	<div class="flex flex-1 flex-col overflow-hidden">
+		<header
+			class="flex items-center justify-between border-b border-b-muted bg-background-secondary px-6 py-2"
+			style:padding-left={isMobile ? 'calc(3.5rem + 1.5rem)' : undefined}
+		>
+			<span class="font-mono text-xs text-muted-light uppercase">
+				{version ?? '—'}
+			</span>
+			<span
+				data-connected={connected}
+				class="flex items-center gap-1.5 font-mono text-xs data-[connected=false]:text-destructive data-[connected=true]:text-success"
+			>
+				<span class="size-1.5 rounded-full bg-current"></span>
+				{connected ? 'online' : 'offline'}
+			</span>
+		</header>
+
+		<main
+			class="flex-1 overflow-auto p-8"
+			style:padding-left={isMobile ? 'calc(3.5rem + 1.5rem)' : undefined}
+		>
+			{@render children()}
+		</main>
+
+		<footer
+			class="flex items-center gap-4 border-t border-t-muted bg-background-secondary px-6 py-2 font-mono text-xs text-muted-light"
+			style:padding-left={isMobile ? 'calc(3.5rem + 1.5rem)' : undefined}
+		>
+			<a
+				href="https://github.com/fletchly/comparator"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="transition-colors hover:text-foreground"
+			>
+				github
+			</a>
+			<a
+				href="https://fletchly.gitbook.io/comparator-docs/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="transition-colors hover:text-foreground"
+			>
+				docs
+			</a>
+		</footer>
+	</div>
 </div>

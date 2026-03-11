@@ -55,7 +55,7 @@
 <aside
 	data-collapsed={collapsed}
 	data-mobile={isMobile}
-	class="flex h-full w-64 flex-col bg-background-secondary transition-[width]
+	class="flex h-full w-64 flex-col border-r border-r-muted bg-background-secondary transition-[width]
          duration-200 data-[collapsed=true]:w-14
          data-[mobile=true]:fixed data-[mobile=true]:inset-y-0 data-[mobile=true]:left-0 data-[mobile=true]:z-50"
 >
