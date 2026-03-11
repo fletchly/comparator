@@ -90,4 +90,6 @@ interface WebPanelData {
      * @return found tool, null if not found
      */
     suspend fun getTool(name: String): Tool?
+
+    suspend fun getVersion(): String
 }

@@ -16,23 +16,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.port.out
+package io.fletchly.comparator.adapter.routing
 
-import io.fletchly.comparator.model.dto.ConversationDto
-import io.fletchly.comparator.model.dto.MessageDto
-import io.fletchly.comparator.model.dto.ToolDto
-import java.util.UUID
+import io.fletchly.comparator.port.out.DataRepositoryPort
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
 
-interface DataRepositoryPort {
-    suspend fun getAllConversations(): Map<String, ConversationDto>
-    suspend fun getAllPlayerConversations(): Map<String, ConversationDto>
-    suspend fun getConversation(key: UUID): ConversationDto
-
-    suspend fun clearAllConversations()
-    suspend fun clearConversation(key: UUID)
-
-    suspend fun getAllTools(): List<ToolDto>
-    suspend fun getTool(name: String): Result<ToolDto>
-
-    suspend fun getVersion(): String
+fun Route.utilRoutes(repository: DataRepositoryPort) {
+    get("/version") {
+        val version = mapOf("version" to repository.getVersion())
+        call.respond(version)
+    }
 }

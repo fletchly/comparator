@@ -21,6 +21,7 @@ package io.fletchly.comparator.adapter.web
 import io.fletchly.comparator.adapter.routing.conversationRoutes
 import io.fletchly.comparator.adapter.routing.eventRoutes
 import io.fletchly.comparator.adapter.routing.toolRoutes
+import io.fletchly.comparator.adapter.routing.utilRoutes
 import io.fletchly.comparator.model.options.WebPanelOptions
 import io.fletchly.comparator.model.web.WebPanelMessage
 import io.fletchly.comparator.port.out.DataRepositoryPort
@@ -53,6 +54,7 @@ class KtorWebPanel(
 
                 routing {
                     route("/api") {
+                        utilRoutes(repository)
                         eventRoutes(eventBus)
                         conversationRoutes(repository)
                         toolRoutes(repository)

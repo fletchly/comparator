@@ -18,21 +18,6 @@
 
 package io.fletchly.comparator.port.out
 
-import io.fletchly.comparator.model.dto.ConversationDto
-import io.fletchly.comparator.model.dto.MessageDto
-import io.fletchly.comparator.model.dto.ToolDto
-import java.util.UUID
-
-interface DataRepositoryPort {
-    suspend fun getAllConversations(): Map<String, ConversationDto>
-    suspend fun getAllPlayerConversations(): Map<String, ConversationDto>
-    suspend fun getConversation(key: UUID): ConversationDto
-
-    suspend fun clearAllConversations()
-    suspend fun clearConversation(key: UUID)
-
-    suspend fun getAllTools(): List<ToolDto>
-    suspend fun getTool(name: String): Result<ToolDto>
-
+interface VersionPort {
     suspend fun getVersion(): String
 }

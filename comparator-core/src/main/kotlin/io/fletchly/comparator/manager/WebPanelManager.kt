@@ -28,12 +28,14 @@ import io.fletchly.comparator.port.`in`.WebPanelLifecycle
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
+import io.fletchly.comparator.port.out.VersionPort
 import io.fletchly.comparator.port.out.WebPanelPort
 import io.fletchly.comparator.tool.ToolRegistry
 
 class WebPanelManager(
     private val webPanel: WebPanelPort,
     private val context: ContextPort,
+    private val version: VersionPort,
     private val toolRegistry: ToolRegistry,
     private val notification: NotificationPort,
     private val log: LogPort
@@ -95,6 +97,7 @@ class WebPanelManager(
     override suspend fun getAllTools(): List<Tool> = toolRegistry.getTools()
 
     override suspend fun getTool(name: String): Tool? = toolRegistry.getTool(name)
+    override suspend fun getVersion(): String = version.getVersion()
 
     private companion object {
         const val GRACE_MS = 1000L

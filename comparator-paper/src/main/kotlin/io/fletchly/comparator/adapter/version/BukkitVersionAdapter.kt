@@ -16,23 +16,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.port.out
+package io.fletchly.comparator.adapter.version
 
-import io.fletchly.comparator.model.dto.ConversationDto
-import io.fletchly.comparator.model.dto.MessageDto
-import io.fletchly.comparator.model.dto.ToolDto
-import java.util.UUID
+import io.fletchly.comparator.infra.BukkitPluginRuntime
+import io.fletchly.comparator.port.out.VersionPort
+import org.bukkit.plugin.java.JavaPlugin
 
-interface DataRepositoryPort {
-    suspend fun getAllConversations(): Map<String, ConversationDto>
-    suspend fun getAllPlayerConversations(): Map<String, ConversationDto>
-    suspend fun getConversation(key: UUID): ConversationDto
-
-    suspend fun clearAllConversations()
-    suspend fun clearConversation(key: UUID)
-
-    suspend fun getAllTools(): List<ToolDto>
-    suspend fun getTool(name: String): Result<ToolDto>
-
-    suspend fun getVersion(): String
+class BukkitVersionAdapter(
+    private val pluginRuntime: BukkitPluginRuntime,
+    private val plugin: JavaPlugin,
+): VersionPort {
+    override suspend fun getVersion(): String = pluginRuntime.runTask {
+        plugin.pluginMeta.version
+    }
 }

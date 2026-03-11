@@ -19,14 +19,9 @@
 package io.fletchly.comparator.adapter.data
 
 import io.fletchly.comparator.model.dto.ConversationDto
-import io.fletchly.comparator.model.dto.MessageDto
 import io.fletchly.comparator.model.dto.ToolDto
 import io.fletchly.comparator.model.dto.toDto
-import io.fletchly.comparator.model.message.BasicConversationKey
-import io.fletchly.comparator.model.message.ChatConversationKey
-import io.fletchly.comparator.model.message.ConsoleConversationKey
-import io.fletchly.comparator.model.message.Conversation
-import io.fletchly.comparator.model.message.Message
+import io.fletchly.comparator.model.message.*
 import io.fletchly.comparator.port.`in`.WebPanelData
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import java.util.*
@@ -79,6 +74,8 @@ class ComparatorDataRepository(
     override suspend fun getTool(name: String): Result<ToolDto> = runCatching {
         data.getTool(name)?.toDto() ?: throw NoSuchElementException("Tool not found")
     }
+
+    override suspend fun getVersion(): String = data.getVersion()
 
     private fun Conversation.ownerDisplayName(): String? =
         messages.filterIsInstance<Message.User>().firstOrNull()?.actor?.displayName
