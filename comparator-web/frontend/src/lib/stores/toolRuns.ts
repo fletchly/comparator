@@ -16,28 +16,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.dto
+import { writable } from 'svelte/store';
+import type {ArgumentValue} from "$lib/types";
 
-import io.fletchly.comparator.model.event.ToolEvent
-import io.fletchly.comparator.util.toJsonObject
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
-import java.util.UUID
-
-@Serializable
-data class ToolExecutedDto(
-    val args: Map<String, JsonElement>,
-    val result: String,
-    val name: String,
-    @SerialName("conversation_id")
-    val conversationId: String
-) {
+export interface ToolRun {
+    args: Record<string, ArgumentValue>
+    result: string
+    name: string
+    conversation_id: string
+    id: string
+    timestamp: Date
 }
 
-fun ToolEvent.ToolExecuted.toDto() = ToolExecutedDto (
-    args = this.args.toJsonObject(),
-    result = this.result.content,
-    name = this.result.name,
-    conversationId = this.conversationKey.uniqueId.toString()
-)
+export const toolRuns = writable<ToolRun[]>([]);
+

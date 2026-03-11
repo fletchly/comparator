@@ -6,6 +6,7 @@
 	import { page } from '$app/state';
 	import { getVersion } from '$lib/api';
 	import { onMount } from 'svelte';
+	import {toolRuns} from "$lib/stores/toolRuns";
 
 	const { children } = $props();
 
@@ -38,6 +39,18 @@
 		const source = new EventSource('/api/events');
 		source.onopen = () => (connected = true);
 		source.onerror = () => (connected = false);
+
+		source.addEventListener('tool-executed', (event) => {
+			const payload = JSON.parse(event.data);
+			toolRuns.update((runs) => [
+				...runs,
+				{
+					...payload,
+					id: crypto.randomUUID(),
+					timestamp: new Date()
+				}
+			]);
+		});
 
 		return () => source.close();
 	});
