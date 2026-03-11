@@ -16,13 +16,17 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.web
+import { writable } from 'svelte/store';
+import type {ArgumentValue} from "$lib/types";
 
-import io.fletchly.comparator.model.ComparatorEvent
-import io.fletchly.comparator.model.message.ConversationKey
-
-sealed interface ConversationEvent: ComparatorEvent {
-    data class MessageAdded(val key: ConversationKey) : ConversationEvent
-    data class ConversationCleared(val key: ConversationKey) : ConversationEvent
-    data object AllCleared : ConversationEvent
+export interface ToolRun {
+    args: Record<string, ArgumentValue>
+    result: string
+    name: string
+    conversation_id: string
+    id: string
+    timestamp: Date
 }
+
+export const toolRuns = writable<ToolRun[]>([]);
+

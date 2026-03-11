@@ -18,12 +18,14 @@
 
 package io.fletchly.comparator.adapter.routing
 
-import io.fletchly.comparator.adapter.event.EventBus
-import io.fletchly.comparator.model.web.ConversationEvent
+import io.fletchly.comparator.model.dto.toDto
+import io.fletchly.comparator.model.event.ConversationEvent
+import io.fletchly.comparator.model.event.ToolEvent
 import io.fletchly.comparator.port.out.EventPort
-import io.ktor.server.routing.Route
-import io.ktor.server.sse.sse
-import io.ktor.sse.ServerSentEvent
+import io.ktor.server.routing.*
+import io.ktor.server.sse.*
+import io.ktor.sse.*
+import kotlinx.serialization.json.Json
 
 fun Route.eventRoutes(eventBus: EventPort) {
     sse("/events") {
@@ -33,8 +35,10 @@ fun Route.eventRoutes(eventBus: EventPort) {
                     send(ServerSentEvent(event.key.uniqueId.toString(), event = "message"))
                 is ConversationEvent.ConversationCleared ->
                     send(ServerSentEvent(event.key.uniqueId.toString(), event = "cleared"))
-                ConversationEvent.AllCleared ->
+                is ConversationEvent.AllCleared ->
                     send(ServerSentEvent("", event = "all-cleared"))
+                is ToolEvent.ToolExecuted ->
+                    send(ServerSentEvent(Json.encodeToString(event.toDto()), event = "tool-executed"))
             }
         }
     }

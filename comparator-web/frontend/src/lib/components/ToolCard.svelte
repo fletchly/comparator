@@ -1,7 +1,6 @@
 <!--
   ToolCard.svelte
   Displays a Tool's name, description, and parameter list.
-  Unstyled.
 -->
 <script lang="ts">
 	import type { Tool } from '$lib/types';
@@ -16,62 +15,40 @@
 	const optional = $derived(tool.parameters.filter((p) => !p.required));
 </script>
 
-<article data-role="tool-card">
-	<header>
-		<h3 data-role="tool-name">{tool.name}</h3>
-		<p data-role="tool-description">{tool.description}</p>
+<article
+		data-role="tool-card"
+		class="border border-muted bg-background-secondary px-4 py-3 font-mono"
+>
+	<header class="mb-2 border-b border-b-muted pb-2">
+		<h3 class="text-sm font-semibold text-foreground">{tool.name}</h3>
+		<p class="mt-0.5 text-xs text-muted-light">{tool.description}</p>
 	</header>
 
 	{#if tool.parameters.length > 0}
-		<section data-role="parameters">
-			{#if required.length > 0}
-				<ul data-role="required-params">
-					{#each required as param (param.name)}
-						<li data-param-name={param.name} data-param-type={param.type}>
-							<span data-role="param-name">{param.name}</span>
-							<span data-role="param-type"
-								>{param.type}{param['element-type'] ? `<${param['element-type']}>` : ''}</span
-							>
-							<span data-role="required-badge">required</span>
-							{#if param.description}
-								<p data-role="param-description">{param.description}</p>
-							{/if}
-							{#if param.enum}
-								<ul data-role="enum-values">
-									{#each param.enum as val (val)}
-										<li>{val}</li>
-									{/each}
-								</ul>
-							{/if}
-						</li>
-					{/each}
-				</ul>
-			{/if}
-
-			{#if optional.length > 0}
-				<ul data-role="optional-params">
-					{#each optional as param (param.name)}
-						<li data-param-name={param.name} data-param-type={param.type}>
-							<span data-role="param-name">{param.name}</span>
-							<span data-role="param-type"
-								>{param.type}{param['element-type'] ? `<${param['element-type']}>` : ''}</span
-							>
-							{#if param.description}
-								<p data-role="param-description">{param.description}</p>
-							{/if}
-							{#if param.enum}
-								<ul data-role="enum-values">
-									{#each param.enum as val (val)}
-										<li>{val}</li>
-									{/each}
-								</ul>
-							{/if}
-						</li>
-					{/each}
-				</ul>
-			{/if}
+		<section data-role="parameters" class="flex flex-col gap-2 pt-1">
+			{#each [...required, ...optional] as param (param.name)}
+				<div data-role="parameter" class="flex flex-col gap-0.5">
+					<div class="flex items-center gap-2">
+						<span class="text-xs text-foreground">{param.name}</span>
+						<span class="text-[10px] text-primary">{param.type}{param['element-type'] ? `<${param['element-type']}>` : ''}</span>
+						{#if param.required}
+							<span class="text-[10px] tracking-widest text-secondary uppercase">required</span>
+						{/if}
+					</div>
+					{#if param.description}
+						<p class="text-xs text-muted-light">{param.description}</p>
+					{/if}
+					{#if param.enum}
+						<div class="mt-0.5 flex flex-wrap gap-1">
+							{#each param.enum as val (val)}
+								<span class="border border-muted px-1.5 py-0.5 text-[10px] text-muted-light">{val}</span>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/each}
 		</section>
 	{:else}
-		<p data-role="no-params">No parameters</p>
+		<p class="text-xs text-muted-light">No parameters.</p>
 	{/if}
 </article>

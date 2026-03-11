@@ -16,6 +16,11 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model
+package io.fletchly.comparator.model.event
 
-interface ComparatorEvent
+import io.fletchly.comparator.model.message.ConversationKey
+import io.fletchly.comparator.model.message.Message
+
+sealed interface ToolEvent: ComparatorEvent {
+    data class ToolExecuted(val args: Map<String, Any>, val result: Message.Tool, val conversationKey: ConversationKey) : ToolEvent
+}

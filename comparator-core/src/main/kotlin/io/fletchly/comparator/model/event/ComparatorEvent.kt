@@ -16,16 +16,6 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.event
+package io.fletchly.comparator.model.event
 
-import io.fletchly.comparator.model.event.ComparatorEvent
-import io.fletchly.comparator.port.out.EventPort
-import kotlinx.coroutines.flow.MutableSharedFlow
-
-class EventBus: EventPort {
-    override val events = MutableSharedFlow<ComparatorEvent>(extraBufferCapacity = 64)
-
-    override fun emit(event: ComparatorEvent) {
-        events.tryEmit(event)
-    }
-}
+interface ComparatorEvent

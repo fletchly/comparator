@@ -149,6 +149,7 @@ class ConversationManagerTest {
         val manager = buildManager()
         val userMessage = Message.User(content = "Search something", actor = actor)
         val toolCall = mockk<ToolCall>()
+        every { toolCall.arguments } returns emptyMap()
         val toolResult = Message.Tool(content = "tool output", name = "tool_name")
         val assistantWithTool = Message.Assistant(content = "Using tool...", toolCalls = listOf(toolCall))
         val finalAssistant = Message.Assistant(content = "Done!")
@@ -176,6 +177,8 @@ class ConversationManagerTest {
         val userMessage = Message.User(content = "Do many things", actor = actor)
         val toolCall1 = mockk<ToolCall>()
         val toolCall2 = mockk<ToolCall>()
+        every { toolCall1.arguments } returns emptyMap()
+        every { toolCall2.arguments } returns emptyMap()
         val toolResult1 = Message.Tool(content = "result 1", name = "tool1")
         val toolResult2 = Message.Tool(content = "result 2", name = "tool2")
         val assistantWithTools = Message.Assistant(

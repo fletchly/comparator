@@ -78,17 +78,42 @@ const mockTools = [
 ];
 
 function sseResponse(): Response {
-	let interval: Timer;
+	let heartbeat: Timer;
+	let toolInterval: Timer;
+
 	const stream = new ReadableStream({
 		start(controller) {
-			interval = setInterval(() => {
-				controller.enqueue(new TextEncoder().encode(': heartbeat\n\n'));
+			const encode = (data: string) => new TextEncoder().encode(data);
+
+			heartbeat = setInterval(() => {
+				controller.enqueue(encode(': heartbeat\n\n'));
 			}, 5000);
+
+			toolInterval = setInterval(() => {
+				const tool = mockTools[Math.floor(Math.random() * mockTools.length)];
+				const conversationIds = Object.keys(mockConversations);
+				const conversationId = conversationIds[Math.floor(Math.random() * conversationIds.length)];
+
+				const args = Object.fromEntries(
+					tool.parameters.map((p) => [p.name, `mock_${p.name}`])
+				);
+
+				const payload = JSON.stringify({
+					name: tool.name,
+					args,
+					result: `Mock result for ${tool.name}`,
+					conversation_id: conversationId
+				});
+
+				controller.enqueue(encode(`event: tool-executed\ndata: ${payload}\n\n`));
+			}, 4000);
 		},
 		cancel() {
-			clearInterval(interval);
+			clearInterval(heartbeat);
+			clearInterval(toolInterval);
 		}
 	});
+
 	return new Response(stream, {
 		headers: {
 			'Content-Type': 'text/event-stream',
