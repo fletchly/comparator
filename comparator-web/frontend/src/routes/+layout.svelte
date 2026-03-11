@@ -1,7 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { MessageSquare, House, MessageSquareCode, MessageSquareText } from '@lucide/svelte';
+	import {MessageSquare, House, MessageSquareCode, MessageSquareText, Wrench, Play} from '@lucide/svelte';
 	import Sidebar, { type NavItem } from '$lib/components/ui/Sidebar.svelte';
 	import { page } from '$app/state';
 	import { getVersion } from '$lib/api';
@@ -21,7 +21,9 @@
 				{ id: 'chat', label: 'Chat', href: '/conversation/chat', icon: MessageSquareText },
 				{ id: 'console', label: 'Console', href: '/conversation/console', icon: MessageSquareCode }
 			]
-		}
+		},
+		{ id: 'tool', label: 'Tool Runs', href: '/tool', icon: Play },
+		{ id: 'tool-registered', label: 'Registered Tools', href: '/tool/registered', icon: Wrench }
 	];
 
 	const allItems = navItems.flatMap((item) => [item, ...(item.children ?? [])]);
