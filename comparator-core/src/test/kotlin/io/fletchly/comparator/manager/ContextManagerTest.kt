@@ -21,6 +21,7 @@ package io.fletchly.comparator.manager
 import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.port.out.ContextPort
+import io.fletchly.comparator.port.out.EventPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.mockk.coVerify
@@ -35,7 +36,8 @@ class ContextManagerTest {
     private val context = mockk<ContextPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
     private val log = mockk<LogPort>(relaxed = true)
-    private val manager = ContextManager(context, notification, log)
+    private val event = mockk<EventPort>(relaxed = true)
+    private val manager = ContextManager(context, notification, log, event)
 
     private val conversationKey = mockk<ConversationKey> {
         every { uniqueId } returns UUID.randomUUID()
