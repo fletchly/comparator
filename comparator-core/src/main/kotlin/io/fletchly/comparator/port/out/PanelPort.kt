@@ -16,17 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.di
+package io.fletchly.comparator.port.out
 
-import io.fletchly.comparator.adapter.data.ComparatorDataRepository
-import io.fletchly.comparator.adapter.web.KtorWebPanel
-import io.fletchly.comparator.port.out.DataRepositoryPort
-import io.fletchly.comparator.port.out.PanelPort
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import io.fletchly.comparator.model.panel.PanelMessage
 
-val webAdapterModule = module {
-    singleOf(::KtorWebPanel) bind PanelPort::class
-    singleOf(::ComparatorDataRepository) bind DataRepositoryPort::class
+interface PanelPort {
+    suspend fun start(): PanelMessage
+    suspend fun stop(graceMs: Long, timeoutMs: Long): PanelMessage
+    suspend fun restart(onStop: suspend (PanelMessage) -> Unit, onStart: suspend (PanelMessage) -> Unit)
+    suspend fun status(): PanelMessage
+    suspend fun forceStop()
 }

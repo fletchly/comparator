@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.web
+package io.fletchly.comparator.model.panel
 
-sealed interface WebPanelMessage {
+sealed interface PanelMessage {
     val message: String
 
     @JvmInline
-    value class Ok(override val message: String) : WebPanelMessage
+    value class Ok(override val message: String) : PanelMessage
 
     @JvmInline
-    value class Error(override val message: String) : WebPanelMessage
+    value class Error(override val message: String) : PanelMessage
 }

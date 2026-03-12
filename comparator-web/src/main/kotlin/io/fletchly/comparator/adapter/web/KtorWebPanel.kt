@@ -23,10 +23,10 @@ import io.fletchly.comparator.adapter.routing.eventRoutes
 import io.fletchly.comparator.adapter.routing.toolRoutes
 import io.fletchly.comparator.adapter.routing.utilRoutes
 import io.fletchly.comparator.model.options.WebPanelOptions
-import io.fletchly.comparator.model.web.WebPanelMessage
+import io.fletchly.comparator.model.panel.PanelMessage
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import io.fletchly.comparator.port.out.EventPort
-import io.fletchly.comparator.port.out.WebPanelPort
+import io.fletchly.comparator.port.out.PanelPort
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -40,13 +40,13 @@ import org.koin.java.KoinJavaComponent.getKoin
 class KtorWebPanel(
     private val options: WebPanelOptions,
     private val eventBus: EventPort
-) : WebPanelPort {
+) : PanelPort {
     private val repository: DataRepositoryPort by lazy { getKoin().get() }
     private var server: EmbeddedServer<*, *>? = null
     private var isRunning = false
 
-    override suspend fun start(): WebPanelMessage {
-        if (isRunning) return WebPanelMessage.Ok("Web panel is already running on port ${options.port}")
+    override suspend fun start(): PanelMessage {
+        if (isRunning) return PanelMessage.Ok("Web panel is already running on port ${options.port}")
         try {
             server = embeddedServer(Netty, port = options.port, host = options.host) {
                 install(ContentNegotiation) { json() }
@@ -71,32 +71,32 @@ class KtorWebPanel(
                 start(wait = false)  // non-blocking
             }
             isRunning = true
-            return WebPanelMessage.Ok("Started web panel on port ${options.port}")
+            return PanelMessage.Ok("Started web panel on port ${options.port}")
         } catch (ex: Exception) {
-            return WebPanelMessage.Error("Failed to start web panel: ${ex.message}")
+            return PanelMessage.Error("Failed to start web panel: ${ex.message}")
         }
     }
 
-    override suspend fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage {
-        if (!isRunning || server == null) return WebPanelMessage.Ok("The web panel is not running")
+    override suspend fun stop(graceMs: Long, timeoutMs: Long): PanelMessage {
+        if (!isRunning || server == null) return PanelMessage.Ok("The web panel is not running")
 
         server?.stop(graceMs, timeoutMs)
         server = null
         isRunning = false
-        return WebPanelMessage.Ok("Stopped the web panel")
+        return PanelMessage.Ok("Stopped the web panel")
     }
 
     override suspend fun restart(
-        onStop: suspend (WebPanelMessage) -> Unit,
-        onStart: suspend (WebPanelMessage) -> Unit
+        onStop: suspend (PanelMessage) -> Unit,
+        onStart: suspend (PanelMessage) -> Unit
     ) {
         onStop.invoke(stop(1000, 1000))
         onStart.invoke(start())
     }
 
-    override suspend fun status(): WebPanelMessage = when {
-        isRunning -> WebPanelMessage.Ok("The web panel is running on ${options.port}")
-        else -> WebPanelMessage.Ok("The web panel is not running")
+    override suspend fun status(): PanelMessage = when {
+        isRunning -> PanelMessage.Ok("The web panel is running on ${options.port}")
+        else -> PanelMessage.Ok("The web panel is not running")
     }
 
     override suspend fun forceStop() {

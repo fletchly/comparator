@@ -29,7 +29,7 @@ import io.fletchly.comparator.model.message.ChatConversationKey
 import io.fletchly.comparator.model.message.ConsoleConversationKey
 import io.fletchly.comparator.model.message.PlayerConversationKey
 import io.fletchly.comparator.port.`in`.ContextLifecycle
-import io.fletchly.comparator.port.`in`.WebPanelLifecycle
+import io.fletchly.comparator.port.`in`.PanelLifecycle
 import io.fletchly.comparator.util.toActor
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import io.papermc.paper.command.brigadier.Commands
@@ -46,7 +46,7 @@ import org.bukkit.permissions.PermissionDefault
  */
 class ComparatorCommand(
     private val contextLifecycle: ContextLifecycle,
-    private val webPanelLifecycle: WebPanelLifecycle,
+    private val panelLifecycle: PanelLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : CommandDefinition {
     override val definition = command("comparator") {
@@ -208,7 +208,7 @@ class ComparatorCommand(
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            webPanelLifecycle.start(requestor)
+            panelLifecycle.start(requestor)
         }
     }
 
@@ -216,7 +216,7 @@ class ComparatorCommand(
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            webPanelLifecycle.stop(requestor)
+            panelLifecycle.stop(requestor)
         }
     }
 
@@ -224,7 +224,7 @@ class ComparatorCommand(
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            webPanelLifecycle.restart(requestor)
+            panelLifecycle.restart(requestor)
         }
     }
 
@@ -232,7 +232,7 @@ class ComparatorCommand(
         val requestor = ctx.source.sender.toActor()
 
         pluginRuntime.runCoroutine {
-            webPanelLifecycle.status(requestor)
+            panelLifecycle.status(requestor)
         }
     }
 }
