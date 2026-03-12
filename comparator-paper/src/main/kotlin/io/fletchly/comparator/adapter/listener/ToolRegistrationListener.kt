@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.adapter.listener
 
-import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.model.event.bukkit.ToolRegistrationEvent
 import io.fletchly.comparator.model.options.BuiltInToolOptions
 import io.fletchly.comparator.tool.currentDateTool
 import io.fletchly.comparator.tool.gameVersionTool

@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator
 
-import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.model.event.bukkit.ToolRegistrationEvent
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition

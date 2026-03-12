@@ -19,7 +19,7 @@
 package io.fletchly.comparator.example
 
 import io.fletchly.comparator.annotation.ToolFunction
-import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.model.event.bukkit.ToolRegistrationEvent
 import io.fletchly.comparator.tool.tool
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
