@@ -23,14 +23,14 @@ import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.tool.Tool
 
 /**
- * Defines the contract for managing conversations and tools in a web panel.
+ * Defines the contract for managing conversations and tools in a panel.
  *
  * This interface provides methods for retrieving, clearing, and managing
  * conversational data and tools within the system. It allows interaction
  * with multiple conversations and tools, enabling their accessibility and
  * lifecycle management.
  */
-interface WebPanelData {
+interface PanelData {
     /**
      * Retrieves all existing conversations within the system.
      *

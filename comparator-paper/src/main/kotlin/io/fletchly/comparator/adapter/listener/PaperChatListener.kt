@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.event
+package io.fletchly.comparator.adapter.listener
 
 import io.fletchly.comparator.adapter.command.AskCommand
 import io.fletchly.comparator.infra.BukkitPluginRuntime
@@ -34,7 +34,7 @@ import org.bukkit.event.Listener
 /**
  * Handles chat-related events within a Paper-based environment.
  *
- * @constructor Initializes the `PaperChatEvents` listener with dependencies for
+ * @constructor Initializes the `PaperChatListener` listener with dependencies for
  * handling messages, managing command prefixes, and executing asynchronous tasks.
  *
  * @param prefixOptions The bot prefix used to identify commands intended for the bot.
@@ -44,7 +44,7 @@ import org.bukkit.event.Listener
  * @param pluginRuntime A utility for managing coroutine execution and task scheduling
  * specific to the lifecycle of a Bukkit plugin.
  */
-class PaperChatEvents(
+class PaperChatListener(
     prefixOptions: PublicChatPrefixOptions,
     private val messageSender: MessageSender,
     private val pluginRuntime: BukkitPluginRuntime

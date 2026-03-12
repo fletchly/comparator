@@ -16,14 +16,19 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.model.web
+package io.fletchly.comparator.port.`in`
 
-sealed interface WebPanelMessage {
-    val message: String
+import io.fletchly.comparator.model.tool.Tool
 
-    @JvmInline
-    value class Ok(override val message: String) : WebPanelMessage
-
-    @JvmInline
-    value class Error(override val message: String) : WebPanelMessage
+/**
+ * Defines a registry for managing tools that can be executed.
+ *
+ * An implementation of this interface is responsible for maintaining a collection of tools and providing
+ * functionality to register new tools. Tools are expected to conform to the [Tool] structure, which includes
+ * metadata such as name, description, input parameters, and execution logic.
+ */
+interface ToolRegistry {
+    fun register(vararg tools: Tool)
+    fun getTool(name: String): Tool?
+    fun getTools(): List<Tool>
 }

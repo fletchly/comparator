@@ -32,19 +32,19 @@ import kotlinx.coroutines.test.runTest
 import java.util.UUID
 import kotlin.test.Test
 
-class ContextManagerTest {
+class ContextLifecycleManagerTest {
     private val context = mockk<ContextPort>(relaxed = true)
     private val notification = mockk<NotificationPort>(relaxed = true)
     private val log = mockk<LogPort>(relaxed = true)
     private val event = mockk<EventPort>(relaxed = true)
-    private val manager = ContextManager(context, notification, log, event)
+    private val manager = ContextLifecycleManager(context, notification, log, event)
 
     private val conversationKey = mockk<ConversationKey> {
         every { uniqueId } returns UUID.randomUUID()
     }
     private val requestor = mockk<Actor>(relaxed = true) {
         every { displayName } returns "Requestor"
-        every { conversationKey } returns this@ContextManagerTest.conversationKey
+        every { conversationKey } returns this@ContextLifecycleManagerTest.conversationKey
     }
 
     // --- clearSelf ---

@@ -22,41 +22,41 @@ import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.Conversation
 import io.fletchly.comparator.model.message.ConversationKey
 import io.fletchly.comparator.model.tool.Tool
-import io.fletchly.comparator.model.web.WebPanelMessage
-import io.fletchly.comparator.port.`in`.WebPanelData
-import io.fletchly.comparator.port.`in`.WebPanelLifecycle
+import io.fletchly.comparator.model.panel.PanelMessage
+import io.fletchly.comparator.port.`in`.PanelData
+import io.fletchly.comparator.port.`in`.PanelLifecycle
 import io.fletchly.comparator.port.out.ContextPort
 import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.port.out.VersionPort
-import io.fletchly.comparator.port.out.WebPanelPort
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.port.out.PanelPort
+import io.fletchly.comparator.port.`in`.ToolRegistry
 
-class WebPanelManager(
-    private val webPanel: WebPanelPort,
+class PanelManager(
+    private val panel: PanelPort,
     private val context: ContextPort,
     private val version: VersionPort,
     private val toolRegistry: ToolRegistry,
     private val notification: NotificationPort,
     private val log: LogPort
-) : WebPanelLifecycle, WebPanelData {
+) : PanelLifecycle, PanelData {
     override suspend fun start(requestor: Actor) {
-        val message = webPanel.start()
+        val message = panel.start()
         displayPanelMessage(requestor, message, true)
     }
 
     override suspend fun stop(requestor: Actor) {
-        val message = webPanel.stop(GRACE_MS, TIMEOUT_MS)
+        val message = panel.stop(GRACE_MS, TIMEOUT_MS)
         displayPanelMessage(requestor, message, true)
     }
 
     override suspend fun status(requestor: Actor) {
-        val message = webPanel.status()
+        val message = panel.status()
         displayPanelMessage(requestor, message)
     }
 
     override suspend fun restart(requestor: Actor) {
-        webPanel.restart(onStop = { msg ->
+        panel.restart(onStop = { msg ->
             displayPanelMessage(requestor, msg, true)
         }, onStart = { msg ->
             displayPanelMessage(requestor, msg, true)
@@ -64,16 +64,16 @@ class WebPanelManager(
     }
 
     override suspend fun forceStop() {
-        webPanel.forceStop()
+        panel.forceStop()
     }
 
-    private suspend fun displayPanelMessage(requestor: Actor, panelMessage: WebPanelMessage, printLog: Boolean = false) {
+    private suspend fun displayPanelMessage(requestor: Actor, panelMessage: PanelMessage, printLog: Boolean = false) {
         when (panelMessage) {
-            is WebPanelMessage.Ok -> {
+            is PanelMessage.Ok -> {
                 notification.info(requestor, panelMessage.message )
                 if (printLog) log.info(panelMessage.message, this::class.simpleName)
             }
-            is WebPanelMessage.Error -> {
+            is PanelMessage.Error -> {
                 notification.error(requestor, panelMessage.message)
                 if (printLog) log.info(panelMessage.message, this::class.simpleName)
             }

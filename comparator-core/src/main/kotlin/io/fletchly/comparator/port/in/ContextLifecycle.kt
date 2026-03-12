@@ -22,45 +22,35 @@ import io.fletchly.comparator.model.actor.Actor
 import io.fletchly.comparator.model.message.ConversationKey
 
 /**
- * Provides an interface for clearing conversation context for one or more scopes
- * in a conversational system.
+ * Responsible for managing the lifecycle of stored context within the application
  */
 interface ContextLifecycle {
 
     /**
-     * Clears the conversational context for the specified actor.
+     * Clears context for a single [Actor].
      *
-     * This method removes conversation-specific data or state associated with
-     * the given `Actor` instance. It is typically used to reset the conversational
-     * context for the actor, ensuring that the system no longer retains any history
-     * or state tied to the actor's participation in previous interactions.
+     * Executed by the actor, targeting itself.
      *
-     * @param target The actor whose conversational context should be cleared.
+     * @param target actor to clear context for
      */
     suspend fun clearSelf(target: Actor)
 
     /**
-     * Clears the conversational context for the specified targets as requested by a given actor.
+     * Clears context for multiple [Actor]s.
      *
-     * This method removes conversation-specific data or state associated with the provided
-     * list of targets, ensuring that the system no longer retains history or context
-     * tied to their interactions. It is typically used to allow the requestor to reset
-     * or clear contexts affecting other actors identified by the given conversation keys.
+     * Executed by an actor, targeting other actors, not excluding itself.
      *
-     * @param requestor The actor initiating the context clearing operation.
-     * @param targets A list of conversation keys representing the targets whose conversational
-     *                contexts should be cleared.
+     * @param requestor the actor initiating the operation
+     * @param targets list of contexts to clear
      */
     suspend fun clearOther(requestor: Actor, targets: List<ConversationKey>)
 
     /**
-     * Clears the conversational context for all actors in the system as requested by the specified actor.
+     * Clears all stored contexts across the application.
      *
-     * This method removes all conversation-specific data or state associated with all actors
-     * within the system. It is typically used to perform a global reset of the conversational
-     * context at the request of the provided actor, ensuring no history or state is retained.
+     * Executed by an actor.
      *
-     * @param requestor The actor initiating the context clearing operation for all actors.
+     * @param requestor the actor initiating the operation
      */
     suspend fun clearAll(requestor: Actor)
 

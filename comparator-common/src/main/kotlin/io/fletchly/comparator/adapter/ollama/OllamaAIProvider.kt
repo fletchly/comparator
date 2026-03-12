@@ -29,7 +29,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.util.*
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -37,7 +37,6 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.io.IOException
-import kotlinx.serialization.json.Json
 
 /**
  * An implementation of the [AIPort] interface that integrates with the Ollama API to generate responses

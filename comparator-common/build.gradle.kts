@@ -23,8 +23,6 @@ plugins {
 
 dependencies {
     implementation(project(":comparator-core"))
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.serialization)
     implementation(libs.bundles.ktor.client)
     implementation(libs.bundles.configurate)
     implementation(platform(libs.koin.bom))
@@ -33,5 +31,4 @@ dependencies {
 
     testImplementation(libs.bundles.test)
     testImplementation(libs.ktor.client.mock)
-    testImplementation(libs.kotlinx.coroutines.test)
 }

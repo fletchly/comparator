@@ -31,5 +31,4 @@ dependencies {
     api(project(":comparator-api"))
 
     testImplementation(libs.bundles.test)
-    testImplementation(libs.kotlinx.coroutines.test)
 }

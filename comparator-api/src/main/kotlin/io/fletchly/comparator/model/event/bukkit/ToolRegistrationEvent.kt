@@ -16,16 +16,16 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.event
+package io.fletchly.comparator.model.event.bukkit
 
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 /**
  * Event triggered to allow the registration of custom tools into the tool registry.
  *
- * This event provides access to the [ToolRegistry], enabling plugins or other components
+ * This event provides access to the [io.fletchly.comparator.port. in.ToolRegistry], enabling plugins or other components
  * to register their custom tools during the server's initialization phase. Tools added
  * to the registry are then available for execution throughout the system.
  *

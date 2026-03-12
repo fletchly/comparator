@@ -16,14 +16,38 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.port.out
+package io.fletchly.comparator.port.`in`
 
-import io.fletchly.comparator.model.web.WebPanelMessage
+import io.fletchly.comparator.model.actor.Actor
 
-interface WebPanelPort {
-    suspend fun start(): WebPanelMessage
-    suspend fun stop(graceMs: Long, timeoutMs: Long): WebPanelMessage
-    suspend fun restart(onStop: suspend (WebPanelMessage) -> Unit, onStart: suspend (WebPanelMessage) -> Unit)
-    suspend fun status(): WebPanelMessage
+/**
+ * Manages the lifecycle operations of a panel, including starting, stopping,
+ * querying status, and restarting the panel.
+ */
+interface PanelLifecycle {
+    /**
+     * Starts the panel.
+     */
+    suspend fun start(requestor: Actor)
+
+    /**
+     * Stops the panel.
+     */
+    suspend fun stop(requestor: Actor)
+
+
+    /**
+     * Retrieves the current status of the panel.
+     */
+    suspend fun status(requestor: Actor)
+
+    /**
+     * Restarts the panel.
+     */
+    suspend fun restart(requestor: Actor)
+
+    /**
+     * Immediately and forcefully terminates the panel.
+     */
     suspend fun forceStop()
 }

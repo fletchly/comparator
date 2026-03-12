@@ -50,7 +50,6 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
@@ -60,7 +59,6 @@ ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor" }
 # Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }
-koin-test = { module = "io.insert-koin:koin-test" }
 
 # Persistence
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
@@ -76,20 +74,26 @@ paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j-simple" }
+koin-test = { module = "io.insert-koin:koin-test" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 
 [bundles]
 ktor-client = [
     "ktor-client-core",
     "ktor-client-cio",
     "ktor-client-content-negotiation",
-    "ktor-serialization-kotlinx-json"
+    "ktor-serialization-kotlinx-json",
+    "kotlinx-coroutines",
+    "kotlinx-serialization"
 ]
 ktor-server = [
     "ktor-server-core",
     "ktor-server-netty",
     "ktor-server-content-negotiation",
     "ktor-serialization-kotlinx-json",
-    "ktor-server-sse"
+    "ktor-server-sse",
+    "kotlinx-coroutines",
+    "kotlinx-serialization"
 ]
 configurate = [
     "configurate-hocon",
@@ -98,11 +102,11 @@ configurate = [
 test = [
     "kotlin-test",
     "mockk",
-    "slf4j-simple"
+    "slf4j-simple",
+    "kotlinx-coroutines-test",
 ]
 
 [plugins]
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 paperweight-userdev = { id = "io.papermc.paperweight.userdev", version.ref = "paperweight" }
 shadow-jar = { id = "com.gradleup.shadow", version.ref = "shadow-jar" }

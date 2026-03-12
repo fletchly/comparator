@@ -28,19 +28,7 @@ import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.util.pluralize
 
-/**
- * Manages the context and notification operations for a given set of actors in a conversational system.
- *
- * This class provides functionality to clear context information for one or multiple actors
- * and to notify the sender of any successful context clear operations. It interacts with the
- * context storage and notification mechanisms through the provided `ContextPort` and `NotificationPort` interfaces.
- *
- * @constructor Creates a `ContextManager` with a specified context storage and notification mechanism.
- *
- * @param context The storage mechanism for managing conversation contexts.
- * @param notification The notification mechanism for sending updates to actors.
- */
-class ContextManager(
+class ContextLifecycleManager(
     private val context: ContextPort,
     private val notification: NotificationPort,
     private val log: LogPort,
@@ -49,7 +37,7 @@ class ContextManager(
     override suspend fun clearSelf(target: Actor) {
         context.clear(target.conversationKey)
         event.emit(ConversationEvent.ConversationCleared(target.conversationKey))
-        log.info("Cleared chat context for ${target.displayName}", ContextManager::class.simpleName)
+        log.info("Cleared chat context for ${target.displayName}", ContextLifecycleManager::class.simpleName)
         notification.info(target, "Cleared chat context")
     }
 
@@ -63,7 +51,7 @@ class ContextManager(
         }
 
         val message = "Cleared chat context for ${targets.size} ${"target".pluralize(targets.size)}"
-        log.info(message, ContextManager::class.simpleName)
+        log.info(message, ContextLifecycleManager::class.simpleName)
         notification.info(requestor, message)
     }
 
@@ -71,7 +59,7 @@ class ContextManager(
         context.clearAll()
         event.emit(ConversationEvent.AllCleared)
         val message = "Cleared chat context for all scopes"
-        log.info(message, ContextManager::class.simpleName)
+        log.info(message, ContextLifecycleManager::class.simpleName)
         notification.info(requestor, message)
     }
 

@@ -18,15 +18,15 @@
 
 package io.fletchly.comparator
 
-import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.model.event.bukkit.ToolRegistrationEvent
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.infra.KoinBootstrapper
 import io.fletchly.comparator.model.command.CommandDefinition
 import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
-import io.fletchly.comparator.port.`in`.WebPanelLifecycle
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.comparator.port.`in`.PanelLifecycle
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
@@ -51,7 +51,7 @@ class Comparator : JavaPlugin(), KoinComponent {
     override fun onDisable() {
         val context: ContextLifecycle = get()
         val scheduler: BukkitPluginRuntime = get()
-        val webPanel: WebPanelLifecycle = get()
+        val webPanel: PanelLifecycle = get()
 
         logger.info { "Shutting down web panel" }
         runBlocking { webPanel.forceStop() }

@@ -22,12 +22,12 @@ import io.fletchly.comparator.model.dto.ConversationDto
 import io.fletchly.comparator.model.dto.ToolDto
 import io.fletchly.comparator.model.dto.toDto
 import io.fletchly.comparator.model.message.*
-import io.fletchly.comparator.port.`in`.WebPanelData
+import io.fletchly.comparator.port.`in`.PanelData
 import io.fletchly.comparator.port.out.DataRepositoryPort
 import java.util.*
 
 class ComparatorDataRepository(
-    private val data: WebPanelData
+    private val data: PanelData
 ) : DataRepositoryPort {
     override suspend fun getAllConversations(): Map<String, ConversationDto> =
         data.getAllConversations()

@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.event
+package io.fletchly.comparator.adapter.listener
 
-import io.fletchly.comparator.event.ToolRegistrationEvent
+import io.fletchly.comparator.model.event.bukkit.ToolRegistrationEvent
 import io.fletchly.comparator.model.options.BuiltInToolOptions
 import io.fletchly.comparator.tool.currentDateTool
 import io.fletchly.comparator.tool.gameVersionTool
@@ -38,7 +38,7 @@ import org.bukkit.event.Listener
  * @param options Configuration settings that control the inclusion of various
  * built-in tools in the tool registration process.
  */
-class ToolRegistrationEvents(
+class ToolRegistrationListener(
     private val options: BuiltInToolOptions
 ) : Listener {
     @EventHandler
