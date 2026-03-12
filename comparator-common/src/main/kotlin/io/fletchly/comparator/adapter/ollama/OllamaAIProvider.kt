@@ -29,7 +29,7 @@ import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.out.AIPort
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.port.`in`.ToolRegistry
 import io.fletchly.comparator.util.*
 import io.ktor.client.*
 import io.ktor.client.call.*

@@ -18,7 +18,7 @@
 
 package io.fletchly.comparator.event
 
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.port.`in`.ToolRegistry
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 

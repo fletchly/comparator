@@ -28,7 +28,7 @@ import io.fletchly.comparator.port.`in`.ToolExecutor
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.port.`in`.PanelData
 import io.fletchly.comparator.port.`in`.PanelLifecycle
-import io.fletchly.comparator.tool.ToolRegistry
+import io.fletchly.port.`in`.ToolRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.binds
