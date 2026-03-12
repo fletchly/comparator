@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.port.`in`
+package io.fletchly.comparator.port.`in`
 
 import io.fletchly.comparator.model.tool.Tool
 
@@ -24,7 +24,7 @@ import io.fletchly.comparator.model.tool.Tool
  * Defines a registry for managing tools that can be executed.
  *
  * An implementation of this interface is responsible for maintaining a collection of tools and providing
- * functionality to register new tools. Tools are expected to conform to the [io.fletchly.comparator.model.tool.Tool] structure, which includes
+ * functionality to register new tools. Tools are expected to conform to the [Tool] structure, which includes
  * metadata such as name, description, input parameters, and execution logic.
  */
 interface ToolRegistry {

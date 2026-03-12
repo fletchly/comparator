@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package io.fletchly.comparator.adapter.event
+package io.fletchly.comparator.adapter.listener
 
 import io.fletchly.comparator.infra.BukkitPluginRuntime
 import io.fletchly.comparator.model.actor.BukkitPlayerActor
@@ -36,7 +36,7 @@ import org.bukkit.event.player.PlayerQuitEvent
  * @param context A `ContextLifecycle` instance used for clearing the player's conversational context.
  * @param pluginRuntime A `BukkitPluginRuntime` instance for managing asynchronous tasks within the plugin's lifecycle.
  */
-class BukkitPlayerEvents(
+class BukkitPlayerListener(
     private val context: ContextLifecycle,
     private val pluginRuntime: BukkitPluginRuntime
 ) : Listener {

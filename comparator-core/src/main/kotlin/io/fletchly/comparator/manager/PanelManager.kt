@@ -30,7 +30,7 @@ import io.fletchly.comparator.port.out.LogPort
 import io.fletchly.comparator.port.out.NotificationPort
 import io.fletchly.comparator.port.out.VersionPort
 import io.fletchly.comparator.port.out.PanelPort
-import io.fletchly.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistry
 
 class PanelManager(
     private val panel: PanelPort,

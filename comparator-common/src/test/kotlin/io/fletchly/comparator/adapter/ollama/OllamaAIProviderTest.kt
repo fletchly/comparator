@@ -26,7 +26,7 @@ import io.fletchly.comparator.model.message.conversationOf
 import io.fletchly.comparator.model.options.OllamaOptions
 import io.fletchly.comparator.model.tool.Tool
 import io.fletchly.comparator.port.out.LogPort
-import io.fletchly.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.util.HttpClients
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.*

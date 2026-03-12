@@ -22,9 +22,9 @@ import io.fletchly.comparator.adapter.chat.PaperChatService
 import io.fletchly.comparator.adapter.chat.PaperNotificationService
 import io.fletchly.comparator.adapter.command.ComparatorCommand
 import io.fletchly.comparator.adapter.command.AskCommand
-import io.fletchly.comparator.adapter.event.BukkitPlayerEvents
-import io.fletchly.comparator.adapter.event.PaperChatEvents
-import io.fletchly.comparator.adapter.event.ToolRegistrationEvents
+import io.fletchly.comparator.adapter.listener.BukkitPlayerListener
+import io.fletchly.comparator.adapter.listener.PaperChatListener
+import io.fletchly.comparator.adapter.listener.ToolRegistrationListener
 import io.fletchly.comparator.adapter.lifecycle.BukkitPluginLifecycleCoroutineScope
 import io.fletchly.comparator.adapter.logger.BukkitPluginLogger
 import io.fletchly.comparator.adapter.version.BukkitVersionAdapter
@@ -45,9 +45,9 @@ private val commands = module {
 }
 
 private val events = module {
-    singleOf(::BukkitPlayerEvents) bind Listener::class
-    singleOf(::PaperChatEvents) bind Listener::class
-    singleOf(::ToolRegistrationEvents) bind Listener::class
+    singleOf(::BukkitPlayerListener) bind Listener::class
+    singleOf(::PaperChatListener) bind Listener::class
+    singleOf(::ToolRegistrationListener) bind Listener::class
 }
 
 val paperAdapterModule = module {

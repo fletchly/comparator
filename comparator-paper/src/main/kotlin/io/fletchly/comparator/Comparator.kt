@@ -26,7 +26,7 @@ import io.fletchly.comparator.model.command.registerCommand
 import io.fletchly.comparator.port.`in`.ContextLifecycle
 import io.fletchly.comparator.port.`in`.ToolRegistryLifecycle
 import io.fletchly.comparator.port.`in`.PanelLifecycle
-import io.fletchly.port.`in`.ToolRegistry
+import io.fletchly.comparator.port.`in`.ToolRegistry
 import io.fletchly.comparator.util.pluralize
 import io.fletchly.comparator.util.registerEventListener
 import kotlinx.coroutines.runBlocking
