@@ -35,28 +35,33 @@
 	let connected = $state(false);
 
 	onMount(() => {
-		getVersion()
-				.then((v) => (version = v.version))
-				.catch(() => (version = null));
+		const checkConnection = async () => {
+			try {
+				await getVersion().then((v) => (version = v.version));
+				connected = true;
+			} catch {
+				connected = false;
+			}
+		};
+
+		checkConnection();
+		const interval = setInterval(checkConnection, 10_000);
 
 		const source = new EventSource('/api/events');
-		source.onopen = () => (connected = true);
-		source.onerror = () => (connected = false);
-
 		source.addEventListener('tool-executed', (event) => {
 			const payload = JSON.parse(event.data);
 			const id = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
 			toolRuns.update((runs) => [...runs, { ...payload, id, timestamp: new Date() }]);
 		});
 
-		// Invalidate conversation-dependent load functions on any conversation event.
-		// This covers the conversation list, individual conversation pages, and the
-		// dashboard counts — all of which call depends('app:conversations').
 		source.addEventListener('message', () => invalidate('app:conversations'));
 		source.addEventListener('cleared', () => invalidate('app:conversations'));
 		source.addEventListener('all-cleared', () => invalidate('app:conversations'));
 
-		return () => source.close();
+		return () => {
+			clearInterval(interval);
+			source.close();
+		};
 	});
 </script>
 
