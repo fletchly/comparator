@@ -6,10 +6,9 @@
 [![Modrinth](https://img.shields.io/badge/modrinth-comparator-00AF5C?logo=modrinth)](https://modrinth.com/project/MQoLAFN8)
 ![Release](https://img.shields.io/github/v/release/fletchly/comparator)
 [![Documentation](https://img.shields.io/badge/read%20the%20docs-gray?logo=gitbook&logoColor=FFBD59)](https://fletchly.gitbook.io/comparator-docs/)
-![Minecraft Version](https://img.shields.io/badge/minecraft-1.21.x-brightgreen)
+![Minecraft Version](https://img.shields.io/badge/minecraft-26.x-brightgreen)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 [![Build](https://github.com/fletchly/comparator/actions/workflows/build.yml/badge.svg)](https://github.com/fletchly/comparator/actions/workflows/build.yml)
-[![CodeFactor](https://www.codefactor.io/repository/github/fletchly/comparator/badge/main)](https://www.codefactor.io/repository/github/fletchly/comparator/overview/main)
 
 Comparator brings a fully conversational AI agent to your Paper server; with multi-turn memory, built-in tools, and an API to extend it on your own.
 
