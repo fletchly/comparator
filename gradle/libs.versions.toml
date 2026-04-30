@@ -24,9 +24,9 @@ configurate = "4.2.0"
 dokka = "2.1.0"
 
 # Minecraft
-minecraft = "1.21.11"
-paper = "1.21.11-R0.1-SNAPSHOT"
-paperweight = "2.0.0-beta.19"
+minecraft = "26.1.2"
+paper = "26.1.2.build.+"
+paperweight = "2.0.0-beta.21"
 
 # Build
 shadow-jar = "8.3.0"
